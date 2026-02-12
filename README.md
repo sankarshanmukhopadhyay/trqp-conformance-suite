@@ -1,116 +1,234 @@
-# TRQP Conformance Test Suite (CTS)
+# TRQP Conformance Suite
 
-Certification-grade, evidence-first conformance testing for implementations of the **Trust Registry Query Protocol (TRQP)**.
+![CI](https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite/actions/workflows/cts.yml/badge.svg)
+![License](https://img.shields.io/badge/license-Apache--2.0-blue)
+![Status](https://img.shields.io/badge/status-Experimental-orange)
 
-This repository is intentionally designed to support **auditable, reproducible** conformance claims. “HTTP 200” is not conformance. Conformance requires **assertions + evidence**.
+Conformance Test Suite for the Trust Registry Query Protocol (TRQP).
 
----
+This repository provides a profile-driven, evidence-oriented testing
+framework to validate TRQP implementations for interoperability,
+determinism, lifecycle correctness, and operational readiness.
 
-## What this repo provides
+This is an independent, open reference implementation. It is not an
+official artifact of the Trust over IP Foundation. The goal is to
+support ecosystem alignment and accelerate production-grade conformance
+discussions.
 
-- **Profile-based conformance** (Baseline, Enterprise, High-Assurance)
-- **Requirement catalog** with stable IDs mapped to tests
-- **Assertion-based test runner** that emits **evidence bundles**
-- **Deterministic verdict model**: PASS / FAIL / INCONCLUSIVE / NOT_APPLICABLE
-- **Integrity & signing** for evidence manifests (Ed25519)
-- **CI-ready** workflows for continuous conformance
+------------------------------------------------------------------------
 
----
+## Why This Exists
 
-## Repo layout
+Specifications describe behavior. Deployments require proof.
 
-```text
-.
-├── cts/                     # Test runner + evidence packaging
-├── profiles/                # Conformance profiles
-├── requirements/            # Normative requirement catalog(s)
-├── tests/                   # Declarative test cases
-├── schemas/                 # JSON schemas for validation
-├── spec/                    # Proposed spec text (PR-ready)
-├── examples/                # Example SUT + fixtures
-├── docs/                    # Architecture, profiles, evidence, governance notes
-└── .github/                 # Workflows + issue templates + PR template
+TRQP is designed as a lightweight verification rail across trust
+ecosystems. Without structured conformance testing, implementations may
+diverge in subtle but critical ways:
+
+-   Non-deterministic authorization outcomes\
+-   Inconsistent lifecycle semantics\
+-   Fragmented security posture\
+-   Weak or undefined error modeling\
+-   "Pass" results without verifiable evidence
+
+This suite addresses those risks through executable, assertion-based
+testing.
+
+------------------------------------------------------------------------
+
+## Core Principles
+
+### Profile-Based Conformance
+
+Different ecosystems require different assurance levels.
+
+Profiles:
+
+-   **Baseline** --- Minimal interoperable TRQP behavior\
+-   **Enterprise** --- Governance metadata and operational discipline\
+-   **High-Assurance** --- Deterministic state reference, replay
+    resistance, stronger security enforcement
+
+Profiles determine which requirements are mandatory.
+
+------------------------------------------------------------------------
+
+### Assertion-Based Testing
+
+Every normative requirement is mapped to:
+
+-   A stable requirement ID\
+-   One or more executable tests\
+-   Explicit pass/fail criteria\
+-   Required evidence artifacts
+
+A test does not pass without evidence.
+
+------------------------------------------------------------------------
+
+### Deterministic Verdict Model
+
+Each test produces one of:
+
+-   `PASS`\
+-   `FAIL`\
+-   `INCONCLUSIVE`\
+-   `NOT_APPLICABLE`
+
+Verdicts are derived from requirement-level assertions, not HTTP status
+codes.
+
+------------------------------------------------------------------------
+
+### Evidence-First Reporting
+
+Each test run generates:
+
+-   Canonicalized request/response pairs\
+-   Full HTTP transcripts\
+-   Hashes of payloads\
+-   A structured verdict manifest\
+-   A signed evidence bundle (High-Assurance profile)
+
+This enables auditability and reproducibility.
+
+------------------------------------------------------------------------
+
+## Why Determinism Matters
+
+TRQP decisions depend on registry state.
+
+If identical inputs can produce different outputs under unclear state
+conditions, interoperability collapses.
+
+High-Assurance profile requires:
+
+-   A declared `state_reference`\
+-   Controlled fixture conditions\
+-   Deterministic decision behavior for identical inputs
+
+Without stable state reference, semantic conformance cannot be
+validated.
+
+------------------------------------------------------------------------
+
+## Conformance Architecture Overview
+
+``` mermaid
+graph TD
+    A[Verifier / Client] --> B[TRQP Conformance Runner]
+    B --> C[System Under Test]
+    B --> D[Evidence Artifacts]
+    D --> E[Manifest + Signature]
 ```
 
----
+The runner executes profile-bound tests, captures transcripts, validates
+assertions, and produces a cryptographically verifiable evidence bundle.
 
-## Quickstart (local)
+------------------------------------------------------------------------
 
-### 1) Create a venv and install deps
+## Repository Structure
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r cts/requirements.txt
-```
+    profiles/         Conformance profiles
+    requirements/     Requirement catalog with stable IDs
+    tests/            Declarative test definitions
+    schemas/          JSON schemas for validation
+    cts/              Conformance test runner
+    examples/         Example TRQP-like service and configuration
+    docs/             Design philosophy and evidence model
 
-### 2) Start the example SUT (optional)
+------------------------------------------------------------------------
 
-```bash
-pip install fastapi uvicorn
-uvicorn examples.poc_service:app --reload
-```
+## Running the Suite
 
-### 3) Run the CTS
+### 1. Start the Example SUT
 
-Baseline:
+    uvicorn examples.poc_service:app --reload
 
-```bash
-python cts/run.py --profile profiles/baseline.yaml --sut examples/sut.local.yaml --out reports/run-baseline
-```
+### 2. Run Baseline Profile
 
-High-Assurance (requires headers; see `examples/sut.local.yaml`):
+    python cts/run.py   --profile profiles/baseline.yaml   --sut examples/sut.local.yaml   --out reports/run1
 
-```bash
-python cts/run.py --profile profiles/high_assurance.yaml --sut examples/sut.local.yaml --out reports/run-ha
-```
+### 3. Run High-Assurance Profile
 
----
+    python cts/run.py   --profile profiles/high_assurance.yaml   --sut examples/sut.local.yaml   --out reports/runHA
 
-## Evidence bundles (certification posture)
+------------------------------------------------------------------------
 
-Each run produces an evidence directory and a portable bundle:
+## Evidence Artifacts
 
-```text
-reports/<run-id>/
-  run.json                 # run envelope (who/what/when/profile)
-  verdicts.json            # per-test verdicts
-  cases/                   # per-test transcripts and assertions
-  manifest.json            # hashes of artifacts
-  manifest.sig             # Ed25519 signature over manifest.json (HA only)
-  bundle.zip               # zipped evidence directory for audit portability
-```
+Each run produces:
 
-High-Assurance **gates** on the presence of a `state_reference` (fixture ID / snapshot hash / signed snapshot reference). If state cannot be pinned, semantics cannot be certified.
+    reports/<run-id>/
+      run.json
+      verdicts.json
+      manifest.json
+      manifest.sig   (High-Assurance)
+      cases/
+      bundle.zip
 
----
+The manifest includes cryptographic hashes of all artifacts.\
+High-Assurance profile signs the manifest for integrity verification.
 
-## Conformance philosophy
+------------------------------------------------------------------------
 
-See:
-- `docs/conformance_philosophy.md`
-- `docs/evidence_contract.md`
-- `docs/profiles.md`
+## Sample Signed Conformance Report
 
----
+A reference signed evidence bundle will be added under:
 
-## Versioning
+    docs/reference-reports/
 
-This repository uses **SemVer** for the CTS (`vMAJOR.MINOR.PATCH`). Requirement IDs are stable across patch releases.
+This will demonstrate:
 
-See `docs/versioning.md`.
+-   Deterministic replay\
+-   Manifest hashing\
+-   Signature verification workflow
 
----
+------------------------------------------------------------------------
+
+## Status
+
+**Status:** Experimental
+
+This repository is evolving and intended to inform structured
+conformance approaches for TRQP. It does not represent a formal
+certification authority.
+
+------------------------------------------------------------------------
+
+## Roadmap
+
+Planned enhancements:
+
+-   Formal evidence bundle schema\
+-   State snapshot verification model\
+-   mTLS security profile\
+-   Performance and SLA validation\
+-   Reference conformance reports\
+-   CI reproducibility improvements
+
+------------------------------------------------------------------------
 
 ## Contributing
 
-- Read `CONTRIBUTING.md`
-- Open issues using templates under `.github/ISSUE_TEMPLATE/`
-- New tests **must** map to a requirement ID.
-- New requirements **must** define expected evidence.
+All additions must:
 
----
+-   Map to a requirement ID\
+-   Produce structured evidence\
+-   Respect profile definitions\
+-   Avoid introducing undefined semantic assumptions
 
-## License
+See `CONTRIBUTING.md` for guidelines.
 
-Apache-2.0. See `LICENSE`.
+------------------------------------------------------------------------
+
+## Strategic Positioning
+
+This suite is intended to:
+
+-   Encourage interoperable TRQP implementations\
+-   Support production-readiness discussions\
+-   Provide a structured foundation for future conformance programs\
+-   Reduce ambiguity in multi-ecosystem deployments
+
+It does not assert normative authority over the TRQP specification.
