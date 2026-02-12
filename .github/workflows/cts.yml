@@ -10,9 +10,11 @@ jobs:
   conformance:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: "pip"
@@ -28,18 +30,55 @@ jobs:
           uvicorn examples.poc_service:app --host 127.0.0.1 --port 8000 &
           sleep 1
 
-      - name: Run Baseline
+      - name: Run Baseline profile
         run: |
           python cts/run.py --profile profiles/baseline.yaml --sut examples/sut.local.yaml --out reports/ci_baseline
 
-      - name: Run High-Assurance
+      - name: Run High-Assurance profile
         run: |
           python cts/run.py --profile profiles/high_assurance.yaml --sut examples/sut.local.yaml --out reports/ci_high_assurance
 
-      - name: Upload Evidence Bundles
+      - name: Ensure bundle.zip exists (Baseline)
+        run: |
+          chmod +x scripts/create_bundle.sh
+          ./scripts/create_bundle.sh reports/ci_baseline
+
+      - name: Ensure bundle.zip exists (High-Assurance)
+        run: |
+          chmod +x scripts/create_bundle.sh
+          ./scripts/create_bundle.sh reports/ci_high_assurance
+
+      # Upload single, shareable artifacts per profile (preferred for socialization)
+      - name: Upload Baseline bundle
         uses: actions/upload-artifact@v4
         with:
-          name: trqp-cts-evidence
+          name: trqp-cts-baseline-bundle
+          path: |
+            reports/ci_baseline/bundle.zip
+            reports/ci_baseline/manifest.json
+            reports/ci_baseline/verdicts.json
+            reports/ci_baseline/run.json
+          if-no-files-found: error
+
+      - name: Upload High-Assurance bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: trqp-cts-high-assurance-bundle
+          path: |
+            reports/ci_high_assurance/bundle.zip
+            reports/ci_high_assurance/manifest.json
+            reports/ci_high_assurance/manifest.sig
+            reports/ci_high_assurance/signing_public_key.pem
+            reports/ci_high_assurance/verdicts.json
+            reports/ci_high_assurance/run.json
+          if-no-files-found: warn
+
+      # Upload full directories as a fallback (useful for debugging, but secondary)
+      - name: Upload full reports (debug)
+        uses: actions/upload-artifact@v4
+        with:
+          name: trqp-cts-reports-full
           path: |
             reports/ci_baseline/**
             reports/ci_high_assurance/**
+          if-no-files-found: warn
