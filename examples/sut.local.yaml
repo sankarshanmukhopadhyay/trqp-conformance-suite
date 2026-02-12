@@ -1,0 +1,7 @@
+base_url: "http://127.0.0.1:8000"
+state_reference: "fixtureset:v1"
+default_headers:
+  Accept: "application/json"
+api_key: "demo-secret"
+# Ed25519 key for signing evidence manifests (High-Assurance)
+signing_key_b64: "sf5HYKs/HeO+wYwb3GvzgwkfrA8c83ARNe8mblspdCs="

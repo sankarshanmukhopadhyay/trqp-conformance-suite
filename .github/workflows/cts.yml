@@ -1,0 +1,46 @@
+name: CTS
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r cts/requirements.txt
+          pip install fastapi uvicorn
+      - name: Start PoC SUT
+        run: |
+          nohup uvicorn examples.poc_service:app --host 127.0.0.1 --port 8000 &
+          sleep 2
+      - name: Run Baseline
+        run: |
+          python cts/run.py --profile profiles/baseline.yaml --sut examples/sut.local.yaml --out reports/ci-baseline
+
+  high_assurance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r cts/requirements.txt
+          pip install fastapi uvicorn
+      - name: Start PoC SUT
+        run: |
+          nohup uvicorn examples.poc_service:app --host 127.0.0.1 --port 8000 &
+          sleep 2
+      - name: Run High-Assurance
+        run: |
+          python cts/run.py --profile profiles/high_assurance.yaml --sut examples/sut.local.yaml --out reports/ci-ha
