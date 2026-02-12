@@ -1,14 +1,11 @@
-## What changed?
+## Summary
 
-## Why?
+## Requirement IDs
 
-## How to review
+## Profile Impact
 
-## Evidence (if applicable)
-- [ ] Updated/added requirement IDs
-- [ ] Updated/added tests mapped to requirement IDs
-- [ ] Updated docs if evidence format/profile semantics changed
+## Evidence Impact
 
-## Checklist
-- [ ] CI passes
-- [ ] No breaking changes without SemVer bump
+## Test Coverage
+
+## Notes for Reviewers

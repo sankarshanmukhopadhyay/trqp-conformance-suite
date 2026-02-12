@@ -1,16 +1,13 @@
-# Conformance profiles
+# Profiles
 
 ## Baseline
-- Schema compliance
-- Basic error handling
-- Interoperable request/response behavior
+
+Schema validation, structured errors, deterministic outcomes under stable state.
 
 ## Enterprise
-- Governance/operational expectations (correlation IDs, error codes)
+
+Adds governance metadata expectations and operational discipline.
 
 ## High-Assurance
-- Authentication required
-- Replay resistance (nonce + timestamp)
-- Timestamp skew enforcement
-- Determinism gate via state reference
-- Signed evidence manifest
+
+Requires declared state reference, replay resistance expectations, and signed evidence bundles.

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TRQP Conformance Evidence Bundle",
+  "type": "object",
+  "required": [
+    "bundle_version",
+    "run",
+    "artifacts"
+  ],
+  "properties": {
+    "bundle_version": {
+      "type": "string"
+    },
+    "run": {
+      "type": "object"
+    },
+    "artifacts": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}
