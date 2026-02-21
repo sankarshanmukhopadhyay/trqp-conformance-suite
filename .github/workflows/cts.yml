@@ -25,6 +25,10 @@ jobs:
           if [ -f cts/requirements.txt ]; then pip install -r cts/requirements.txt; fi
           pip install fastapi uvicorn
 
+- name: Schema hygiene checks
+  run: |
+    python scripts/schema_check.py
+
       - name: Start example SUT
         run: |
           uvicorn examples.poc_service:app --host 127.0.0.1 --port 8000 &
