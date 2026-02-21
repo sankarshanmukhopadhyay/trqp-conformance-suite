@@ -171,108 +171,122 @@ def main():
             }
             case_path = out/"cases"/f"{tc_id}.json"
             case_path.write_text(json.dumps(case, indent=2), encoding="utf-8")
-            verdicts.append({"test_case_id": tc_id, "result": "SKIP", "reason": f"not applicable to profile {profile.get('id')}", "elapsed_ms": 0})
+            verdicts.append({"test_case_id": tc_id, "result": "NOT_APPLICABLE", "reason": f"not applicable to profile {profile.get('id')}", "elapsed_ms": 0})
             continue
-        headers = dict(sut.get("default_headers", {}))
-        headers.update(tc.get("request", {}).get("headers", {}) or {})
-        body = tc.get("request", {}).get("body", None)
-
-        # If profile is HA, add HA headers for tests except TC-SEC-001 (which asserts unauth)
-        if profile["id"] == "high_assurance" and tc_id != "TC-SEC-001":
-            nonce = "nonce-" + str(uuid.uuid4())
-            ts = now_iso()
-            add_ha_headers(headers, sut, nonce, ts)
-
-        started = time.time()
-        resp = http_request(base_url, tc, headers, body)
-        elapsed_ms = int((time.time() - started) * 1000)
-
-        case = {
-            "id": tc_id,
-            "name": tc.get("name"),
-            "request": {"method": tc.get("method","POST"), "path": tc["path"], "headers": headers, "body": body},
-            "response": {"status": resp.status_code, "headers": dict(resp.headers), "text": resp.text},
-            "elapsed_ms": elapsed_ms,
-            "assertions": []
-        }
-
-        ok = True
-        exp = tc.get("expect", {})
-
-        if "status" in exp and "status_in" in exp:
+        try:
+            headers = dict(sut.get("default_headers", {}))
+            headers.update(tc.get("request", {}).get("headers", {}) or {})
+            body = tc.get("request", {}).get("body", None)
+    
+            # If profile is HA, add HA headers for tests except TC-SEC-001 (which asserts unauth)
+            if profile["id"] == "high_assurance" and tc_id != "TC-SEC-001":
+                nonce = "nonce-" + str(uuid.uuid4())
+                ts = now_iso()
+                add_ha_headers(headers, sut, nonce, ts)
+    
+            started = time.time()
+            resp = http_request(base_url, tc, headers, body)
+            elapsed_ms = int((time.time() - started) * 1000)
+    
+            case = {
+                "id": tc_id,
+                "name": tc.get("name"),
+                "request": {"method": tc.get("method","POST"), "path": tc["path"], "headers": headers, "body": body},
+                "response": {"status": resp.status_code, "headers": dict(resp.headers), "text": resp.text},
+                "elapsed_ms": elapsed_ms,
+                "assertions": []
+            }
+    
+            ok = True
+            exp = tc.get("expect", {})
+    
+            if "status" in exp and "status_in" in exp:
+                ok = False
+                case["assertions"].append({"type":"expect_config","error":"expect.status and expect.status_in are mutually exclusive","pass":False})
+            
+            if "status" in exp:
+                passed = resp.status_code == exp["status"]
+                ok &= passed
+                case["assertions"].append({"type":"status", "expected":exp["status"], "actual":resp.status_code, "pass":passed})
+    
+            if "status_in" in exp:
+                passed = resp.status_code in exp["status_in"]
+                ok &= passed
+                case["assertions"].append({"type":"status_in", "expected":exp["status_in"], "actual":resp.status_code, "pass":passed})
+    
+            resp_json = None
+            needs_json = any(k in exp for k in ["schema","json_path_exists","json_path_equals"]) or exp.get("response_json")
+            if needs_json:
+                try:
+                    resp_json = resp.json()
+                    case["response"]["json"] = resp_json
+                    case["assertions"].append({"type":"json_parse","pass":True})
+                except Exception:
+                    ok = False
+                    case["assertions"].append({"type":"json_parse","pass":False})
+    
+            if "response_header_contains" in exp:
+                for k,v in exp["response_header_contains"].items():
+                    actual = resp.headers.get(k)
+                    passed = (actual is not None and v in actual) if k.lower()=="content-type" else (actual == v)
+                    ok &= passed
+                    case["assertions"].append({"type":"header_contains","header":k,"expected":v,"actual":actual,"pass":passed})
+    
+            if exp.get("schema") and resp_json is not None:
+                schema = load_json(ROOT/exp["schema"])
+                try:
+                    js_validate(instance=resp_json, schema=schema)
+                    case["assertions"].append({"type":"schema","schema":exp["schema"],"pass":True})
+                except Exception as e:
+                    ok = False
+                    case["assertions"].append({"type":"schema","schema":exp["schema"],"pass":False,"error":str(e)})
+    
+            if exp.get("json_path_exists") and resp_json is not None:
+                for p in exp["json_path_exists"]:
+                    v = json_path_get(resp_json, p)
+                    passed = (v is not None) and (v != [])
+                    ok &= passed
+                    case["assertions"].append({"type":"json_path_exists","path":p,"pass":passed})
+    
+            if exp.get("json_path_equals") and resp_json is not None:
+                for p, expected in exp["json_path_equals"]:
+                    actual = json_path_get(resp_json, p)
+                    passed = (actual == expected)
+                    ok &= passed
+                    case["assertions"].append({"type":"json_path_equals","path":p,"expected":expected,"actual":actual,"pass":passed})
+    
+            if exp.get("json_path_in") and resp_json is not None:
+                for p, allowed in exp["json_path_in"]:
+                    actual = json_path_get(resp_json, p)
+                    passed = actual in allowed
+                    ok &= passed
+                    case["assertions"].append({"type":"json_path_in","path":p,"allowed":allowed,"actual":actual,"pass":passed})
+    
+            # Special replay test for HA: send the same nonce twice to trigger 409
+            if tc_id == "TC-SEC-002" and profile["id"] == "high_assurance":
+                # Reuse the same nonce/timestamp headers
+                resp2 = http_request(base_url, tc, headers, body)
+                passed = resp2.status_code == exp["status"]
+                ok &= passed
+                case["assertions"].append({"type":"replay","expected":exp["status"],"actual":resp2.status_code,"pass":passed})
+    
+        except Exception as e:
+            # Record as ERROR to keep reports deterministic and audit-friendly
+            elapsed_ms = int((time.time() - started) * 1000) if 'started' in locals() else 0
+            case = {
+                "id": tc_id,
+                "name": tc.get("name"),
+                "request": {"method": tc.get("method","POST"), "path": tc.get("path"), "headers": headers if 'headers' in locals() else {}, "body": body if 'body' in locals() else None},
+                "response": {"status": None, "headers": {}, "text": ""},
+                "elapsed_ms": elapsed_ms,
+                "assertions": [{"type": "exception", "pass": False, "error": str(e)}],
+            }
             ok = False
-            case["assertions"].append({"type":"expect_config","error":"expect.status and expect.status_in are mutually exclusive","pass":False})
-        
-        if "status" in exp:
-            passed = resp.status_code == exp["status"]
-            ok &= passed
-            case["assertions"].append({"type":"status", "expected":exp["status"], "actual":resp.status_code, "pass":passed})
-
-        if "status_in" in exp:
-            passed = resp.status_code in exp["status_in"]
-            ok &= passed
-            case["assertions"].append({"type":"status_in", "expected":exp["status_in"], "actual":resp.status_code, "pass":passed})
-
-        resp_json = None
-        needs_json = any(k in exp for k in ["schema","json_path_exists","json_path_equals"]) or exp.get("response_json")
-        if needs_json:
-            try:
-                resp_json = resp.json()
-                case["response"]["json"] = resp_json
-                case["assertions"].append({"type":"json_parse","pass":True})
-            except Exception:
-                ok = False
-                case["assertions"].append({"type":"json_parse","pass":False})
-
-        if "response_header_contains" in exp:
-            for k,v in exp["response_header_contains"].items():
-                actual = resp.headers.get(k)
-                passed = (actual is not None and v in actual) if k.lower()=="content-type" else (actual == v)
-                ok &= passed
-                case["assertions"].append({"type":"header_contains","header":k,"expected":v,"actual":actual,"pass":passed})
-
-        if exp.get("schema") and resp_json is not None:
-            schema = load_json(ROOT/exp["schema"])
-            try:
-                js_validate(instance=resp_json, schema=schema)
-                case["assertions"].append({"type":"schema","schema":exp["schema"],"pass":True})
-            except Exception as e:
-                ok = False
-                case["assertions"].append({"type":"schema","schema":exp["schema"],"pass":False,"error":str(e)})
-
-        if exp.get("json_path_exists") and resp_json is not None:
-            for p in exp["json_path_exists"]:
-                v = json_path_get(resp_json, p)
-                passed = (v is not None) and (v != [])
-                ok &= passed
-                case["assertions"].append({"type":"json_path_exists","path":p,"pass":passed})
-
-        if exp.get("json_path_equals") and resp_json is not None:
-            for p, expected in exp["json_path_equals"]:
-                actual = json_path_get(resp_json, p)
-                passed = (actual == expected)
-                ok &= passed
-                case["assertions"].append({"type":"json_path_equals","path":p,"expected":expected,"actual":actual,"pass":passed})
-
-        if exp.get("json_path_in") and resp_json is not None:
-            for p, allowed in exp["json_path_in"]:
-                actual = json_path_get(resp_json, p)
-                passed = actual in allowed
-                ok &= passed
-                case["assertions"].append({"type":"json_path_in","path":p,"allowed":allowed,"actual":actual,"pass":passed})
-
-        # Special replay test for HA: send the same nonce twice to trigger 409
-        if tc_id == "TC-SEC-002" and profile["id"] == "high_assurance":
-            # Reuse the same nonce/timestamp headers
-            resp2 = http_request(base_url, tc, headers, body)
-            passed = resp2.status_code == exp["status"]
-            ok &= passed
-            case["assertions"].append({"type":"replay","expected":exp["status"],"actual":resp2.status_code,"pass":passed})
-
+            _verdict_override = "ERROR"
         case_path = out/"cases"/f"{tc_id}.json"
         case_path.write_text(json.dumps(case, indent=2), encoding="utf-8")
 
-        verdicts.append({"test_case_id": tc_id, "result": "PASS" if ok else "FAIL", "elapsed_ms": elapsed_ms})
+        verdicts.append({"test_case_id": tc_id, "result": (_verdict_override if "_verdict_override" in locals() else ("PASS" if ok else "FAIL")), "elapsed_ms": elapsed_ms})
 
     run["ended_at"] = now_iso()
     (out/"run.json").write_text(json.dumps(run, indent=2), encoding="utf-8")
