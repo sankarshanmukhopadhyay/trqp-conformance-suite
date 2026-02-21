@@ -3,7 +3,6 @@
   "type": "object",
   "required": [
     "authority_id",
-    "subject_authority_id",
     "statement"
   ],
   "properties": {
@@ -46,7 +45,22 @@
         }
       },
       "additionalProperties": true
+    },
+    "entity_id": {
+      "type": "string"
     }
   },
-  "additionalProperties": true
+  "additionalProperties": true,
+  "oneOf": [
+    {
+      "required": [
+        "subject_authority_id"
+      ]
+    },
+    {
+      "required": [
+        "entity_id"
+      ]
+    }
+  ]
 }

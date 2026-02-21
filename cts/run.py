@@ -25,17 +25,83 @@ def load_json(p: Path):
     return json.loads(p.read_text(encoding="utf-8"))
 
 def json_path_get(doc, path: str):
-    if not path.startswith("$."):
-        raise ValueError("Only supports paths starting with $.")
-    cur = doc
-    toks = path[2:].split(".")
-    for t in toks:
-        if "[" in t and t.endswith("]"):
-            key, idx = t[:-1].split("[", 1)
-            cur = cur.get(key)
-            cur = cur[int(idx)]
+    """
+    Minimal JSONPath-like accessor.
+
+    Supports:
+      - $.a.b.c
+      - $.a[0].b
+      - $["key.with.dots"].a
+      - wildcard array iteration: $.items[*].id  (returns list of matches)
+    """
+    if not path.startswith("$"):
+        raise ValueError("Only supports paths starting with $")
+
+    # Tokenize
+    i = 1  # skip $
+    tokens = []
+    while i < len(path):
+        if path[i] == ".":
+            i += 1
+            # read identifier until . or [ or end
+            j = i
+            while j < len(path) and path[j] not in ".[":
+                j += 1
+            tokens.append(("key", path[i:j]))
+            i = j
+        elif path[i] == "[":
+            # index, wildcard, or quoted key
+            j = path.find("]", i)
+            if j == -1:
+                raise ValueError(f"Unclosed [ in path: {path}")
+            inner = path[i+1:j]
+            if inner == "*":
+                tokens.append(("wildcard", None))
+            elif (inner.startswith('"') and inner.endswith('"')) or (inner.startswith("'") and inner.endswith("'")):
+                tokens.append(("key", inner[1:-1]))
+            else:
+                # assume integer index
+                tokens.append(("index", int(inner)))
+            i = j + 1
         else:
-            cur = cur.get(t) if isinstance(cur, dict) else None
+            raise ValueError(f"Unexpected character in path at {i}: {path[i]} ({path})")
+
+    def step(cur, tok):
+        kind, val = tok
+        if kind == "key":
+            return cur.get(val) if isinstance(cur, dict) else None
+        if kind == "index":
+            if isinstance(cur, list) and 0 <= val < len(cur):
+                return cur[val]
+            return None
+        if kind == "wildcard":
+            if isinstance(cur, list):
+                return cur[:]  # list of items to expand
+            return None
+        raise ValueError("unknown token")
+
+    cur = doc
+    for tok in tokens:
+        if tok[0] == "wildcard":
+            # Expand wildcard: apply remaining tokens to each element
+            remainder = tokens[tokens.index(tok)+1:]
+            arr = step(cur, tok)
+            if arr is None:
+                return None
+            out = []
+            for item in arr:
+                c = item
+                for rt in remainder:
+                    c = step(c, rt)
+                    if c is None:
+                        break
+                if c is not None:
+                    out.append(c)
+            return out
+        else:
+            cur = step(cur, tok)
+            if cur is None:
+                return None
     return cur
 
 def ensure_dirs(out: Path):
@@ -50,7 +116,10 @@ def http_request(base_url: str, tc: dict, headers: dict, body):
 def add_ha_headers(headers: dict, sut: dict, nonce: str, ts: str):
     # Demo HA control plane (example SUT expects these)
     headers["X-Auth-Mode"] = "high_assurance"
-    headers["X-API-Key"] = sut.get("api_key", "demo-secret")
+    api_key = sut.get("api_key")
+    if not api_key:
+        raise SystemExit("High assurance profile requires sut.api_key (refusing to default to demo-secret)")
+    headers["X-API-Key"] = api_key
     headers["X-Nonce"] = nonce
     headers["X-Timestamp"] = ts
 
@@ -72,10 +141,11 @@ def main():
 
     tests = load_yaml(ROOT/"tests/core_tests.yaml")["tests"]
 
-    run_id = out.name or str(uuid.uuid4())
+    run_id = str(uuid.uuid4())
     run = {
         "test_run_id": run_id,
         "profile_id": profile["id"],
+        "out_dir_label": out.name,
         "sut": {k:v for k,v in sut.items() if k != "signing_key_b64"},
         "started_at": now_iso(),
         "tool": {"name": "trqp-cts", "version": "0.1.0"},
@@ -86,6 +156,23 @@ def main():
 
     for tc in tests:
         tc_id = tc["id"]
+
+        # Profile gating: tests may declare 'profiles: [..]' to indicate applicability.
+        applicable_profiles = tc.get("profiles")
+        if applicable_profiles and profile.get("id") not in applicable_profiles:
+            case = {
+                "test_case_id": tc_id,
+                "name": tc.get("name"),
+                "request": {"method": tc.get("method","POST"), "path": tc["path"], "headers": {}, "body": None},
+                "response": {"status": None, "headers": {}, "text": ""},
+                "elapsed_ms": 0,
+                "assertions": [{"type": "profile_gate", "profiles": applicable_profiles, "profile_id": profile.get("id"), "pass": True}],
+                "skipped": True
+            }
+            case_path = out/"cases"/f"{tc_id}.json"
+            case_path.write_text(json.dumps(case, indent=2), encoding="utf-8")
+            verdicts.append({"test_case_id": tc_id, "result": "SKIP", "reason": f"not applicable to profile {profile.get('id')}", "elapsed_ms": 0})
+            continue
         headers = dict(sut.get("default_headers", {}))
         headers.update(tc.get("request", {}).get("headers", {}) or {})
         body = tc.get("request", {}).get("body", None)
@@ -112,6 +199,10 @@ def main():
         ok = True
         exp = tc.get("expect", {})
 
+        if "status" in exp and "status_in" in exp:
+            ok = False
+            case["assertions"].append({"type":"expect_config","error":"expect.status and expect.status_in are mutually exclusive","pass":False})
+        
         if "status" in exp:
             passed = resp.status_code == exp["status"]
             ok &= passed
@@ -151,7 +242,8 @@ def main():
 
         if exp.get("json_path_exists") and resp_json is not None:
             for p in exp["json_path_exists"]:
-                passed = json_path_get(resp_json, p) is not None
+                v = json_path_get(resp_json, p)
+                passed = (v is not None) and (v != [])
                 ok &= passed
                 case["assertions"].append({"type":"json_path_exists","path":p,"pass":passed})
 
@@ -161,6 +253,13 @@ def main():
                 passed = (actual == expected)
                 ok &= passed
                 case["assertions"].append({"type":"json_path_equals","path":p,"expected":expected,"actual":actual,"pass":passed})
+
+        if exp.get("json_path_in") and resp_json is not None:
+            for p, allowed in exp["json_path_in"]:
+                actual = json_path_get(resp_json, p)
+                passed = actual in allowed
+                ok &= passed
+                case["assertions"].append({"type":"json_path_in","path":p,"allowed":allowed,"actual":actual,"pass":passed})
 
         # Special replay test for HA: send the same nonce twice to trigger 409
         if tc_id == "TC-SEC-002" and profile["id"] == "high_assurance":

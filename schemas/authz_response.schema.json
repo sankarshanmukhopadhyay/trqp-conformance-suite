@@ -31,7 +31,12 @@
       ],
       "properties": {
         "authorized": {
-          "type": "boolean"
+          "type": "string",
+          "enum": [
+            "true",
+            "false",
+            "indeterminate"
+          ]
         },
         "reason": {
           "type": "string"

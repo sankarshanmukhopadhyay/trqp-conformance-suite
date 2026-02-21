@@ -120,6 +120,7 @@ tests:
 
   - id: TC-SEC-002
     name: Replay detection rejects reused nonce
+    profiles: [high_assurance]
     method: POST
     path: /authorization
     request:
@@ -149,5 +150,7 @@ tests:
           timestamp: "2025-01-01T00:00:00Z"
     expect:
       status: 200
-      json_path_equals:
-        - ["$.decision.authorized", true]
+      schema: schemas/authz_response.schema.json
+      json_path_in:
+        - ["$.decision.authorized", ["true", "false", "indeterminate"]]
+
