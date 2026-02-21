@@ -15,6 +15,7 @@ Typical output directory:
 
 ```
 reports/<run-id>/
+  bundle_descriptor.json
   run.json
   verdicts.json
   manifest.json

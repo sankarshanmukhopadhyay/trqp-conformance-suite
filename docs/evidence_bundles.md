@@ -8,6 +8,8 @@ Evidence bundles are generated artifacts that make conformance results **auditab
 - **Safe**: do not leak secrets (API keys, private keys, access tokens)
 
 ## Recommended contents
+- `bundle_descriptor.json`: machine-readable index of the bundle artifacts (kinds, paths, hashes)
+
 - `run.json`: run metadata (run_id, timestamp, profile, SUT target)
 - `verdicts.json`: per-test outcomes with reasons and assertions
 - `requests/`: normalized requests used

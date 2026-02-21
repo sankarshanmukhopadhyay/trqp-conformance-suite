@@ -18,6 +18,20 @@ def sha256_bytes(b: bytes) -> str:
 def sha256_file(p: Path) -> str:
     return sha256_bytes(p.read_bytes())
 
+
+def guess_media_type(p: Path) -> str | None:
+    suf = p.suffix.lower()
+    if suf == ".json":
+        return "application/json"
+    if suf == ".zip":
+        return "application/zip"
+    if suf in [".txt", ".log"]:
+        return "text/plain"
+    if suf in [".yaml", ".yml"]:
+        return "text/yaml"
+    return None
+
+
 def load_yaml(p: Path):
     return yaml.safe_load(p.read_text(encoding="utf-8"))
 
@@ -145,7 +159,6 @@ def main():
     run = {
         "test_run_id": run_id,
         "profile_id": profile["id"],
-        "assurance_level": profile.get("assurance_level"),
         "out_dir_label": out.name,
         "sut": {k:v for k,v in sut.items() if k != "signing_key_b64"},
         "started_at": now_iso(),
@@ -315,6 +328,59 @@ def main():
             for p in sorted(out.rglob("*")):
                 if p.is_file() and p.name != "bundle.zip":
                     z.write(p, arcname=str(p.relative_to(out)))
+
+    # Bundle descriptor (machine-readable index of key artifacts)
+    descriptor = {
+        "bundle_version": "0.1.0",
+        "run": run,
+        "artifacts": {
+            "run_json": "run.json",
+            "verdicts": "verdicts.json",
+            "manifest": "manifest.json",
+            "cases_dir": "cases"
+        }
+    }
+    if (out/"manifest.sig").exists():
+        descriptor["artifacts"]["signature"] = "manifest.sig"
+
+    # Normalized artifact index (canonical kinds where applicable)
+    artifact_index = []
+
+    def add_idx(kind: str, rel_path: str, notes: str | None = None):
+        p = out/rel_path
+        entry = {
+            "kind": kind,
+            "path": rel_path,
+            "produced_by": "trqp-cts",
+        }
+        if p.exists() and p.is_file():
+            entry["sha256"] = sha256_file(p)
+            mt = guess_media_type(p)
+            if mt:
+                entry["media_type"] = mt
+        if notes:
+            entry["notes"] = notes
+        artifact_index.append(entry)
+
+    add_idx("cts_run_json", "run.json")
+    add_idx("cts_verdicts", "verdicts.json")
+    add_idx("cts_manifest", "manifest.json")
+    if (out/"manifest.sig").exists():
+        add_idx("cts_manifest_sig", "manifest.sig", notes="Signature over manifest.json (high-assurance profiles).")
+
+    # Case-level artifacts
+    cases_dir = out/"cases"
+    if cases_dir.exists():
+        for p in sorted(cases_dir.glob("*.json")):
+            add_idx("cts_case_file", str(p.relative_to(out)))
+
+    # Bundle zip is optional; add after creation if present
+    if (out/"bundle.zip").exists():
+        descriptor["artifacts"]["bundle_zip"] = "bundle.zip"
+        add_idx("cts_bundle_zip", "bundle.zip")
+
+    descriptor["artifact_index"] = artifact_index
+    (out/"bundle_descriptor.json").write_text(json.dumps(descriptor, indent=2), encoding="utf-8")
 
     print(f"OK: evidence written to {out}")
 

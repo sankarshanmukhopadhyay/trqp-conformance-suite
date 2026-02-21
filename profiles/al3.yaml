@@ -1,7 +1,0 @@
-id: al3
-name: TRQP AL3 (Operational Non-Repudiation)
-description: Protocol conformance profile intended to pair with TSPP AL3 deployments (default signing + binding + transparency).
-assurance_level: AL3
-requirements:
-  include:
-    - high_assurance

@@ -29,6 +29,25 @@ Choose the path that matches your role:
 
 ---
 
+
+
+## Evidence artifacts produced by CTS
+
+CTS produces a **self-describing evidence bundle** per run under `reports/<run-id>/`. The bundle includes a machine-readable descriptor (`bundle_descriptor.json`) that indexes artifacts using canonical `kind` labels (aligned where possible with the Assurance Hub / TSPP vocabulary).
+
+| Canonical kind | Produced by CTS | Where in bundle | Notes |
+|---|---:|---|---|
+| `cts_run_json` | Yes | `run.json` | Run metadata (profile, SUT, timing, tool version) |
+| `cts_verdicts` | Yes | `verdicts.json` | Per-test verdicts |
+| `cts_manifest` | Yes | `manifest.json` | Hash manifest for integrity verification |
+| `cts_manifest_sig` | Profile-dependent | `manifest.sig` | Present for high-assurance profiles when signing enabled |
+| `cts_case_file` | Yes | `cases/<case-id>.json` | Captured case transcript (requests/responses/notes where applicable) |
+| `cts_bundle_zip` | Profile-dependent | `bundle.zip` | Convenience zip of the run directory |
+| `jwks_snapshot` | Sometimes | `cases/...` | Emitted when a test case captures JWKS material; referenced via `bundle_descriptor.json` when present |
+| `signed_response_sample` | Sometimes | `cases/...` | Emitted when a test captures a signed response envelope |
+
+For auditors and integrators, treat `bundle_descriptor.json` as the **index of record** for what was produced and how to reference it downstream.
+
 ## Why This Exists
 
 Specifications describe behavior. Deployments require proof.
@@ -256,8 +275,3 @@ It does not assert normative authority over the TRQP specification.
 - Preflight (optional): `python scripts/preflight.py --base-url https://your-sut/ --endpoint /.well-known/jwks.json`
 - Traceability template: `docs/traceability.md`
 - Evidence bundle guidance: `docs/evidence_bundles.md`
-
-
-## AL3 / AL4 alignment
-
-This repo includes convenience profiles `profiles/al3.yaml` and `profiles/al4.yaml` which reuse the high-assurance test set while annotating evidence bundles with an `assurance_level` field. Security posture semantics for AL3/AL4 are defined and audited in TRQP‑TSPP.
