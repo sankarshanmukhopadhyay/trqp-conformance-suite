@@ -90,6 +90,16 @@
           "type": "object",
           "description": "Optional environment metadata (CI, OS, Python version, network mode, etc.).",
           "additionalProperties": true
+        },
+        "assurance_level": {
+          "type": "string",
+          "enum": [
+            "AL1",
+            "AL2",
+            "AL3",
+            "AL4"
+          ],
+          "description": "Optional declared assurance level for the run context (typically sourced from TSPP metadata)."
         }
       },
       "additionalProperties": true

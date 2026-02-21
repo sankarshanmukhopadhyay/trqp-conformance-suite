@@ -145,6 +145,7 @@ def main():
     run = {
         "test_run_id": run_id,
         "profile_id": profile["id"],
+        "assurance_level": profile.get("assurance_level"),
         "out_dir_label": out.name,
         "sut": {k:v for k,v in sut.items() if k != "signing_key_b64"},
         "started_at": now_iso(),

@@ -256,3 +256,8 @@ It does not assert normative authority over the TRQP specification.
 - Preflight (optional): `python scripts/preflight.py --base-url https://your-sut/ --endpoint /.well-known/jwks.json`
 - Traceability template: `docs/traceability.md`
 - Evidence bundle guidance: `docs/evidence_bundles.md`
+
+
+## AL3 / AL4 alignment
+
+This repo includes convenience profiles `profiles/al3.yaml` and `profiles/al4.yaml` which reuse the high-assurance test set while annotating evidence bundles with an `assurance_level` field. Security posture semantics for AL3/AL4 are defined and audited in TRQP‑TSPP.

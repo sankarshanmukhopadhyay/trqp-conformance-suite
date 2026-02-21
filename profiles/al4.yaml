@@ -1,0 +1,7 @@
+id: al4
+name: TRQP AL4 (Regulated-grade Assurance)
+description: Protocol conformance profile intended to pair with TSPP AL4 deployments (key custody evidence + monitoring posture).
+assurance_level: AL4
+requirements:
+  include:
+    - high_assurance
