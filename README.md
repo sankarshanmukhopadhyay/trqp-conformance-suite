@@ -4,6 +4,13 @@
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Status](https://img.shields.io/badge/status-Experimental-orange)
 
+## Start here: TRQP Assurance Hub
+
+Looking for the *single front door* across TRQP conformance + security/privacy assurance?
+
+- Hub repo (onboarding, operating model, combined workflows): https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub
+
+
 Conformance Test Suite for the Trust Registry Query Protocol (TRQP).
 
 This repository provides a profile-driven, evidence-oriented testing framework to validate TRQP implementations for interoperability, determinism, lifecycle correctness, and operational readiness.
