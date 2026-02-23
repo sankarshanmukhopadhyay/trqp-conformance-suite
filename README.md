@@ -275,3 +275,17 @@ It does not assert normative authority over the TRQP specification.
 - Preflight (optional): `python scripts/preflight.py --base-url https://your-sut/ --endpoint /.well-known/jwks.json`
 - Traceability template: `docs/traceability.md`
 - Evidence bundle guidance: `docs/evidence_bundles.md`
+
+
+## Certification Baseline Alignment (CTR-ACB)
+
+This repository is the **executable verification engine** for the *Candidate Trust Registry Assurance & Certification Baseline (CTR-ACB)* defined in the TRQP Assurance Hub.
+
+In practice:
+
+- The Assurance Hub defines **what** a trust registry claims (assurance profile, controls, lifecycle, recognition).
+- The Conformance Suite provides **how to verify** those claims and produce evidence artifacts that can be referenced from:
+  - Control Satisfaction Declarations
+  - Certification Attestations (if/when an ecosystem chooses to operationalize certification)
+
+See: `docs/certification-alignment.md`.
