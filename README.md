@@ -25,7 +25,7 @@ Choose the path that matches your role:
 
 - **TRQP implementer**: run the **Baseline** profile, review `docs/START_HERE.md`, then compare results to the reference reports in `docs/reference-reports/`.
 - **Spec author / working group participant**: review `docs/TRQP_Conformance_Philosophy.md` and `docs/ROADMAP.md` to see how requirements map to executable tests and evidence.
-- **Ecosystem / governance / assurance**: read `docs/SOCIALIZING_NOTES.md` and `docs/evidence_bundle.schema.json` to understand the evidence contract and profile model.
+- **Ecosystem / governance / assurance**: read `docs/SOCIALIZING_NOTES.md`, `docs/evidence_bundles.md`, and the Hub crosswalk (`docs/hub-crosswalk.md`) to understand the evidence contract and profile model.
 
 ---
 
@@ -33,10 +33,14 @@ Choose the path that matches your role:
 
 ## Evidence artifacts produced by CTS
 
-CTS produces a **self-describing evidence bundle** per run under `reports/<run-id>/`. The bundle includes a machine-readable descriptor (`bundle_descriptor.json`) that indexes artifacts using canonical `kind` labels (aligned where possible with the Assurance Hub / TSPP vocabulary).
+CTS produces a **self-describing evidence bundle** per run under `reports/<run-id>/`.
+
+For a fast deterministic sanity check, use the **Smoke** profile: `profiles/smoke.yaml`. The bundle includes a machine-readable descriptor (`bundle_descriptor.json`) that indexes artifacts using canonical `kind` labels (aligned where possible with the Assurance Hub / TSPP vocabulary).
 
 | Canonical kind | Produced by CTS | Where in bundle | Notes |
 |---|---:|---|---|
+| `cts_bundle_descriptor` | Yes | `bundle_descriptor.json` | Bundle index (paths + hashes). Includes Hub-aligned `artifact_kind` values. |
+| `cts_checksums` | Yes | `checksums.json` | SHA-256 checksums for key artifacts. |
 | `cts_run_json` | Yes | `run.json` | Run metadata (profile, SUT, timing, tool version) |
 | `cts_verdicts` | Yes | `verdicts.json` | Per-test verdicts |
 | `cts_manifest` | Yes | `manifest.json` | Hash manifest for integrity verification |

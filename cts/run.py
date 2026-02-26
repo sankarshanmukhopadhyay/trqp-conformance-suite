@@ -346,10 +346,24 @@ def main():
     # Normalized artifact index (canonical kinds where applicable)
     artifact_index = []
 
+    # Hub-aligned artifact_kind values (stable semantic labels)
+    ARTIFACT_KIND_MAP = {
+        "cts_run_json": "conformance_run_metadata",
+        "cts_verdicts": "conformance_verdicts",
+        "cts_manifest": "conformance_manifest",
+        "cts_manifest_sig": "conformance_manifest_signature",
+        "cts_case_file": "conformance_case_artifact",
+        "cts_bundle_zip": "conformance_evidence_bundle_zip",
+        "cts_bundle_descriptor": "conformance_evidence_bundle_descriptor",
+        "cts_checksums": "evidence_bundle_checksums",
+    }
+
+
     def add_idx(kind: str, rel_path: str, notes: str | None = None):
         p = out/rel_path
         entry = {
             "kind": kind,
+            "artifact_kind": ARTIFACT_KIND_MAP.get(kind),
             "path": rel_path,
             "produced_by": "trqp-cts",
         }
@@ -381,6 +395,25 @@ def main():
 
     descriptor["artifact_index"] = artifact_index
     (out/"bundle_descriptor.json").write_text(json.dumps(descriptor, indent=2), encoding="utf-8")
+
+    # Add the bundle descriptor itself to the artifact index (and checksum it)
+    add_idx("cts_bundle_descriptor", "bundle_descriptor.json")
+
+    # Checksums (machine-readable integrity metadata over key artifacts)
+    checksums = []
+    for a in artifact_index:
+        if a.get("sha256") and a.get("path"):
+            checksums.append({"path": a["path"], "sha256": a["sha256"]})
+    checksums_obj = {
+        "checksums_version": "0.1.0",
+        "algorithm": "sha256",
+        "generated_by": "trqp-cts",
+        "generated_at": run.get("timestamp"),
+        "entries": sorted(checksums, key=lambda e: e["path"]),
+    }
+    (out/"checksums.json").write_text(json.dumps(checksums_obj, indent=2), encoding="utf-8")
+    add_idx("cts_checksums", "checksums.json")
+
 
     print(f"OK: evidence written to {out}")
 

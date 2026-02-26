@@ -6,8 +6,10 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 
 - Done: onboarding docs (`START_HERE`, `SOCIALIZING_NOTES`, `FAQ`)
 - Done: reference evidence bundles (`docs/reference-reports/`)
-- Done: evidence contract schema (`docs/evidence_bundle.schema.json`)
-- In progress: CI publishes evidence bundles as build artifacts
+- Done: evidence bundle descriptor + checksums schemas (`schemas/evidence/`)
+- Done: CI publishes evidence bundles as build artifacts (descriptor + checksums + bundle.zip)
+- Done: Smoke profile for Hub combined-assurance workflow (`profiles/smoke.yaml`)
+- Done: Hub crosswalk mapping (`docs/hub-crosswalk.md`)
 
 ## 2026 Q2: Deterministic replay and state models
 
