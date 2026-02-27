@@ -1,4 +1,6 @@
-# Traceability Matrix (Template)
+# Traceability
+
+**Assurance Level note:** AL1–AL4 semantics are imported from TRQP Assurance Hub. See `../al-contract.json` for the machine-readable contract (includes canonical doc SHA-256). Matrix (Template)
 
 This document provides a *living* mapping between:
 - **Normative requirements** (TRQP / TSPP specs, profiles, and policy statements)

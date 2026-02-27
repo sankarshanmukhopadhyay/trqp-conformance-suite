@@ -11,6 +11,16 @@ Looking for the *single front door* across TRQP conformance + security/privacy a
 - Hub repo (onboarding, operating model, combined workflows): https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub
 
 
+
+## Assurance Level Semantics
+
+This repository **consumes** Assurance Level (AL1–AL4) semantics from the **TRQP Assurance Hub**.
+
+- Canonical definitions: `docs/guides/assurance-levels.md` (in the Hub)
+- Machine-readable contract: `al-contract.json`
+
+This suite parameterizes tests and evidence templates by AL but **MUST NOT** redefine AL meanings locally. For audit stability, this repo includes an `al-contract.json` with the SHA-256 of the canonical AL definition document (`61c599c5fa06e0c9110f40ff71c0174db5502105b97f1391dbd9ae8548115f71`).
+
 Conformance Test Suite for the Trust Registry Query Protocol (TRQP).
 
 This repository provides a profile-driven, evidence-oriented testing framework to validate TRQP implementations for interoperability, determinism, lifecycle correctness, and operational readiness.

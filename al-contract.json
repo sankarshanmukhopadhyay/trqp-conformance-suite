@@ -1,0 +1,17 @@
+{
+  "contract_version": "0.1.0",
+  "generated_at": "2026-02-27T23:32:47Z",
+  "canonical_source": {
+    "repo": "trqp-assurance-hub",
+    "canonical_doc": "docs/guides/assurance-levels.md",
+    "canonical_doc_sha256": "61c599c5fa06e0c9110f40ff71c0174db5502105b97f1391dbd9ae8548115f71"
+  },
+  "local_usage": {
+    "repo": "trqp-conformance-suite",
+    "notes": "Conformance tests and evidence templates may be parameterized by AL; AL semantics remain canonical in the Assurance Hub."
+  },
+  "pinning": {
+    "recommended": "Pin to a tagged release of trqp-assurance-hub for audit stability.",
+    "current": "UNPINNED (main) \u2014 update on release cut"
+  }
+}

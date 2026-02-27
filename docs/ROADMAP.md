@@ -24,3 +24,8 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 ## 2026 Q4: Performance and operational readiness
 
 - Planned: performance conformance harness and SLA-oriented checks
+
+
+## Completed
+
+- ✅ AL semantic lock to Assurance Hub (`al-contract.json` + explicit README/docs pointers)
