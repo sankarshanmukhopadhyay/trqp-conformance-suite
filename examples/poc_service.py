@@ -1,3 +1,12 @@
+"""Proof-of-concept TRQP service used by the Conformance Suite examples.
+
+This file is intentionally simple, but it is also the most likely copy/paste starting point.
+Key expectations:
+- Keep responses deterministic for tests.
+- Make security-sensitive decisions explicit in code (authn/z, logging, rate limiting).
+- Do not treat this as production-ready without hardening and threat review.
+"""
+
 from fastapi import FastAPI, Request, HTTPException
 from pydantic import BaseModel
 from datetime import datetime, timezone
