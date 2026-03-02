@@ -1,0 +1,12 @@
+# GitHub Pages (Jekyll) configuration
+title: "TRQP Conformance Suite"
+description: "Conformance tooling and documentation for TRQP implementations."
+theme: minima
+markdown: kramdown
+plugins:
+  - jekyll-seo-tag
+# Ensure these directories/files are published even if Jekyll would otherwise ignore them
+include:
+  - schemas
+  - profiles
+  - examples
