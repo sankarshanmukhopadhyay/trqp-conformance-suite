@@ -1,35 +1,18 @@
 # TRQP Conformance Suite
 
-**Current version:** v0.4.2
+**Current version:** v0.4.1
 
 
 ![CI](https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite/actions/workflows/cts.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Status](https://img.shields.io/badge/status-Experimental-orange)
 
-## Program playbook
-
-- Read the cross-repo playbook: [docs/PLAYBOOK.md](docs/PLAYBOOK.md)
-
 ## Start here: TRQP Assurance Hub
 
 Looking for the *single front door* across TRQP conformance + security/privacy assurance?
 
 - Hub repo (onboarding, operating model, combined workflows): https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub
-- Program playbook (non-technical overview): https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub/blob/main/docs/PLAYBOOK.md
-- Operator runbook (combined assurance): https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub/blob/main/docs/OPERATOR_RUNBOOK.md
 
-
-## Running CTS (operator contract)
-
-- Output layout contract: [docs/OUTPUT_CONTRACT.md](docs/OUTPUT_CONTRACT.md)
-- Determinism controls: `--run-id`, `--generated-at`, `--deterministic`, `--nonce-mode`
-
-Example (CI-friendly run):
-
-```bash
-python cts/run.py --profile profiles/smoke.yaml --sut sut.example.yaml --out reports/smoke --deterministic --nonce-mode derived
-```
 
 
 ## Assurance Level Semantics
