@@ -1,5 +1,8 @@
 # Start Here
 
+Before diving into mechanics, read the cross-repo program narrative: [Program playbook](PLAYBOOK.md).
+
+
 This repository provides a conformance testing approach for TRQP with profile-based assurance and evidence bundles.
 
 ---

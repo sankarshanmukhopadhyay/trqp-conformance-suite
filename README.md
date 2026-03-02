@@ -1,17 +1,23 @@
 # TRQP Conformance Suite
 
-**Current version:** v0.4.1
+**Current version:** v0.4.2
 
 
 ![CI](https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite/actions/workflows/cts.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Status](https://img.shields.io/badge/status-Experimental-orange)
 
+## Program playbook
+
+- Read the cross-repo playbook: [docs/PLAYBOOK.md](docs/PLAYBOOK.md)
+
 ## Start here: TRQP Assurance Hub
 
 Looking for the *single front door* across TRQP conformance + security/privacy assurance?
 
 - Hub repo (onboarding, operating model, combined workflows): https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub
+- Program playbook (non-technical overview): https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub/blob/main/docs/PLAYBOOK.md
+- Operator runbook (combined assurance): https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub/blob/main/docs/OPERATOR_RUNBOOK.md
 
 
 

@@ -3,6 +3,8 @@
 This document maps **Assurance Hub** guidance and evidence expectations to the concrete artifacts emitted by the **TRQP Conformance Suite (CTS)**.
 
 - Assurance Hub “front door”: https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub
+- Program playbook: https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub/blob/main/docs/PLAYBOOK.md
+- Operator runbook: https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub/blob/main/docs/OPERATOR_RUNBOOK.md
 - Hub combined workflow guide: https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub/blob/main/docs/guides/combined-assurance.md
 - Hub evidence artifacts matrix: https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub/blob/main/docs/guides/evidence-artifacts.md
 
