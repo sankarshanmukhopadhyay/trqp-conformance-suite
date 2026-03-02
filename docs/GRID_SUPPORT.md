@@ -1,17 +1,18 @@
 # GRID support (optional)
 
-CTS can validate the **shape** of GRID-style artifacts (schema validation) to reduce integration risk for directory operators and verifiers.
+The Conformance Suite can optionally validate the **shape** of GRID-style artifacts used by directory operators.
 
-## What CTS validates
+What is supported:
+- JSON Schema validation of:
+  - `schemas/registrar.schema.json`
+  - `schemas/grid-status-feed.schema.json`
 
-- `registrar.json` against `schemas/registrar.schema.json`
-- `grid-status-feed.json` against `schemas/grid-status-feed.schema.json`
+What is not supported (by design in the baseline runner):
+- Signature verification / proof evaluation
+- Policy eligibility decisions (AL mapping)
+- Key discovery rules
 
-## What CTS does not validate (yet)
-
-- Cryptographic signature verification for the status feed
-- Evidence sufficiency judgments for AL3/AL4 beyond presence/structure checks
-
-For the operational verifier workflow, see the Assurance Hub:
-- `profiles/grid-profile.md`
-- `docs/how-to-verify-grid.md`
+References:
+- UN/CEFACT GTR / GRID: https://un.opensource.unicc.org/unece/uncefact/gtr/
+- EBSI Trusted Issuers Registry APIs: https://hub.ebsi.eu/apis/pilot/trusted-issuers-registry
+- TRQP specification: https://trustoverip.github.io/tswg-trust-registry-protocol/

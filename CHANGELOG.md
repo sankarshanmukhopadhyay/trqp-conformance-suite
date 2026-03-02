@@ -5,7 +5,15 @@ All notable changes to this repository will be documented here.
 ## Unreleased
 - (nothing yet)
 
-## v0.4.2
+## v0.4.4
+### Added
+- Optional GRID artifact schemas (registrar listing + status feed)
+- GRID support documentation with external reference pointers
+
+### Changed
+- Documentation crosswalk updated to reference GRID artifacts
+
+## v0.4.1
 ### Added
 - `al-contract.json` to pin Assurance Level semantics to the canonical TRQP Assurance Hub definitions.
 - `docs/templates/traceability-template.md` for implementer traceability (explicitly non-normative).

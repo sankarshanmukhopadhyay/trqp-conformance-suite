@@ -48,11 +48,16 @@ CTS publishes lightweight schemas for its evidence outputs:
 
 This repo ships `al-contract.json` which references the canonical AL definitions in the Assurance Hub and includes the canonical doc SHA-256 (61c599c5fa06e0c9110f40ff71c0174db5502105b97f1391dbd9ae8548115f71).
 
+## GRID alignment
 
-## GRID
+This suite includes optional schemas and guidance for GRID-style artifacts.
 
-The Assurance Hub includes a minimal GRID kernel. CTS provides optional schema validation support for the GRID artifacts:
+- `docs/GRID_SUPPORT.md`
+- `schemas/registrar.schema.json`
+- `schemas/grid-status-feed.schema.json`
 
-- Hub profile: `profiles/grid-profile.md`
-- Hub verifier workflow: `docs/how-to-verify-grid.md`
-- CTS schemas: `schemas/registrar.schema.json`, `schemas/grid-status-feed.schema.json`
+## Version pins
+
+- TRQP Assurance Hub: v0.5.0
+- TRQP Conformance Suite: v0.4.4
+- TRQP TSPP: v0.2.4

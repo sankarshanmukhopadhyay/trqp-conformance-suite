@@ -1,6 +1,6 @@
 # TRQP Conformance Suite
 
-**Current version:** v0.4.2
+**Current version:** v0.4.4
 
 
 ![CI](https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite/actions/workflows/cts.yml/badge.svg)
