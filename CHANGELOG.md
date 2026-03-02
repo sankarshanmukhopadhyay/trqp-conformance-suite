@@ -16,6 +16,17 @@ All notable changes to this repository will be documented here.
 ## Unreleased
 - (nothing yet)
 
+## v0.4.3 (2026-03-02)
+
+### Added
+- Deterministic bundle generation (`cts.tools.deterministic_zip`) for stable evidence ZIPs.
+- Bundle verifier (`cts.tools.verify_bundle`) to validate required artifacts + checksum integrity.
+
+### Changed
+- CI now performs a run-twice determinism check for Baseline and High-Assurance profiles.
+- CI dependencies for the example SUT are pinned (`cts/ci-requirements.txt`).
+
+
 ## v0.4.1
 ### Added
 - `al-contract.json` to pin Assurance Level semantics to the canonical TRQP Assurance Hub definitions.
