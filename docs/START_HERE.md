@@ -29,3 +29,14 @@ This repository provides a conformance testing approach for TRQP with profile-ba
 1. Review `docs/evidence_bundle.schema.json`.
 2. Inspect reference reports for expected artifact completeness.
 3. Validate that a High-Assurance run includes a declared `state_reference`.
+
+
+## Deterministic mode (Increment 2)
+
+For CI comparisons or repeated runs, CTS supports a deterministic mode:
+
+```bash
+python cts/run.py --profile profiles/smoke.yaml --sut sut.example.yaml --out reports/smoke --deterministic --nonce-mode derived
+```
+
+See: [docs/OUTPUT_CONTRACT.md](OUTPUT_CONTRACT.md)

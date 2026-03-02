@@ -20,6 +20,17 @@ Looking for the *single front door* across TRQP conformance + security/privacy a
 - Operator runbook (combined assurance): https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub/blob/main/docs/OPERATOR_RUNBOOK.md
 
 
+## Running CTS (operator contract)
+
+- Output layout contract: [docs/OUTPUT_CONTRACT.md](docs/OUTPUT_CONTRACT.md)
+- Determinism controls: `--run-id`, `--generated-at`, `--deterministic`, `--nonce-mode`
+
+Example (CI-friendly run):
+
+```bash
+python cts/run.py --profile profiles/smoke.yaml --sut sut.example.yaml --out reports/smoke --deterministic --nonce-mode derived
+```
+
 
 ## Assurance Level Semantics
 

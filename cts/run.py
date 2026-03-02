@@ -9,6 +9,14 @@ from nacl.encoding import Base64Encoder
 
 ROOT = Path(__file__).resolve().parent.parent
 
+def tool_version() -> str:
+    try:
+        v = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+        return v or "unknown"
+    except Exception:
+        return "unknown"
+
+
 def now_iso():
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
@@ -142,6 +150,10 @@ def main():
     ap.add_argument("--profile", required=True)
     ap.add_argument("--sut", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--run-id", help="Override test run id (default: random UUID)")
+    ap.add_argument("--generated-at", help="Override generated_at/started_at timestamps (ISO 8601, e.g., 2026-01-01T00:00:00Z)")
+    ap.add_argument("--deterministic", action="store_true", help="Enable deterministic mode (stable run id + timestamps + derived nonces)")
+    ap.add_argument("--nonce-mode", choices=["random","derived"], default="random", help="Nonce strategy for HA requests")
     args = ap.parse_args()
 
     profile = load_yaml(Path(args.profile))
@@ -150,19 +162,46 @@ def main():
 
     ensure_dirs(out)
 
+    # -------------------------
+    # Determinism controls
+    # -------------------------
+    # generated_at is the canonical timestamp used for run metadata and (optionally) HA request headers.
+    generated_at = args.generated_at or now_iso()
+    if args.deterministic and not args.generated_at:
+        # Stable default to support CI comparisons (override in real runs).
+        generated_at = "1970-01-01T00:00:00Z"
+
+    run_id = args.run_id
+    if not run_id:
+        if args.deterministic:
+            seed = f"{profile.get('id','')}|{sut.get('base_url','')}|{out.name}".encode('utf-8')
+            run_id = sha256_bytes(seed)[:16]
+        else:
+            run_id = str(uuid.uuid4())
+
+    def make_nonce(test_case_id: str) -> str:
+        if args.deterministic or args.nonce_mode == "derived":
+            return "nonce-" + sha256_bytes(f"{run_id}|{test_case_id}".encode('utf-8'))[:16]
+        return "nonce-" + str(uuid.uuid4())
+
+    def ha_timestamp() -> str:
+        # If operator provided a timestamp, respect it; else only freeze time in deterministic mode.
+        if args.generated_at:
+            return generated_at
+        return generated_at if args.deterministic else now_iso()
+
     if profile.get("gates", {}).get("require_state_reference") and not sut.get("state_reference"):
         raise SystemExit("Gate failed: sut.state_reference required for this profile.")
 
     tests = load_yaml(ROOT/"tests/core_tests.yaml")["tests"]
 
-    run_id = str(uuid.uuid4())
     run = {
         "test_run_id": run_id,
         "profile_id": profile["id"],
         "out_dir_label": out.name,
         "sut": {k:v for k,v in sut.items() if k != "signing_key_b64"},
-        "started_at": now_iso(),
-        "tool": {"name": "trqp-cts", "version": "0.1.0"},
+        "started_at": generated_at,
+        "tool": {"name": "trqp-cts", "version": tool_version()},
     }
 
     base_url = sut["base_url"]
@@ -194,8 +233,8 @@ def main():
     
             # If profile is HA, add HA headers for tests except TC-SEC-001 (which asserts unauth)
             if profile["id"] == "high_assurance" and tc_id != "TC-SEC-001":
-                nonce = "nonce-" + str(uuid.uuid4())
-                ts = now_iso()
+                nonce = make_nonce(tc_id)
+                ts = ha_timestamp()
                 add_ha_headers(headers, sut, nonce, ts)
     
             started = time.time()
@@ -302,11 +341,11 @@ def main():
 
         verdicts.append({"test_case_id": tc_id, "result": (_verdict_override if "_verdict_override" in locals() else ("PASS" if ok else "FAIL")), "elapsed_ms": elapsed_ms})
 
-    run["ended_at"] = now_iso()
+    run["ended_at"] = (generated_at if (args.deterministic or args.generated_at) else now_iso())
     (out/"run.json").write_text(json.dumps(run, indent=2), encoding="utf-8")
     (out/"verdicts.json").write_text(json.dumps(verdicts, indent=2), encoding="utf-8")
 
-    manifest = {"generated_at": now_iso(), "hashes": {}}
+    manifest = {"generated_at": (generated_at if (args.deterministic or args.generated_at) else now_iso()), "hashes": {}}
     for p in sorted(out.rglob("*")):
         if p.is_file() and p.name not in ["bundle.zip","manifest.sig"]:
             manifest["hashes"][str(p.relative_to(out))] = sha256_file(p)
