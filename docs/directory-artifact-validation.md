@@ -38,3 +38,9 @@ python scripts/validate_directory_artifacts.py --status path/to/status-feed.json
 
 This CTS capability is intentionally minimal: it validates structure so that assessments can reliably reference
 machine-readable artifacts as evidence.
+
+## Identity anchoring (UNTP DIA)
+
+If an entry includes `identity_anchor` metadata (for example `anchor_type: UNTP_DIA_0.6.1`), the validator performs lightweight wiring checks to ensure a DIA JSON-LD context pointer exists (either the normative `context_url` or a vendored `context_vendored_path`).
+
+Cryptographic verification of DID control, signatures, and status-list semantics is profile- and deployment-specific and is evaluated as part of the assessment procedure rather than this generic validator.

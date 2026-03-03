@@ -16,3 +16,7 @@ References:
 - UN/CEFACT GTR / GRID: https://un.opensource.unicc.org/unece/uncefact/gtr/
 - EBSI Trusted Issuers Registry APIs: https://hub.ebsi.eu/apis/pilot/trusted-issuers-registry
 - TRQP specification: https://trustoverip.github.io/tswg-trust-registry-protocol/
+
+## UNTP DIA considerations
+
+Where a directory uses UNTP Digital Identity Anchor (DIA) / Identity Resolver (IDR), conformance evidence SHOULD include DIA context references and resolver documentation. The CTS validator includes lightweight checks for DIA context wiring when `identity_anchor.anchor_type` indicates UNTP DIA.

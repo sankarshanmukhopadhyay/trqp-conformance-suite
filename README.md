@@ -319,3 +319,7 @@ In practice:
   - Certification Attestations (if/when an ecosystem chooses to operationalize certification)
 
 See: `docs/certification-alignment.md`.
+
+## UNTP Digital Identity Anchor (DIA)
+
+Some authoritative directories use UNTP DIA for issuer identity anchoring. See [`docs/UNTP_DIA_SUPPORT.md`](docs/UNTP_DIA_SUPPORT.md).

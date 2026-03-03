@@ -37,3 +37,7 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 - ✅ Release artifacts: VERSION file, changelog entries, and release template updated.
 
 _Last updated: 2026-02-27_
+
+## UNTP DIA considerations
+
+Where a directory uses UNTP Digital Identity Anchor (DIA) / Identity Resolver (IDR), conformance evidence SHOULD include DIA context references and resolver documentation. The CTS validator includes lightweight checks for DIA context wiring when `identity_anchor.anchor_type` indicates UNTP DIA.

@@ -9,7 +9,7 @@
 
 ## Unreleased
 - (nothing yet)
-
+- Add lightweight UNTP DIA context wiring checks to directory artifact validator; vendor DIA JSON-LD context.
 ## v0.4.4
 ### Added
 - Optional GRID artifact schemas (registrar listing + status feed)

@@ -61,3 +61,7 @@ This suite includes optional schemas and guidance for GRID-style artifacts.
 - TRQP Assurance Hub: v0.6.0
 - TRQP Conformance Suite: v0.5.0
 - TRQP TSPP: v0.3.0
+
+## UNTP DIA considerations
+
+Where a directory uses UNTP Digital Identity Anchor (DIA) / Identity Resolver (IDR), conformance evidence SHOULD include DIA context references and resolver documentation. The CTS validator includes lightweight checks for DIA context wiring when `identity_anchor.anchor_type` indicates UNTP DIA.

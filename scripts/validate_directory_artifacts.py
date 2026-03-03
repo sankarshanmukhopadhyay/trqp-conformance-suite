@@ -31,6 +31,27 @@ def load_json(p: Path):
 def validate_json(doc, schema_path: Path):
     schema = load_json(schema_path)
     js_validate(instance=doc, schema=schema)
+def validate_identity_anchor(entry: dict):
+    """Lightweight checks for optional identity anchoring metadata.
+
+    - This is intentionally non-cryptographic and non-normative.
+    - It prevents obvious wiring errors (missing context pointers) from slipping into CI.
+    """
+    ia = entry.get("identity_anchor")
+    if not isinstance(ia, dict):
+        return
+
+    anchor_type = ia.get("anchor_type", "")
+    if isinstance(anchor_type, str) and anchor_type.upper().startswith("UNTP_DIA"):
+        # For DIA, we expect a context URL (normative) or a vendored path (tooling convenience).
+        if not ia.get("context_url") and not ia.get("context_vendored_path"):
+            raise ValueError("identity_anchor: UNTP_DIA anchors MUST include context_url or context_vendored_path")
+        # If a vendored path is provided, it should exist relative to repo root.
+        vp = ia.get("context_vendored_path")
+        if isinstance(vp, str) and vp.strip():
+            candidate = ROOT / vp
+            if not candidate.exists():
+                raise ValueError(f"identity_anchor: context_vendored_path not found: {vp}")
 
 def main():
     ap = argparse.ArgumentParser()
@@ -46,6 +67,8 @@ def main():
         doc = load_json(Path(args.entry))
         validate_json(doc, SCHEMAS / "authoritative-directory-entry.schema.json")
         print("[OK] entry schema: authoritative-directory-entry")
+    validate_identity_anchor(doc)
+    print("[OK] entry identity_anchor checks")
 
     if args.manifest:
         doc = load_json(Path(args.manifest))
