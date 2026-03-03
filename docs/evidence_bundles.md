@@ -20,3 +20,12 @@ Evidence bundles are generated artifacts that make conformance results **auditab
 - Authorization headers and API keys MUST be redacted.
 - Signed responses MAY be stored; private key material MUST NEVER be stored.
 
+## Supply chain integrity artifacts (optional)
+
+Evidence bundles MAY include supply chain integrity artifacts to support higher assurance evaluations:
+
+- `software_sbom` (SBOM for the deployed artifact)
+- `build_provenance` (build provenance / attestation)
+- `openssf_scorecard_report` (OpenSSF Scorecard output or equivalent)
+
+These are referenced by TSPP-SCI controls and surfaced in the Assurance Hub workflow.

@@ -65,3 +65,15 @@ This suite includes optional schemas and guidance for GRID-style artifacts.
 ## UNTP DIA considerations
 
 Where a directory uses UNTP Digital Identity Anchor (DIA) / Identity Resolver (IDR), conformance evidence SHOULD include DIA context references and resolver documentation. The CTS validator includes lightweight checks for DIA context wiring when `identity_anchor.anchor_type` indicates UNTP DIA.
+
+## Supply chain integrity artifacts (TSPP-SCI)
+
+CTS recognizes optional supply chain integrity evidence artifacts in bundle descriptors:
+
+| artifact_kind | Example | Purpose |
+|---|---|---|
+| `software_sbom` | SPDX/CycloneDX SBOM | Dependency transparency for deployed artifacts |
+| `build_provenance` | provenance attestation | Verifiable build chain for AL3+ |
+| `openssf_scorecard_report` | scorecard output | Automated posture checks evidence |
+
+Reference: `docs/reference/openssf-supply-chain.md`.

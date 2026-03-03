@@ -323,3 +323,7 @@ See: `docs/certification-alignment.md`.
 ## UNTP Digital Identity Anchor (DIA)
 
 Some authoritative directories use UNTP DIA for issuer identity anchoring. See [`docs/UNTP_DIA_SUPPORT.md`](docs/UNTP_DIA_SUPPORT.md).
+
+### Supply chain integrity evidence
+
+CTS supports evidence bundle descriptors that can include SBOM, build provenance, and Scorecard outputs for audit-ready evaluations.

@@ -8,6 +8,8 @@
 - Add documentation for directory artifact validation and how it complements API conformance testing.
 
 ## Unreleased
+
+- Recognize supply chain integrity artifacts (SBOM, provenance, Scorecard) in evidence bundle schema and documentation.
 - (nothing yet)
 - Add lightweight UNTP DIA context wiring checks to directory artifact validator; vendor DIA JSON-LD context.
 ## v0.4.4
