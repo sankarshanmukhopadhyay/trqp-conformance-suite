@@ -1,6 +1,11 @@
 # Changelog
 
-All notable changes to this repository will be documented here.
+
+## v0.5.0 (2026-03-03)
+
+- Add SAD-1 schemas for directory entry, publication manifest, and status feed.
+- Add `scripts/validate_directory_artifacts.py` to validate authoritative directory artifacts as evidence (schema validation).
+- Add documentation for directory artifact validation and how it complements API conformance testing.
 
 ## Unreleased
 - (nothing yet)

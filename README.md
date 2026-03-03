@@ -3,7 +3,7 @@
 📘 **Documentation site (GitHub Pages):** https://<OWNER>.github.io/trqp-conformance-suite/
 
 
-**Current version:** v0.4.4
+**Current version:** v0.5.0
 
 
 ![CI](https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite/actions/workflows/cts.yml/badge.svg)
@@ -34,6 +34,16 @@ This repository provides a profile-driven, evidence-oriented testing framework t
 This is an independent, open reference implementation. It is not an official artifact of the Trust over IP Foundation. The goal is to support ecosystem alignment and accelerate production-grade conformance discussions.
 
 ---
+
+
+## Authoritative directories (SAD-1 / GRID)
+
+The TRQP ecosystem can evaluate **authoritative digital trust directories** (including sovereign registry patterns) by treating published directory artifacts as evidence.
+
+This suite ships schemas and a lightweight validator:
+
+- Docs: `docs/directory-artifact-validation.md`
+- Tool: `scripts/validate_directory_artifacts.py`
 
 ## Start Here
 
