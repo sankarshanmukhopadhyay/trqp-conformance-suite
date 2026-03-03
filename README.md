@@ -3,7 +3,7 @@
 📘 **Documentation site (GitHub Pages):** https://<OWNER>.github.io/trqp-conformance-suite/
 
 
-**Current version:** v0.5.0
+**Current version:** v0.6.0
 
 
 ![CI](https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite/actions/workflows/cts.yml/badge.svg)
@@ -327,3 +327,12 @@ Some authoritative directories use UNTP DIA for issuer identity anchoring. See [
 ### Supply chain integrity evidence
 
 CTS supports evidence bundle descriptors that can include SBOM, build provenance, and Scorecard outputs for audit-ready evaluations.
+
+## Experimental: DeDi support
+
+The CTS ships an **experimental** DeDi artifact validator (schema checks) to support decentralized directory ecosystems.
+
+- See `docs/profiles.md` and `profiles/dedi_experimental.yaml` (snapshot 2026-03-03).
+
+- DeDi mapping matrix: `docs/reference/dedi-mapping-matrix.md`
+

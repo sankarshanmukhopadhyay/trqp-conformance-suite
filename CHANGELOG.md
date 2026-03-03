@@ -1,7 +1,14 @@
 # Changelog
 
 
-## v0.5.0 (2026-03-03)
+## v0.6.0 (2026-03-03)
+
+- Add **DeDi experimental** artifact validation (vendored schemas + validation script).
+- Add `profiles/dedi_experimental.yaml` to enable DeDi profile runs.
+- Documentation updates linking DeDi profile to TRQP Assurance Hub experimental mapping.
+
+
+## v0.6.0 (2026-03-03)
 
 - Add SAD-1 schemas for directory entry, publication manifest, and status feed.
 - Add `scripts/validate_directory_artifacts.py` to validate authoritative directory artifacts as evidence (schema validation).
