@@ -32,7 +32,14 @@ jobs:
       - name: Start example SUT
         run: |
           uvicorn examples.poc_service:app --host 127.0.0.1 --port 8000 &
-          sleep 1
+          # Avoid flaky CI by waiting for the SUT to accept connections.
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8000/.well-known/trust-registries >/dev/null 2>&1; then
+              echo "SUT is up"
+              break
+            fi
+            sleep 0.5
+          done
 
       - name: Run Baseline profile
         run: |
