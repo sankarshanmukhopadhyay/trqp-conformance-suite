@@ -1,6 +1,9 @@
 ---
 layout: default
 title: TRQP Conformance Suite
+owner: maintainers
+last_reviewed: 2026-03-04
+tier: 0
 ---
 
 # TRQP Conformance Suite
@@ -26,3 +29,7 @@ This site publishes the documentation for the **TRQP Conformance Suite** reposit
 ## Repo entry points
 
 - Source repository: see root `README.md`
+
+## Governance
+
+- Documentation freshness policy: [`docs/governance/README.md`](governance/README.md)

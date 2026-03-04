@@ -1,3 +1,13 @@
+---
+owner: maintainers
+last_reviewed: 2026-03-04
+tier: 0
+---
+
+## Documentation
+
+- Documentation governance: [`docs/governance/README.md`](docs/governance/README.md)
+
 # TRQP Conformance Suite
 
 📘 **Documentation site (GitHub Pages):** https://<OWNER>.github.io/trqp-conformance-suite/
@@ -335,4 +345,3 @@ The CTS ships an **experimental** DeDi artifact validator (schema checks) to sup
 - See `docs/profiles.md` and `profiles/dedi_experimental.yaml` (snapshot 2026-03-03).
 
 - DeDi mapping matrix: `docs/reference/dedi-mapping-matrix.md`
-
