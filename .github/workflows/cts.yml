@@ -60,7 +60,7 @@ jobs:
           ./scripts/create_bundle.sh reports/ci_high_assurance
 
       - name: Upload Baseline bundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: trqp-cts-baseline-bundle
           path: |
@@ -71,7 +71,7 @@ jobs:
           if-no-files-found: error
 
       - name: Upload High-Assurance bundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: trqp-cts-high-assurance-bundle
           path: |
@@ -84,7 +84,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Upload full reports (debug)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: trqp-cts-reports-full
           path: |
