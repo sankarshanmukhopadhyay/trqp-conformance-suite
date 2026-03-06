@@ -10,10 +10,10 @@ tier: 0
 
 # TRQP Conformance Suite
 
-📘 **Documentation site (GitHub Pages):** https://<OWNER>.github.io/trqp-conformance-suite/
+📘 **Documentation site (GitHub Pages):** https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/
 
 
-**Current version:** v0.6.0
+**Current version:** v0.6.1
 
 
 ![CI](https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite/actions/workflows/cts.yml/badge.svg)
@@ -66,6 +66,10 @@ Choose the path that matches your role:
 ---
 
 
+
+## Local example configuration
+
+The example SUT configuration is now shipped as `examples/sut.local.yaml.example`. Copy it to `examples/sut.local.yaml` and generate a fresh Ed25519 signing key before running the high-assurance profile locally.
 
 ## Evidence artifacts produced by CTS
 

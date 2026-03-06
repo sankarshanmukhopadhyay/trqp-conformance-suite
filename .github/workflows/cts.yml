@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: "pip"
@@ -25,6 +25,18 @@ jobs:
           if [ -f cts/requirements.txt ]; then pip install -r cts/requirements.txt; fi
           pip install fastapi uvicorn
 
+      - name: Prepare local SUT config
+        run: |
+          cp examples/sut.local.yaml.example examples/sut.local.yaml
+          python - <<'PY'
+          from pathlib import Path
+          from nacl.signing import SigningKey
+          from nacl.encoding import Base64Encoder
+          p = Path("examples/sut.local.yaml")
+          key = SigningKey.generate().encode(Base64Encoder).decode()
+          p.write_text(p.read_text(encoding="utf-8").replace("REPLACE_WITH_BASE64_ED25519_PRIVATE_KEY", key), encoding="utf-8")
+          PY
+
       - name: Schema hygiene checks
         run: |
           python scripts/schema_check.py
@@ -32,7 +44,6 @@ jobs:
       - name: Start example SUT
         run: |
           uvicorn examples.poc_service:app --host 127.0.0.1 --port 8000 &
-          # Avoid flaky CI by waiting for the SUT to accept connections.
           for i in $(seq 1 20); do
             if curl -fsS http://127.0.0.1:8000/.well-known/trust-registries >/dev/null 2>&1; then
               echo "SUT is up"
@@ -60,7 +71,7 @@ jobs:
           ./scripts/create_bundle.sh reports/ci_high_assurance
 
       - name: Upload Baseline bundle
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: trqp-cts-baseline-bundle
           path: |
@@ -71,20 +82,19 @@ jobs:
           if-no-files-found: error
 
       - name: Upload High-Assurance bundle
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: trqp-cts-high-assurance-bundle
           path: |
             reports/ci_high_assurance/bundle.zip
             reports/ci_high_assurance/manifest.json
             reports/ci_high_assurance/manifest.sig
-            reports/ci_high_assurance/signing_public_key.pem
             reports/ci_high_assurance/verdicts.json
             reports/ci_high_assurance/run.json
           if-no-files-found: warn
 
       - name: Upload full reports (debug)
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: trqp-cts-reports-full
           path: |

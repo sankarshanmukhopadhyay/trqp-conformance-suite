@@ -181,6 +181,7 @@ def main():
     verdicts = []
 
     for tc in tests:
+        _verdict_override = None
         tc_id = tc["id"]
 
         # Profile gating: tests may declare 'profiles: [..]' to indicate applicability.
@@ -312,7 +313,7 @@ def main():
         case_path = out/"cases"/f"{tc_id}.json"
         case_path.write_text(json.dumps(case, indent=2), encoding="utf-8")
 
-        verdicts.append({"test_case_id": tc_id, "result": (_verdict_override if "_verdict_override" in locals() else ("PASS" if ok else "FAIL")), "elapsed_ms": elapsed_ms})
+        verdicts.append({"test_case_id": tc_id, "result": (_verdict_override if _verdict_override else ("PASS" if ok else "FAIL")), "elapsed_ms": elapsed_ms})
 
     run["ended_at"] = now_iso()
     (out/"run.json").write_text(json.dumps(run, indent=2), encoding="utf-8")
@@ -420,7 +421,7 @@ def main():
         "checksums_version": "0.1.0",
         "algorithm": "sha256",
         "generated_by": "trqp-cts",
-        "generated_at": run.get("timestamp"),
+        "generated_at": now_iso(),
         "entries": sorted(checksums, key=lambda e: e["path"]),
     }
     (out/"checksums.json").write_text(json.dumps(checksums_obj, indent=2), encoding="utf-8")

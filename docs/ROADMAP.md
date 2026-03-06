@@ -31,12 +31,12 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 - ✅ AL semantic lock to Assurance Hub (`al-contract.json` + explicit README/docs pointers)
 
 
-## Release readiness (v0.4.1)
+## Release readiness (v0.6.1)
 
-- ✅ Findings addressed: AL contract pinning, template hygiene, and code intent documentation.
-- ✅ Release artifacts: VERSION file, changelog entries, and release template updated.
+- ✅ Security and correctness stabilization completed for the runner, example SUT, and CI workflow.
+- ✅ Public documentation, release notes, and cross-repo version pins synchronized for the patch release.
 
-_Last updated: 2026-02-27_
+_Last updated: 2026-03-06_
 
 ## UNTP DIA considerations
 

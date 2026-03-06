@@ -3,3 +3,4 @@ __pycache__/
 reports/
 *.pyc
 .DS_Store
+examples/sut.local.yaml
