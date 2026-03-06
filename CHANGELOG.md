@@ -1,5 +1,32 @@
 # Changelog
 
+## v0.7.1 (2026-03-06)
+
+- Synchronize public-facing documentation and release metadata with TRQP-TSPP v0.5.1 and Assurance Hub v0.8.1.
+- Retain Commit 3 and 4 tooling additions while removing stale version drift from README, roadmap, and crosswalk docs.
+- Refresh release artifacts for the coordinated patch alignment release.
+
+## v0.3.0 (2026-03-06)
+
+### Added
+- Add `--dry-run` flag to `cts/run.py` to validate inputs and list applicable tests without making HTTP requests.
+- Add `--list-tests` flag to `cts/run.py` to print tests applicable to the selected profile and exit.
+- Add `identifiers` block support to `sut.yaml` config, allowing real SUTs to override `authority_id`, `entity_id`, `subject_authority_id`, and `action` without modifying core test definitions.
+- Add `QUICKSTART.md` at the repository root for fast onboarding of new implementers and operators.
+
+### Fixed
+- Fix JSONPath wildcard token indexing bug: `tokens.index(tok)` was replaced with `enumerate`-based tracking, preventing incorrect remainder slicing when a wildcard token appeared more than once in a path.
+
+### Changed
+- Refactor `cts/run.py` to extract `resolve_identifiers`, `apply_identifier_overrides`, and `list_tests` functions, reducing the size of `main()` and making each concern independently testable.
+- Update `examples/sut.local.yaml.example` to document the `identifiers:` override block.
+- Expand `SECURITY.md` with threat model references and reporting scope clarification.
+- Synchronize roadmap, release notes, and version pins for the coordinated v0.3.0 release.
+
+---
+
+*Prior entries below reflect earlier releases in this series.*
+
 ## v0.7.0 (2026-03-06)
 
 - Add machine-verifiable AL contract pin checking using a canonical assurance-level snapshot from the Assurance Hub.

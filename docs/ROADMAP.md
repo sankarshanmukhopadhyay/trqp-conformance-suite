@@ -10,6 +10,10 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 - Done: CI publishes evidence bundles as build artifacts (descriptor + checksums + bundle.zip)
 - Done: Smoke profile for Hub combined-assurance workflow (`profiles/smoke.yaml`)
 - Done: Hub crosswalk mapping (`docs/hub-crosswalk.md`)
+- Done: `--dry-run` and `--list-tests` CLI flags for developer tooling
+- Done: `identifiers:` SUT config block for real-SUT parameterization
+- Done: JSONPath wildcard token indexing fix
+- Done: `QUICKSTART.md` for fast onboarding
 
 ## 2026 Q2: Deterministic replay and state models
 
@@ -29,15 +33,15 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 ## Completed
 
 - ✅ AL semantic lock to Assurance Hub (`al-contract.json` + explicit README/docs pointers)
+- ✅ Runner refactored into named functions for testability
 
 
-## Release readiness (v0.7.0)
+## Release readiness (v0.7.1)
 
-- Cross-repo AL contract pinning is now machine-verifiable in CI.
-- Version references are synchronized with TSPP v0.5.0 and Assurance Hub v0.8.0 for the AL3/AL4 hardening release.
-
-- ✅ Security and correctness stabilization completed for the runner, example SUT, and CI workflow.
-- ✅ Public documentation, release notes, and cross-repo version pins synchronized for the patch release.
+- `--dry-run` and `--list-tests` flags enable safer CI integration and developer inspection.
+- Identifier parameterization via `sut.yaml` allows real SUTs to run the suite without modifying core tests.
+- JSONPath wildcard bug fixed for correct assertion evaluation on array paths.
+- QUICKSTART and expanded SECURITY documentation complete.
 
 _Last updated: 2026-03-06_
 

@@ -9,3 +9,11 @@ api_key: "demo-secret"
 # Generate a signing key for local runs, for example:
 # python -c "from nacl.signing import SigningKey; from nacl.encoding import Base64Encoder; print(SigningKey.generate().encode(Base64Encoder).decode())"
 signing_key_b64: "REPLACE_WITH_BASE64_ED25519_PRIVATE_KEY"
+
+# Optional: override test-case identifiers so real SUTs can run without modifying core tests.
+# All fields default to the did:example:* placeholders shipped with the test suite.
+# identifiers:
+#   authority_id: "did:example:your-authority"
+#   entity_id: "did:example:your-entity"
+#   subject_authority_id: "did:example:your-subject-authority"
+#   action: "your-action"
