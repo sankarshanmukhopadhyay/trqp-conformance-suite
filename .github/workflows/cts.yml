@@ -41,6 +41,10 @@ jobs:
         run: |
           python scripts/schema_check.py
 
+      - name: Verify AL contract pin
+        run: |
+          python scripts/verify_al_contract.py
+
       - name: Start example SUT
         run: |
           uvicorn examples.poc_service:app --host 127.0.0.1 --port 8000 &

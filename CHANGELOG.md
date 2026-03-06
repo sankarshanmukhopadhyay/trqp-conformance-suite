@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.7.0 (2026-03-06)
+
+- Add machine-verifiable AL contract pin checking using a canonical assurance-level snapshot from the Assurance Hub.
+- Synchronize cross-repo version references and public-facing release documentation for the AL3/AL4 hardening release train.
+
 ## v0.6.1 (2026-03-06)
 
 ### Fixed

@@ -31,7 +31,10 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 - ✅ AL semantic lock to Assurance Hub (`al-contract.json` + explicit README/docs pointers)
 
 
-## Release readiness (v0.6.1)
+## Release readiness (v0.7.0)
+
+- Cross-repo AL contract pinning is now machine-verifiable in CI.
+- Version references are synchronized with TSPP v0.5.0 and Assurance Hub v0.8.0 for the AL3/AL4 hardening release.
 
 - ✅ Security and correctness stabilization completed for the runner, example SUT, and CI workflow.
 - ✅ Public documentation, release notes, and cross-repo version pins synchronized for the patch release.

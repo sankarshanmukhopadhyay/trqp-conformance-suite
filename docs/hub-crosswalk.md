@@ -58,9 +58,9 @@ This suite includes optional schemas and guidance for GRID-style artifacts.
 
 ## Version pins
 
-- TRQP Assurance Hub: v0.7.1
-- TRQP Conformance Suite: v0.6.1
-- TRQP TSPP: v0.4.1
+- TRQP Assurance Hub: v0.8.0
+- TRQP Conformance Suite: v0.7.0
+- TRQP TSPP: v0.5.0
 
 ## UNTP DIA considerations
 
