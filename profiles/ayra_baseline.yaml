@@ -1,0 +1,25 @@
+id: ayra_baseline
+name: Ayra Trust Network TRQP Baseline
+description: >
+  TRQP profile for registries implementing the Ayra Trust Network API.
+  Extends Enterprise with mandatory freshness semantics and recognition
+  statement alignment. Intended as pre-certification tooling against the
+  Ayra TRQP Profile API (https://ayraforum.github.io/ayra-trust-registry-resources/api.html).
+
+  Note: Ayra-specific extension fields (ecosystem_id, network_credential_type)
+  are not yet covered by automated tests. Track progress in ROADMAP.md.
+extends: enterprise
+requirements:
+  include:
+    - TRQP-FRESH-001
+    - TRQP-FRESH-002
+    - TRQP-RECOG-001
+    - TRQP-SEC-001
+notes:
+  - "Ayra requires governance_framework_id in provenance when available."
+  - "Recognition responses should include recognized_since and valid_until."
+  - "Error codes must align with TSPP error surface enum."
+  - "Registry must implement /.well-known/trqp-metadata (see TSPP profile)."
+evidence:
+  sign_manifest: false
+  bundle: true

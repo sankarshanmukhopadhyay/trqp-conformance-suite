@@ -154,3 +154,37 @@ tests:
       json_path_in:
         - ["$.decision.authorized", ["true", "false", "indeterminate"]]
 
+
+  - id: TC-FRESH-001
+    name: Authorization response includes freshness meta
+    method: POST
+    path: /authorization
+    request:
+      headers:
+        Content-Type: application/json
+      body:
+        authority_id: "did:example:transport-ministry"
+        entity_id: "did:example:logistics-sp-123"
+        action: "issue-transport-credential"
+        resource: "TransportCredentialV1"
+    expect:
+      status: 200
+      json_path_exists:
+        - "$.meta.time_evaluated"
+        - "$.meta.expires_at"
+
+  - id: TC-FRESH-002
+    name: Recognition response includes freshness meta
+    method: POST
+    path: /recognition
+    request:
+      headers:
+        Content-Type: application/json
+      body:
+        authority_id: "did:example:transport-ministry"
+        subject_authority_id: "did:example:foreign-authority-xyz"
+    expect:
+      status: 200
+      json_path_exists:
+        - "$.meta.time_evaluated"
+        - "$.meta.expires_at"

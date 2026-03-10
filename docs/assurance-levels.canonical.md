@@ -1,6 +1,6 @@
 # Assurance levels (AL1–AL4)
 
-← [Back to Docs Index](../index.md)
+← [Back to Docs Index](./index.md)
 
 
 **Normative status:** This is the **canonical definition** of Assurance Levels **AL1–AL4** for the TRQP ecosystem.

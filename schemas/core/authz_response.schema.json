@@ -61,6 +61,22 @@
         }
       },
       "additionalProperties": true
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "time_evaluated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "RFC 3339 timestamp when the authorization decision was evaluated."
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "RFC 3339 timestamp after which this response should not be trusted without re-query."
+        }
+      },
+      "description": "Freshness envelope. SHOULD be present; required by TSPP AL1+ deployments."
     }
   },
   "additionalProperties": true

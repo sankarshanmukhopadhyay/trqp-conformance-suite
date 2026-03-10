@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.8.0 (2026-03-10)
+
+### Fixed
+- Rename `recognised`/`recognised_since` → `recognized`/`recognized_since` in `schemas/core/recog_response.schema.json` and `examples/poc_service.py` to align with ToIP TRQP v2.0 specification and TSPP. UK/US spelling divergence meant a server passing CTS would use the wrong field names against the TSPP harness and the Ayra TRQP Profile API.
+- Fix broken internal link in `docs/assurance-levels.canonical.md` (`../index.md` → `./index.md`). The previous link resolved to the repo root, which has no `index.md`.
+- Align `docs/hub-crosswalk.md` version pins with `al-contract.json`: Assurance Hub v0.8.1 → v0.9.0; CTS v0.7.1 → v0.8.0; TSPP v0.5.1 → v0.6.0.
+
+### Added
+- Add optional `meta` object (`time_evaluated`, `expires_at`) to `schemas/core/authz_response.schema.json` and `schemas/core/recog_response.schema.json`. Servers conforming to TSPP AL1+ must emit these fields; CTS now accepts and validates them.
+- Add `meta` freshness envelope to `examples/poc_service.py` authorization and recognition responses, making the reference SUT passable against both CTS and the TSPP AL1 harness without reconfiguration.
+- Add TRQP-FRESH-001 and TRQP-FRESH-002 (SHOULD-level) requirements with tests TC-FRESH-001/002 checking `meta.time_evaluated` and `meta.expires_at`. Gated under Enterprise profile.
+- Strengthen `schemas/core/error.schema.json` with a stable `error` enum aligned with the TSPP error surface and an optional `meta.time_evaluated` field.
+- Add `profiles/ayra_baseline.yaml`: Ayra Trust Network TRQP pre-certification profile extending Enterprise.
+- Add `docs/ayra-crosswalk.md`: crosswalk from CTS/TSPP evidence artifacts to Ayra conformance requirements.
+- Add frontmatter to `docs/hub-crosswalk.md` for freshness SLA enforcement.
+
+### Changed
+- Update `profiles/enterprise.yaml` to include TRQP-FRESH-001 and TRQP-FRESH-002.
+- Update `examples/poc_service.py` `_freshness_meta()` helper to produce deterministic freshness envelopes.
+
+## Cross-repo versions
+
+| Repository | Version |
+|---|---|
+| TRQP-TSPP | v0.6.0 |
+| Conformance Suite | v0.8.0 |
+| Assurance Hub | v0.9.0 |
+
 ## v0.7.1 (2026-03-06)
 
 - Synchronize public-facing documentation and release metadata with TRQP-TSPP v0.5.1 and Assurance Hub v0.8.1.

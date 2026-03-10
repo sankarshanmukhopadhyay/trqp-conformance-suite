@@ -48,3 +48,17 @@ requirements:
     level: MUST
     statement: If context.timestamp is supplied, decision MUST be evaluated as-of that time.
     tests: [TC-CTX-001]
+
+  - id: TRQP-FRESH-001
+    level: SHOULD
+    statement: >
+      Authorization and recognition responses SHOULD include a meta object with
+      time_evaluated and expires_at fields (RFC 3339). Required by TSPP AL1+ deployments.
+    tests: [TC-FRESH-001]
+
+  - id: TRQP-FRESH-002
+    level: SHOULD
+    statement: >
+      Recognition responses SHOULD include a meta object with time_evaluated and
+      expires_at fields (RFC 3339). Required by TSPP AL1+ deployments.
+    tests: [TC-FRESH-002]

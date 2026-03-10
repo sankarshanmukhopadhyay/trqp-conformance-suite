@@ -1,3 +1,9 @@
+---
+owner: maintainers
+last_reviewed: 2026-03-10
+tier: 1
+---
+
 # Assurance Hub ↔ Conformance Suite Crosswalk
 
 This document maps **Assurance Hub** guidance and evidence expectations to the concrete artifacts emitted by the **TRQP Conformance Suite (CTS)**.
@@ -58,9 +64,9 @@ This suite includes optional schemas and guidance for GRID-style artifacts.
 
 ## Version pins
 
-- TRQP Assurance Hub: v0.8.1
-- TRQP Conformance Suite: v0.7.1
-- TRQP TSPP: v0.5.1
+- TRQP Assurance Hub: v0.9.0
+- TRQP Conformance Suite: v0.8.0
+- TRQP TSPP: v0.6.0
 
 ## UNTP DIA considerations
 

@@ -1,6 +1,6 @@
 ---
 owner: maintainers
-last_reviewed: 2026-03-06
+last_reviewed: 2026-03-10
 tier: 0
 ---
 
@@ -13,7 +13,7 @@ tier: 0
 📘 **Documentation site (GitHub Pages):** https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/
 
 
-**Current version:** v0.7.1
+**Current version:** v0.8.0
 
 
 ![CI](https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite/actions/workflows/cts.yml/badge.svg)

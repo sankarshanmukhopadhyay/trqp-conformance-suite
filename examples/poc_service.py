@@ -11,7 +11,7 @@ Key expectations:
 - Do not treat this as production-ready without hardening and threat review.
 """
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Dict, Optional
 import time
 
@@ -60,6 +60,15 @@ def echo_corr(req: Request, headers: Dict[str, str]):
     if cid:
         headers["X-Correlation-Id"] = cid
 
+def _freshness_meta(ttl_seconds: int = 3600) -> Dict:
+    """Return a freshness envelope aligned with TSPP AL1+ requirements."""
+    now = datetime.now(timezone.utc)
+    expires = now + timedelta(seconds=ttl_seconds)
+    return {
+        "time_evaluated": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "expires_at": expires.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
+
 class Context(BaseModel):
     timestamp: Optional[str] = None
 
@@ -94,6 +103,7 @@ async def authorization(q: AuthorizationQuery, request: Request):
             "valid_until": "2026-01-01T00:00:00Z",
             "assertion_reference": "urn:vc:statuslist:123#entry-99" if authorized else None,
         },
+        "meta": _freshness_meta(),
     }
     return JSONResponse(content=resp, headers=headers)
 
@@ -103,17 +113,18 @@ async def recognition(q: RecognitionQuery, request: Request):
     headers = {"Content-Type": "application/json; charset=utf-8"}
     echo_corr(request, headers)
 
-    recognised = q.subject_authority_id == "did:example:foreign-authority-xyz"
+    recognized = q.subject_authority_id == "did:example:foreign-authority-xyz"
     resp = {
         "authority_id": q.authority_id,
         "subject_authority_id": q.subject_authority_id,
         "statement": {
-            "recognised": recognised,
-            "reason": "Recognised according to current governance framework." if recognised else "No recognition relationship found.",
-            "recognised_since": "2024-06-01T00:00:00Z" if recognised else None,
+            "recognized": recognized,
+            "reason": "Recognized according to current governance framework." if recognized else "No recognition relationship found.",
+            "recognized_since": "2024-06-01T00:00:00Z" if recognized else None,
             "valid_until": None,
-            "governance_reference": "https://example.org/gf/transport-recognition-v1" if recognised else None,
+            "governance_reference": "https://example.org/gf/transport-recognition-v1" if recognized else None,
         },
+        "meta": _freshness_meta(),
     }
     return JSONResponse(content=resp, headers=headers)
 

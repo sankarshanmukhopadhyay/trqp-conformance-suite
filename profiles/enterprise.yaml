@@ -1,11 +1,13 @@
 id: enterprise
 name: Enterprise TRQP
-description: Adds governance + operational expectations.
+description: Adds governance, operational expectations, and freshness semantics.
 requirements:
   include:
     - baseline
     - TRQP-OPS-001
     - TRQP-ERR-010
+    - TRQP-FRESH-001
+    - TRQP-FRESH-002
 evidence:
   sign_manifest: false
   bundle: true

@@ -7,13 +7,27 @@
   ],
   "properties": {
     "error": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "invalid_request",
+        "unauthorized",
+        "forbidden",
+        "not_available",
+        "not_found",
+        "rate_limited",
+        "server_error",
+        "replay_detected",
+        "bad_request"
+      ],
+      "description": "Stable machine-readable error code. Aligned with TSPP error surface."
     },
     "code": {
-      "type": "string"
+      "type": "string",
+      "description": "Optional implementation-specific sub-code for diagnostics."
     },
     "message": {
-      "type": "string"
+      "type": "string",
+      "description": "Human-readable error description."
     },
     "details": {
       "type": [
@@ -21,7 +35,22 @@
         "array",
         "string",
         "null"
-      ]
+      ],
+      "description": "Optional additional diagnostic detail."
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "time_evaluated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "request_id": {
+          "type": "string",
+          "maxLength": 128
+        }
+      },
+      "description": "Optional envelope metadata; required by TSPP AL1+ on error responses."
     }
   },
   "additionalProperties": true
