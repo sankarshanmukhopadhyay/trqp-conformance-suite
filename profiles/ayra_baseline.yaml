@@ -1,25 +1,49 @@
 id: ayra_baseline
 name: Ayra Trust Network TRQP Baseline
 description: >
-  TRQP profile for registries implementing the Ayra Trust Network API.
-  Extends Enterprise with mandatory freshness semantics and recognition
-  statement alignment. Intended as pre-certification tooling against the
-  Ayra TRQP Profile API (https://ayraforum.github.io/ayra-trust-registry-resources/api.html).
+  TRQP Conformance Suite profile for registries implementing the Ayra Trust Network
+  TRQP Profile (v0.5.0-draft). Extends Enterprise with mandatory freshness semantics,
+  recognition statement coverage, and smoke tests for the eight Ayra extension
+  endpoints. Intended as pre-certification tooling against the Ayra TRQP Profile.
 
-  Note: Ayra-specific extension fields (ecosystem_id, network_credential_type)
-  are not yet covered by automated tests. Track progress in ROADMAP.md.
+  Reference: https://ayraforum.github.io/ayra-trust-registry-resources/
+
+  Identifier requirement: The Ayra Profile mandates did:webvh for all ecosystem,
+  trust registry, and cluster identifiers. did:webvh format validation is not yet
+  automated; see Known Gaps in docs/ayra-crosswalk.md.
+
+  Response signing: The Ayra Profile requires JWS-signed responses at all tiers.
+  Signing is tested via the TSPP AL2 harness (test_06_al2_signed_responses.py) —
+  run TSPP alongside CTS for a complete evidence package.
 extends: enterprise
 requirements:
   include:
     - TRQP-FRESH-001
     - TRQP-FRESH-002
     - TRQP-RECOG-001
+    - TRQP-RECOG-002
     - TRQP-SEC-001
+    - TRQP-ERR-RFC7807
+    - TC-AYRA-META-001
+    - TC-AYRA-ENT-001
+    - TC-AYRA-ENT-002
+    - TC-AYRA-ECO-001
+    - TC-AYRA-ECO-002
+    - TC-AYRA-LKP-001
+    - TC-AYRA-LKP-002
+    - TC-AYRA-LKP-003
+schema_overrides:
+  authz_response: schemas/ayra/authz_response.schema.json
+  recog_response: schemas/ayra/recog_response.schema.json
 notes:
-  - "Ayra requires governance_framework_id in provenance when available."
-  - "Recognition responses should include recognized_since and valid_until."
-  - "Error codes must align with TSPP error surface enum."
-  - "Registry must implement /.well-known/trqp-metadata (see TSPP profile)."
+  - "Ayra MUST: both /authorization AND /recognition endpoints required (TRQP core only requires one)."
+  - "Ayra MUST: all responses signed with JWS using Trust Registry controller key (tested by TSPP AL2)."
+  - "Ayra MUST: governance_framework_id in provenance references an Ayra-registered URI."
+  - "Ayra MUST: RFC 7807 Problem Details for all error responses."
+  - "Ayra RECOMMENDED: /metadata, /entities/*, /ecosystems/*, /lookups/* extension endpoints."
+  - "Ayra MUST: did:webvh for all ecosystem/TR/cluster identifiers (manual check — not yet automated)."
+  - "ATN DID: did:webvh:ayra.forum is the trust anchor for recognition queries."
 evidence:
   sign_manifest: false
   bundle: true
+  companion_harness: "TSPP ayra-baseline profile (docs/profiles/ayra-baseline.md)"

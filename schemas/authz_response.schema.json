@@ -1,4 +1,55 @@
 {
-  "$ref": "./core/authz_response.schema.json",
-  "$schema": "https://json-schema.org/draft/2020-12/schema"
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/ayra/authz_response.schema.json",
+  "title": "Ayra TRQP Authorization Response",
+  "description": "Authorization response schema conforming to the Ayra TRQP Profile v0.5.0-draft. Uses the flat response shape from the Ayra Implementers Guide rather than the wrapped decision object in the core CTS schema. See: https://ayraforum.github.io/ayra-trust-registry-resources/guides/",
+  "type": "object",
+  "required": [
+    "entity_id",
+    "authority_id",
+    "action",
+    "authorized",
+    "time_evaluated"
+  ],
+  "properties": {
+    "entity_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The entity being tested. MUST be a did:webvh DID in Ayra deployments."
+    },
+    "authority_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The ecosystem DID governing this authorization. MUST be a did:webvh DID."
+    },
+    "action": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The action being checked (e.g. 'issue', 'verify')."
+    },
+    "resource": {
+      "type": ["string", "null"],
+      "description": "The resource the action applies to (e.g. 'credential:driverlicense')."
+    },
+    "authorized": {
+      "type": "boolean",
+      "description": "Authorization decision. true = authorized, false = not authorized."
+    },
+    "time_evaluated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "RFC 3339 UTC timestamp when the authorization decision was evaluated."
+    },
+    "time_requested": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "RFC 3339 UTC timestamp from the request context, if provided."
+    },
+    "message": {
+      "type": ["string", "null"],
+      "description": "Human-readable explanation of the decision."
+    }
+  },
+  "additionalProperties": true,
+  "$comment": "Ayra uses a flat response shape. The core CTS schema wraps the decision in a 'decision' object. This override is applied via profiles/ayra_baseline.yaml schema_overrides. Both schemas validate the same semantic content but with different field structure."
 }
