@@ -12,9 +12,7 @@ tier: 0
 
 📘 **Documentation site (GitHub Pages):** https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/
 
-
-**Current version:** v0.8.0
-
+**Current version:** v0.9.0
 
 ![CI](https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite/actions/workflows/cts.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
@@ -25,8 +23,6 @@ tier: 0
 Looking for the *single front door* across TRQP conformance + security/privacy assurance?
 
 - Hub repo (onboarding, operating model, combined workflows): https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub
-
-
 
 ## Assurance Level Semantics
 
@@ -45,6 +41,29 @@ This is an independent, open reference implementation. It is not an official art
 
 ---
 
+## Ayra Trust Network
+
+For registries targeting the [Ayra Trust Network](https://ayra.forum), use the `ayra_baseline` profile:
+
+```bash
+python cts/run.py \
+  --profile profiles/ayra_baseline.yaml \
+  --sut examples/sut.local.yaml \
+  --out reports/ayra-run
+```
+
+The `ayra_baseline` profile extends `enterprise` with:
+
+- RFC 7807 error format validation (Ayra MUST)
+- Freshness gates on both `/authorization` and `/recognition`
+- Eight `TC-AYRA-*` test cases for all RECOMMENDED Ayra extension endpoints
+- Ayra flat-shape response schema overrides (`schemas/ayra/`)
+
+See [`docs/ayra-crosswalk.md`](docs/ayra-crosswalk.md) for the full artifact mapping, identifier requirements, and submission checklist.
+
+Reference: [Ayra TRQP Profile v0.5.0-draft](https://ayraforum.github.io/ayra-trust-registry-resources/)
+
+---
 
 ## Authoritative directories (SAD-1 / GRID)
 
@@ -62,10 +81,9 @@ Choose the path that matches your role:
 - **TRQP implementer**: run the **Baseline** profile, review `docs/START_HERE.md`, then compare results to the reference reports in `docs/reference-reports/`.
 - **Spec author / working group participant**: review `docs/TRQP_Conformance_Philosophy.md` and `docs/ROADMAP.md` to see how requirements map to executable tests and evidence.
 - **Ecosystem / governance / assurance**: read `docs/SOCIALIZING_NOTES.md`, `docs/evidence_bundles.md`, and the Hub crosswalk (`docs/hub-crosswalk.md`) to understand the evidence contract and profile model.
+- **Ayra registry operator**: run the `ayra_baseline` profile and see `docs/ayra-crosswalk.md` for the pre-certification evidence checklist.
 
 ---
-
-
 
 ## Local example configuration
 
@@ -102,7 +120,7 @@ TRQP is designed as a lightweight verification rail across trust ecosystems. Wit
 - Inconsistent lifecycle semantics
 - Fragmented security posture
 - Weak or undefined error modeling
-- “Pass” results without verifiable evidence
+- "Pass" results without verifiable evidence
 
 This suite addresses those risks through executable, assertion-based testing.
 
@@ -111,7 +129,7 @@ This suite addresses those risks through executable, assertion-based testing.
 ## What You Get
 
 - **Profiles** that scale assurance without changing core protocol semantics
-  - Baseline, Enterprise, High-Assurance
+  - Baseline, Enterprise, High-Assurance, Ayra Baseline
 - **Requirement IDs** mapped to executable tests
 - **Deterministic verdict model** (PASS/FAIL/INCONCLUSIVE/NOT_APPLICABLE)
 - **Evidence bundles** that are audit-friendly
@@ -131,6 +149,7 @@ Profiles:
 - **Baseline** — Minimal interoperable TRQP behavior
 - **Enterprise** — Governance metadata and operational discipline
 - **High-Assurance** — Deterministic state reference, replay resistance, stronger security enforcement
+- **Ayra Baseline** — Extends Enterprise for Ayra Trust Network pre-certification
 
 Profiles determine which requirements are mandatory.
 
@@ -209,13 +228,13 @@ The runner executes profile-bound tests, captures transcripts, validates asserti
 ## Repository Structure
 
 ```
-profiles/         Conformance profiles
+profiles/         Conformance profiles (including ayra_baseline.yaml)
 requirements/     Requirement catalog with stable IDs
 tests/            Declarative test definitions
-schemas/          JSON schemas for validation
+schemas/          JSON schemas for validation (including schemas/ayra/)
 cts/              Conformance test runner
 examples/         Example TRQP-like service and configuration
-docs/             Design philosophy and evidence model
+docs/             Design philosophy, evidence model, and crosswalks
 ```
 
 ---
@@ -238,6 +257,12 @@ python cts/run.py   --profile profiles/baseline.yaml   --sut examples/sut.local.
 
 ```
 python cts/run.py   --profile profiles/high_assurance.yaml   --sut examples/sut.local.yaml   --out reports/runHA
+```
+
+### 4. Run Ayra Baseline Profile
+
+```
+python cts/run.py   --profile profiles/ayra_baseline.yaml   --sut examples/sut.local.yaml   --out reports/ayra-run
 ```
 
 ---
@@ -270,7 +295,7 @@ This repo includes sample evidence bundles under:
 - `docs/reference-reports/sample_run_baseline/`
 - `docs/reference-reports/sample_run_high_assurance/`
 
-These are intended as concrete examples of what “good evidence” looks like, and how to verify manifests and signatures.
+These are intended as concrete examples of what "good evidence" looks like, and how to verify manifests and signatures.
 
 ---
 
