@@ -16,3 +16,8 @@ Use `--run-id` and `--target-id` when invoking `cts/run.py` for cross-repo stack
 ```bash
 python cts/run.py   --profile profiles/interop_demo.yaml   --sut examples/sut.local.yaml   --out reports/interop_demo   --run-id opstack-demo-001   --target-id demo-directory
 ```
+
+
+## Discovery and publication
+
+CTS reports are intended to be consumed by the Assurance Hub and then published through the Hub's Trust Registry reference service. In other words, CTS answers the behavior question, while the registry answers the discovery question.

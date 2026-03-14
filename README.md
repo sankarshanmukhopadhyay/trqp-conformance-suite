@@ -12,7 +12,7 @@ tier: 0
 
 📘 **Documentation site (GitHub Pages):** https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/
 
-**Current version:** v0.9.0
+**Current version:** v0.9.1
 
 ![CI](https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite/actions/workflows/cts.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
@@ -23,6 +23,7 @@ tier: 0
 Looking for the *single front door* across TRQP conformance + security/privacy assurance?
 
 - Hub repo (onboarding, operating model, combined workflows): https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub
+- Operational Stack narrative and trust registry publication flow live in the Hub docs.
 
 ## Assurance Level Semantics
 

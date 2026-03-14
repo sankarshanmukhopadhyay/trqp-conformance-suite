@@ -64,9 +64,9 @@ This suite includes optional schemas and guidance for GRID-style artifacts.
 
 ## Version pins
 
-- TRQP Assurance Hub: v0.9.0
-- TRQP Conformance Suite: v0.8.0
-- TRQP TSPP: v0.6.0
+- TRQP Assurance Hub: v1.1.0
+- TRQP Conformance Suite: v0.9.1
+- TRQP TSPP: v0.7.1
 
 ## UNTP DIA considerations
 
@@ -83,3 +83,8 @@ CTS recognizes optional supply chain integrity evidence artifacts in bundle desc
 | `openssf_scorecard_report` | scorecard output | Automated posture checks evidence |
 
 Reference: `docs/reference/openssf-supply-chain.md`.
+
+
+## Discovery surface
+
+When CTS reports are incorporated into a Combined Assurance Manifest, the resulting artifacts SHOULD be publishable through the Assurance Hub Trust Registry reference service so that conformance evidence becomes discoverable by ecosystem participants.
