@@ -20,6 +20,7 @@ from nacl.signing import SigningKey
 from nacl.encoding import Base64Encoder
 
 ROOT = Path(__file__).resolve().parent.parent
+VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 def now_iso():
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -192,6 +193,8 @@ def main():
     ap.add_argument("--profile", required=True, help="Path to profile YAML")
     ap.add_argument("--sut", required=True, help="Path to SUT config YAML")
     ap.add_argument("--out", required=True, help="Output directory for evidence artifacts")
+    ap.add_argument("--run-id", default=None, help="Optional shared run identifier for Operational Stack workflows")
+    ap.add_argument("--target-id", default=None, help="Optional stable target identifier for Operational Stack workflows")
     ap.add_argument("--dry-run", action="store_true",
                     help="Validate inputs and list applicable tests without executing any HTTP requests")
     ap.add_argument("--list-tests", action="store_true",
@@ -220,17 +223,19 @@ def main():
     if profile.get("gates", {}).get("require_state_reference") and not sut.get("state_reference"):
         raise SystemExit("Gate failed: sut.state_reference required for this profile.")
 
-    run_id = str(uuid.uuid4())
+    run_id = args.run_id or str(uuid.uuid4())
+    base_url = sut["base_url"]
+    target_id = args.target_id or sut.get("target_id") or base_url
     run = {
         "test_run_id": run_id,
         "profile_id": profile["id"],
         "out_dir_label": out.name,
         "sut": {k:v for k,v in sut.items() if k != "signing_key_b64"},
+        "target_id": target_id,
         "started_at": now_iso(),
-        "tool": {"name": "trqp-cts", "version": "0.1.0"},
+        "tool": {"name": "trqp-cts", "version": VERSION},
     }
 
-    base_url = sut["base_url"]
     verdicts = []
 
     for tc in tests:
@@ -373,6 +378,28 @@ def main():
     (out/"run.json").write_text(json.dumps(run, indent=2), encoding="utf-8")
     (out/"verdicts.json").write_text(json.dumps(verdicts, indent=2), encoding="utf-8")
 
+    summary_counts = {
+        "PASS": sum(1 for v in verdicts if v["result"] == "PASS"),
+        "FAIL": sum(1 for v in verdicts if v["result"] == "FAIL"),
+        "SKIP": sum(1 for v in verdicts if v["result"] == "SKIP"),
+        "NOT_APPLICABLE": sum(1 for v in verdicts if v["result"] == "NOT_APPLICABLE"),
+        "ERROR": sum(1 for v in verdicts if v["result"] == "ERROR"),
+        "XFAIL": sum(1 for v in verdicts if v["result"] == "XFAIL"),
+        "exit_status": 0 if all(v["result"] in ["PASS", "NOT_APPLICABLE"] for v in verdicts) else 1,
+    }
+    cts_report = {
+        "run_id": run_id,
+        "target_id": target_id,
+        "generated_at": now_iso(),
+        "profile": profile["id"],
+        "profile_id": profile["id"],
+        "suite_version": VERSION,
+        "tool": {"name": "trqp-cts", "version": VERSION},
+        "summary": summary_counts,
+        "results": verdicts,
+    }
+    (out/"cts-report.json").write_text(json.dumps(cts_report, indent=2), encoding="utf-8")
+
     manifest = {"generated_at": now_iso(), "hashes": {}}
     for p in sorted(out.rglob("*")):
         if p.is_file() and p.name not in ["bundle.zip","manifest.sig"]:
@@ -423,6 +450,7 @@ def main():
         "cts_bundle_zip": "conformance_evidence_bundle_zip",
         "cts_bundle_descriptor": "conformance_evidence_bundle_descriptor",
         "cts_checksums": "evidence_bundle_checksums",
+        "cts_report": "conformance_report",
     }
 
 
@@ -444,6 +472,7 @@ def main():
         artifact_index.append(entry)
 
     add_idx("cts_run_json", "run.json")
+    add_idx("cts_report", "cts-report.json", notes="Operational Stack conformance report.")
     add_idx("cts_verdicts", "verdicts.json")
     add_idx("cts_manifest", "manifest.json")
     if (out/"manifest.sig").exists():

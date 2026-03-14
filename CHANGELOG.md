@@ -1,3 +1,9 @@
+## v0.9.0
+
+- Add an `interop_demo` profile for onboarding and Operational Stack demonstrations.
+- Extend `cts/run.py` with shared `--run-id` and `--target-id` support and emit `cts-report.json` for Assurance Hub ingestion.
+- Add `docs/integration/assurance-hub.md` to document the integrated workflow.
+
 # Changelog
 
 ## v0.8.0 (2026-03-10)

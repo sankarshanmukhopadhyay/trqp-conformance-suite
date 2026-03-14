@@ -1,0 +1,8 @@
+id: interop_demo
+name: Interop Demo
+version: 0.1.0
+notes: Lightweight profile for onboarding, workshops, and Operational Stack demonstrations.
+gates: {}
+evidence:
+  bundle: true
+  sign_manifest: false

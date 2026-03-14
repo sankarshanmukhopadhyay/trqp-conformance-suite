@@ -374,3 +374,8 @@ The CTS ships an **experimental** DeDi artifact validator (schema checks) to sup
 - See `docs/profiles.md` and `profiles/dedi_experimental.yaml` (snapshot 2026-03-03).
 
 - DeDi mapping matrix: `docs/reference/dedi-mapping-matrix.md`
+
+
+## Operational Stack integration
+
+CTS now emits `cts-report.json` in each report directory and supports `--run-id` and `--target-id` so the Assurance Hub can build a combined manifest without translation glue.

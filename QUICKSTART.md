@@ -112,3 +112,17 @@ python cts/run.py \
 - Evidence bundle model: `docs/evidence_bundles.md`
 - Start-here guide (by role): `docs/START_HERE.md`
 - TRQP Assurance Hub: https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub
+
+
+### Operational Stack demo
+
+```bash
+python cts/run.py \
+  --profile profiles/interop_demo.yaml \
+  --sut examples/sut.local.yaml \
+  --out reports/interop_demo \
+  --run-id opstack-demo-001 \
+  --target-id demo-directory
+```
+
+This writes `cts-report.json` alongside the standard evidence bundle artifacts.
