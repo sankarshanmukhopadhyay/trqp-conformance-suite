@@ -1,0 +1,15 @@
+{
+  "profile_id": "baseline",
+  "suite_version": "1.0.0",
+  "summary": {
+    "PASS": 14,
+    "FAIL": 0,
+    "SKIP": 1,
+    "NOT_APPLICABLE": 0,
+    "ERROR": 0,
+    "XFAIL": 0,
+    "exit_status": 0,
+    "coverage_index": 93.33,
+    "evidence_completeness": 100.0
+  }
+}

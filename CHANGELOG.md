@@ -1,3 +1,9 @@
+## v1.0.0
+
+- Added coverage and evidence completeness metrics to the Conformance Report.
+- Added Operational Trust Stack public documentation and Golden Flow examples.
+- Refreshed public-facing docs and synchronized versions across the stack.
+
 ## v0.9.0
 
 - Add an `interop_demo` profile for onboarding and Operational Stack demonstrations.

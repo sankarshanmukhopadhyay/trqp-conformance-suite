@@ -1,6 +1,6 @@
 ---
 owner: maintainers
-last_reviewed: 2026-03-10
+last_reviewed: 2026-03-17
 tier: 0
 ---
 
@@ -12,61 +12,45 @@ tier: 0
 
 📘 **Documentation site (GitHub Pages):** https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/
 
-**Current version:** v0.9.1
+**Current version:** v1.0.0
+
+**Release line:** Operational Trust Stack v1
 
 ![CI](https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite/actions/workflows/cts.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
-![Status](https://img.shields.io/badge/status-Experimental-orange)
+![Status](https://img.shields.io/badge/status-Operational%20Baseline-brightgreen)
 
-## Start here: TRQP Assurance Hub
+The Conformance Suite is the **verification engine** in the three-repository Operational Trust Stack v1 release line.
+It turns protocol expectations into repeatable execution, structured verdicts, bundleable evidence, and a machine-readable
+**Conformance Report** that downstream assurance workflows can ingest directly.
 
-Looking for the *single front door* across TRQP conformance + security/privacy assurance?
+## Where this fits
 
-- Hub repo (onboarding, operating model, combined workflows): https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub
-- Operational Stack narrative and trust registry publication flow live in the Hub docs.
+| Layer | Repository role | Primary output |
+|---|---|---|
+| TSPP | Posture computation | Posture Report |
+| Conformance Suite | Protocol verification | Conformance Report |
+| Assurance Hub | Assurance orchestration and publication | Combined Assurance Manifest |
 
-## Assurance Level Semantics
+## What is new in v1.0.0
 
-This repository **consumes** Assurance Level (AL1–AL4) semantics from the **TRQP Assurance Hub**.
+- Canonical Conformance Report metrics: `coverage_index` and `evidence_completeness`
+- Golden flow example assets for stack integration
+- Public docs refreshed and aligned to the system-level narrative
+- Version synchronization with TSPP v0.8.0 and Assurance Hub v1.2.0
 
-- Canonical definitions: `docs/guides/assurance-levels.md` (in the Hub)
-- Machine-readable contract: `al-contract.json`
+## Start here
 
-This suite parameterizes tests and evidence templates by AL but **MUST NOT** redefine AL meanings locally. For audit stability, this repo includes an `al-contract.json` with the SHA-256 of the canonical AL definition document (`61c599c5fa06e0c9110f40ff71c0174db5502105b97f1391dbd9ae8548115f71`).
+- Operational stack overview: [`docs/operational-stack.md`](docs/operational-stack.md)
+- Start here guide: [`docs/START_HERE.md`](docs/START_HERE.md)
+- Quickstart: [`QUICKSTART.md`](QUICKSTART.md)
+- Hub repo: https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub
 
-Conformance Test Suite for the Trust Registry Query Protocol (TRQP).
+## Why this exists
 
-This repository provides a profile-driven, evidence-oriented testing framework to validate TRQP implementations for interoperability, determinism, lifecycle correctness, and operational readiness.
-
-This is an independent, open reference implementation. It is not an official artifact of the Trust over IP Foundation. The goal is to support ecosystem alignment and accelerate production-grade conformance discussions.
-
----
-
-## Ayra Trust Network
-
-For registries targeting the [Ayra Trust Network](https://ayra.forum), use the `ayra_baseline` profile:
-
-```bash
-python cts/run.py \
-  --profile profiles/ayra_baseline.yaml \
-  --sut examples/sut.local.yaml \
-  --out reports/ayra-run
-```
-
-The `ayra_baseline` profile extends `enterprise` with:
-
-- RFC 7807 error format validation (Ayra MUST)
-- Freshness gates on both `/authorization` and `/recognition`
-- Eight `TC-AYRA-*` test cases for all RECOMMENDED Ayra extension endpoints
-- Ayra flat-shape response schema overrides (`schemas/ayra/`)
-
-See [`docs/ayra-crosswalk.md`](docs/ayra-crosswalk.md) for the full artifact mapping, identifier requirements, and submission checklist.
-
-Reference: [Ayra TRQP Profile v0.5.0-draft](https://ayraforum.github.io/ayra-trust-registry-resources/)
-
----
-
-## Authoritative directories (SAD-1 / GRID)
+A protocol is not operational just because a spec exists. This suite gives implementers a CI-friendly way to prove
+what they satisfy, what they skipped, and how complete their evidence is. That matters because interoperability has a
+nasty habit of collapsing into vibes unless someone makes the checks executable.
 
 The TRQP ecosystem can evaluate **authoritative digital trust directories** (including sovereign registry patterns) by treating published directory artifacts as evidence.
 

@@ -1,8 +1,6 @@
 ---
-layout: default
-title: TRQP Conformance Suite
 owner: maintainers
-last_reviewed: 2026-03-10
+last_reviewed: 2026-03-17
 tier: 0
 ---
 
@@ -10,7 +8,7 @@ tier: 0
 
 This site publishes the documentation for the **TRQP Conformance Suite** repository via **GitHub Pages**.
 
-**Current version:** v0.9.1 · [Assurance Hub](https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub) · [TRQP-TSPP](https://github.com/sankarshanmukhopadhyay/TRQP-TSPP)
+**Current version:** v1.0.0 · [Assurance Hub](https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub) · [TRQP-TSPP](https://github.com/sankarshanmukhopadhyay/TRQP-TSPP)
 
 ## Start here
 

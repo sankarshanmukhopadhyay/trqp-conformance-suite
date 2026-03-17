@@ -378,13 +378,25 @@ def main():
     (out/"run.json").write_text(json.dumps(run, indent=2), encoding="utf-8")
     (out/"verdicts.json").write_text(json.dumps(verdicts, indent=2), encoding="utf-8")
 
+    pass_count = sum(1 for v in verdicts if v["result"] == "PASS")
+    fail_count = sum(1 for v in verdicts if v["result"] == "FAIL")
+    skip_count = sum(1 for v in verdicts if v["result"] == "SKIP")
+    na_count = sum(1 for v in verdicts if v["result"] == "NOT_APPLICABLE")
+    error_count = sum(1 for v in verdicts if v["result"] == "ERROR")
+    xfail_count = sum(1 for v in verdicts if v["result"] == "XFAIL")
+    applicable = len(verdicts) - na_count
+    evaluated = pass_count + fail_count + error_count + xfail_count
+    coverage_index = round((evaluated / applicable) * 100.0, 2) if applicable else 100.0
+    evidence_completeness = round(((pass_count + skip_count) / applicable) * 100.0, 2) if applicable else 100.0
     summary_counts = {
-        "PASS": sum(1 for v in verdicts if v["result"] == "PASS"),
-        "FAIL": sum(1 for v in verdicts if v["result"] == "FAIL"),
-        "SKIP": sum(1 for v in verdicts if v["result"] == "SKIP"),
-        "NOT_APPLICABLE": sum(1 for v in verdicts if v["result"] == "NOT_APPLICABLE"),
-        "ERROR": sum(1 for v in verdicts if v["result"] == "ERROR"),
-        "XFAIL": sum(1 for v in verdicts if v["result"] == "XFAIL"),
+        "PASS": pass_count,
+        "FAIL": fail_count,
+        "SKIP": skip_count,
+        "NOT_APPLICABLE": na_count,
+        "ERROR": error_count,
+        "XFAIL": xfail_count,
+        "coverage_index": coverage_index,
+        "evidence_completeness": evidence_completeness,
         "exit_status": 0 if all(v["result"] in ["PASS", "NOT_APPLICABLE"] for v in verdicts) else 1,
     }
     cts_report = {
