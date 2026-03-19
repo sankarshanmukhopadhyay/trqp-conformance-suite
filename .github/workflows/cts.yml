@@ -45,7 +45,17 @@ jobs:
         run: |
           python scripts/verify_al_contract.py
 
-      - name: Start example SUT
+      - name: Run Baseline profile (fixture-pinned, deterministic)
+        run: |
+          python cts/run.py \
+            --profile profiles/baseline.yaml \
+            --sut examples/sut.local.yaml \
+            --fixture-set fixtures/baseline.fixture-set.json \
+            --generated-at "2026-01-15T00:00:00Z" \
+            --run-id "ci-fixture-baseline" \
+            --out reports/ci_baseline_fixture
+
+      - name: Start example SUT (for live run)
         run: |
           uvicorn examples.poc_service:app --host 127.0.0.1 --port 8000 &
           for i in $(seq 1 20); do
@@ -56,13 +66,22 @@ jobs:
             sleep 0.5
           done
 
-      - name: Run Baseline profile
+      - name: Run Baseline profile (live SUT)
         run: |
           python cts/run.py --profile profiles/baseline.yaml --sut examples/sut.local.yaml --out reports/ci_baseline
 
       - name: Run High-Assurance profile
         run: |
           python cts/run.py --profile profiles/high_assurance.yaml --sut examples/sut.local.yaml --out reports/ci_high_assurance
+
+      - name: Replay baseline run (determinism verification)
+        run: |
+          python cts/run.py \
+            --profile profiles/baseline.yaml \
+            --sut examples/sut.local.yaml \
+            --replay reports/ci_baseline \
+            --generated-at "2026-01-15T00:00:00Z" \
+            --out reports/ci_baseline_replay
 
       - name: Ensure bundle.zip exists (Baseline)
         run: |
@@ -73,6 +92,18 @@ jobs:
         run: |
           chmod +x scripts/create_bundle.sh
           ./scripts/create_bundle.sh reports/ci_high_assurance
+
+      - name: Upload Fixture-pinned Baseline bundle
+        uses: actions/upload-artifact@v7
+        with:
+          name: trqp-cts-baseline-fixture-bundle
+          path: |
+            reports/ci_baseline_fixture/bundle.zip
+            reports/ci_baseline_fixture/manifest.json
+            reports/ci_baseline_fixture/verdicts.json
+            reports/ci_baseline_fixture/run.json
+            reports/ci_baseline_fixture/cts-report.json
+          if-no-files-found: error
 
       - name: Upload Baseline bundle
         uses: actions/upload-artifact@v7
@@ -97,11 +128,20 @@ jobs:
             reports/ci_high_assurance/run.json
           if-no-files-found: warn
 
+      - name: Upload replay report
+        uses: actions/upload-artifact@v7
+        with:
+          name: trqp-cts-baseline-replay-report
+          path: reports/ci_baseline_replay/replay-report.json
+          if-no-files-found: warn
+
       - name: Upload full reports (debug)
         uses: actions/upload-artifact@v7
         with:
           name: trqp-cts-reports-full
           path: |
             reports/ci_baseline/**
+            reports/ci_baseline_fixture/**
+            reports/ci_baseline_replay/**
             reports/ci_high_assurance/**
           if-no-files-found: warn

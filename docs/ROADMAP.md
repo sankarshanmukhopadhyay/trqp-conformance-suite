@@ -17,8 +17,10 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 
 ## 2026 Q2: Deterministic replay and state models
 
-- Planned: deterministic replay mode (`--replay <run-dir>`)
-- Planned: state snapshot verification models (fixture ID, snapshot hash, signed snapshot)
+- ✅ Deterministic replay mode (`--replay <run-dir>`): re-evaluates assertion logic over captured case files, emits `replay-report.json` with verdict diffs.
+- ✅ Fixture-pinned run mode (`--fixture-set <file>`): canned responses with SHA-256 provenance embedded in `run.json`.
+- ✅ `--generated-at` timestamp pinning: all evidence artifact timestamps are now deterministic when a value is supplied.
+- Planned: state snapshot verification (fetch, hash, and gate on declared `state_snapshot_url`)
 
 ## 2026 Q3: Security profiles and plugfests
 
@@ -43,7 +45,7 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 - JSONPath wildcard bug fixed for correct assertion evaluation on array paths.
 - QUICKSTART and expanded SECURITY documentation complete.
 
-_Last updated: 2026-03-06_
+_Last updated: 2026-03-19_
 
 ## UNTP DIA considerations
 

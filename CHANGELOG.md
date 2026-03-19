@@ -1,3 +1,14 @@
+## v1.1.0
+
+- Add `--generated-at` flag to `cts/run.py` to pin timestamps for deterministic, reproducible evidence artifacts.
+- Add `--fixture-set` flag to `cts/run.py` for canned-response runs without a live SUT; embeds fixture set SHA-256 and ID in `run.json` for full provenance.
+- Add `--replay <run-dir>` flag to `cts/run.py` to re-evaluate assertion logic over captured case files without hitting a SUT; emits `replay-report.json` with per-assertion verdict diffs.
+- Extract `_evaluate_assertions()` as a shared helper used by both live runs and replay, eliminating assertion logic duplication.
+- Add `fixtures/baseline.fixture-set.json`: canonical canned-response fixture set for the baseline profile, covering all 11 non-HA test cases with schema-valid responses.
+- Update CI workflow to run the fixture-pinned baseline profile deterministically on every push, and to replay the live baseline run as a post-run determinism check.
+- Fix `docs/assurance-levels.canonical.md` back-link (`./index.md` → `../index.md`) to resolve correctly from the `docs/` subdirectory.
+- Update `al-contract.json` to pin the corrected canonical doc SHA-256 (`61c599c5...`) matching TRQP Assurance Hub v1.2.0 and TRQP-TSPP v0.8.0.
+
 ## v1.0.0
 
 - Added coverage and evidence completeness metrics to the Conformance Report.

@@ -5,6 +5,9 @@ machine-readable evidence artifacts (reports, manifests, bundles).
 
 Operator notes:
 - Prefer deterministic mode for CI and audit-grade runs.
+- Use --generated-at to pin timestamps for reproducible output.
+- Use --fixture-set to run against canned responses instead of a live SUT.
+- Use --replay to re-evaluate assertion logic over a prior run directory.
 - Outputs are written under the configured output directory with stable naming.
 
 This docstring exists to make the runner easier to maintain and safer to adapt.
@@ -31,7 +34,6 @@ def sha256_bytes(b: bytes) -> str:
 def sha256_file(p: Path) -> str:
     return sha256_bytes(p.read_bytes())
 
-
 def guess_media_type(p: Path) -> str | None:
     suf = p.suffix.lower()
     if suf == ".json":
@@ -43,7 +45,6 @@ def guess_media_type(p: Path) -> str | None:
     if suf in [".yaml", ".yml"]:
         return "text/yaml"
     return None
-
 
 def load_yaml(p: Path):
     return yaml.safe_load(p.read_text(encoding="utf-8"))
@@ -64,20 +65,17 @@ def json_path_get(doc, path: str):
     if not path.startswith("$"):
         raise ValueError("Only supports paths starting with $")
 
-    # Tokenize
-    i = 1  # skip $
+    i = 1
     tokens = []
     while i < len(path):
         if path[i] == ".":
             i += 1
-            # read identifier until . or [ or end
             j = i
             while j < len(path) and path[j] not in ".[":
                 j += 1
             tokens.append(("key", path[i:j]))
             i = j
         elif path[i] == "[":
-            # index, wildcard, or quoted key
             j = path.find("]", i)
             if j == -1:
                 raise ValueError(f"Unclosed [ in path: {path}")
@@ -87,7 +85,6 @@ def json_path_get(doc, path: str):
             elif (inner.startswith('"') and inner.endswith('"')) or (inner.startswith("'") and inner.endswith("'")):
                 tokens.append(("key", inner[1:-1]))
             else:
-                # assume integer index
                 tokens.append(("index", int(inner)))
             i = j + 1
         else:
@@ -103,14 +100,13 @@ def json_path_get(doc, path: str):
             return None
         if kind == "wildcard":
             if isinstance(cur, list):
-                return cur[:]  # list of items to expand
+                return cur[:]
             return None
         raise ValueError("unknown token")
 
     cur = doc
     for idx, tok in enumerate(tokens):
         if tok[0] == "wildcard":
-            # Expand wildcard: apply remaining tokens to each element
             remainder = tokens[idx + 1:]
             arr = step(cur, tok)
             if arr is None:
@@ -141,7 +137,6 @@ def http_request(base_url: str, tc: dict, headers: dict, body):
     return requests.request(method, url, headers=headers, json=body, timeout=20)
 
 def add_ha_headers(headers: dict, sut: dict, nonce: str, ts: str):
-    # Demo HA control plane (example SUT expects these)
     headers["X-Auth-Mode"] = "high_assurance"
     api_key = sut.get("api_key")
     if not api_key:
@@ -149,7 +144,6 @@ def add_ha_headers(headers: dict, sut: dict, nonce: str, ts: str):
     headers["X-API-Key"] = api_key
     headers["X-Nonce"] = nonce
     headers["X-Timestamp"] = ts
-
 
 def resolve_identifiers(sut: dict) -> dict:
     """Return identifier overrides from sut config, with defaults."""
@@ -162,7 +156,6 @@ def resolve_identifiers(sut: dict) -> dict:
     overrides = sut.get("identifiers", {}) or {}
     return {**defaults, **overrides}
 
-
 def apply_identifier_overrides(body: dict | None, identifiers: dict) -> dict | None:
     """Replace placeholder identifier values in a request body with SUT-specific overrides."""
     if body is None:
@@ -172,7 +165,6 @@ def apply_identifier_overrides(body: dict | None, identifiers: dict) -> dict | N
         if field in result:
             result[field] = identifiers[field]
     return result
-
 
 def list_tests(tests: list, profile: dict) -> None:
     """Print test IDs and names applicable to the given profile."""
@@ -187,6 +179,245 @@ def list_tests(tests: list, profile: dict) -> None:
         print(f"  [{status}] {tc['id']}: {tc.get('name', '')}")
     print()
 
+# ---------------------------------------------------------------------------
+# Fixture-set support
+# ---------------------------------------------------------------------------
+
+def load_fixture_set(path: Path) -> dict:
+    """Load a fixture set JSON file.
+
+    Expected shape::
+
+        {
+          "fixture_set_id": "v1",
+          "description": "...",
+          "fixtures": {
+            "<tc_id>": {
+              "status": 200,
+              "headers": {"Content-Type": "application/json"},
+              "body": { ... }
+            }
+          }
+        }
+    """
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    if "fixtures" not in raw:
+        raise SystemExit(f"fixture-set file missing 'fixtures' key: {path}")
+    return raw
+
+
+class _FixtureResponse:
+    """Minimal stand-in for a requests.Response, backed by a fixture entry."""
+
+    def __init__(self, entry: dict):
+        self.status_code: int = int(entry.get("status", 200))
+        self.headers: dict = {k: v for k, v in (entry.get("headers") or {}).items()}
+        self._body = entry.get("body")
+        self.text: str = json.dumps(self._body) if self._body is not None else entry.get("text", "")
+
+    def json(self):
+        if self._body is not None:
+            return self._body
+        return json.loads(self.text)
+
+
+def fixture_request(fixture_set: dict, tc_id: str):
+    """Return a _FixtureResponse for tc_id if present, else None."""
+    entry = fixture_set.get("fixtures", {}).get(tc_id)
+    if entry is None:
+        return None
+    return _FixtureResponse(entry)
+
+
+# ---------------------------------------------------------------------------
+# Assertion re-evaluation (shared by live runs and replay)
+# ---------------------------------------------------------------------------
+
+def _evaluate_assertions(tc: dict, resp_status, resp_headers: dict, resp_json, resp_text: str) -> tuple[bool, list]:
+    """Run all expect-block assertions against response data. Returns (ok, assertions)."""
+    ok = True
+    assertions = []
+    exp = tc.get("expect", {})
+
+    if "status" in exp and "status_in" in exp:
+        ok = False
+        assertions.append({"type": "expect_config", "error": "expect.status and expect.status_in are mutually exclusive", "pass": False})
+
+    if "status" in exp:
+        passed = resp_status == exp["status"]
+        ok &= passed
+        assertions.append({"type": "status", "expected": exp["status"], "actual": resp_status, "pass": passed})
+
+    if "status_in" in exp:
+        passed = resp_status in exp["status_in"]
+        ok &= passed
+        assertions.append({"type": "status_in", "expected": exp["status_in"], "actual": resp_status, "pass": passed})
+
+    needs_json = any(k in exp for k in ["schema", "json_path_exists", "json_path_equals"]) or exp.get("response_json")
+    if needs_json:
+        if resp_json is not None:
+            assertions.append({"type": "json_parse", "pass": True})
+        else:
+            try:
+                resp_json = json.loads(resp_text) if resp_text else None
+                parse_ok = resp_json is not None
+            except Exception:
+                parse_ok = False
+                resp_json = None
+            assertions.append({"type": "json_parse", "pass": parse_ok})
+            if not parse_ok:
+                ok = False
+
+    if "response_header_contains" in exp:
+        for k, v in exp["response_header_contains"].items():
+            actual = resp_headers.get(k)
+            passed = (actual is not None and v in actual) if k.lower() == "content-type" else (actual == v)
+            ok &= passed
+            assertions.append({"type": "header_contains", "header": k, "expected": v, "actual": actual, "pass": passed})
+
+    if exp.get("schema") and resp_json is not None:
+        schema = load_json(ROOT / exp["schema"])
+        try:
+            js_validate(instance=resp_json, schema=schema)
+            assertions.append({"type": "schema", "schema": exp["schema"], "pass": True})
+        except Exception as e:
+            ok = False
+            assertions.append({"type": "schema", "schema": exp["schema"], "pass": False, "error": str(e)})
+
+    if exp.get("json_path_exists") and resp_json is not None:
+        for p in exp["json_path_exists"]:
+            v = json_path_get(resp_json, p)
+            passed = (v is not None) and (v != [])
+            ok &= passed
+            assertions.append({"type": "json_path_exists", "path": p, "pass": passed})
+
+    if exp.get("json_path_equals") and resp_json is not None:
+        for p, expected in exp["json_path_equals"]:
+            actual = json_path_get(resp_json, p)
+            passed = (actual == expected)
+            ok &= passed
+            assertions.append({"type": "json_path_equals", "path": p, "expected": expected, "actual": actual, "pass": passed})
+
+    if exp.get("json_path_in") and resp_json is not None:
+        for p, allowed in exp["json_path_in"]:
+            actual = json_path_get(resp_json, p)
+            passed = actual in allowed
+            ok &= passed
+            assertions.append({"type": "json_path_in", "path": p, "allowed": allowed, "actual": actual, "pass": passed})
+
+    return ok, assertions
+
+
+# ---------------------------------------------------------------------------
+# Replay mode
+# ---------------------------------------------------------------------------
+
+def run_replay(replay_dir: Path, out: Path, profile: dict, generated_at: str) -> None:
+    """Re-evaluate assertion logic over a prior run directory without hitting a SUT.
+
+    Reads case files from ``replay_dir/cases/*.json``, re-runs all assertion
+    checks against the captured response, and emits a ``replay-report.json``
+    with per-assertion diffs against the original verdicts.
+    """
+    cases_dir = replay_dir / "cases"
+    if not cases_dir.exists():
+        raise SystemExit(f"Replay directory has no cases/ subdirectory: {replay_dir}")
+
+    orig_verdicts_path = replay_dir / "verdicts.json"
+    if orig_verdicts_path.exists():
+        orig_verdicts = {v["test_case_id"]: v for v in json.loads(orig_verdicts_path.read_text(encoding="utf-8"))}
+    else:
+        orig_verdicts = {}
+
+    orig_run_path = replay_dir / "run.json"
+    orig_run_id = None
+    if orig_run_path.exists():
+        orig_run = json.loads(orig_run_path.read_text(encoding="utf-8"))
+        orig_run_id = orig_run.get("test_run_id")
+
+    out.mkdir(parents=True, exist_ok=True)
+
+    replay_id = str(uuid.uuid4())
+    tests = load_yaml(ROOT / "tests/core_tests.yaml")["tests"]
+    tests_by_id = {tc["id"]: tc for tc in tests}
+
+    replay_verdicts = []
+    diffs = []
+
+    for case_file in sorted(cases_dir.glob("*.json")):
+        tc_id = case_file.stem
+        case = json.loads(case_file.read_text(encoding="utf-8"))
+        tc = tests_by_id.get(tc_id)
+
+        if case.get("skipped"):
+            replay_verdicts.append({"test_case_id": tc_id, "result": "NOT_APPLICABLE", "source": "replay"})
+            continue
+
+        if tc is None:
+            replay_verdicts.append({
+                "test_case_id": tc_id,
+                "result": "STALE",
+                "reason": "test case not found in current suite",
+                "source": "replay",
+            })
+            continue
+
+        resp_status = case.get("response", {}).get("status")
+        resp_headers = case.get("response", {}).get("headers", {})
+        resp_json = case.get("response", {}).get("json")
+        resp_text = case.get("response", {}).get("text", "")
+
+        ok, assertions = _evaluate_assertions(tc, resp_status, resp_headers, resp_json, resp_text)
+
+        result = "PASS" if ok else "FAIL"
+        replay_verdicts.append({
+            "test_case_id": tc_id,
+            "result": result,
+            "assertions": assertions,
+            "source": "replay",
+        })
+
+        orig = orig_verdicts.get(tc_id)
+        if orig and orig.get("result") != result:
+            diffs.append({
+                "test_case_id": tc_id,
+                "original_result": orig.get("result"),
+                "replay_result": result,
+            })
+
+    pass_count = sum(1 for v in replay_verdicts if v["result"] == "PASS")
+    fail_count = sum(1 for v in replay_verdicts if v["result"] == "FAIL")
+    na_count = sum(1 for v in replay_verdicts if v["result"] == "NOT_APPLICABLE")
+    stale_count = sum(1 for v in replay_verdicts if v["result"] == "STALE")
+
+    replay_report = {
+        "replay_run_id": replay_id,
+        "replay_of_run_id": orig_run_id,
+        "replay_dir": str(replay_dir),
+        "profile_id": profile.get("id"),
+        "suite_version": VERSION,
+        "generated_at": generated_at,
+        "summary": {
+            "PASS": pass_count,
+            "FAIL": fail_count,
+            "NOT_APPLICABLE": na_count,
+            "STALE": stale_count,
+            "verdict_diffs": len(diffs),
+            "exit_status": 0 if fail_count == 0 else 1,
+        },
+        "verdict_diffs": diffs,
+        "verdicts": replay_verdicts,
+    }
+
+    (out / "replay-report.json").write_text(json.dumps(replay_report, indent=2), encoding="utf-8")
+    print(f"Replay complete: {pass_count} PASS, {fail_count} FAIL, {len(diffs)} verdict diff(s). Report: {out}/replay-report.json")
+    if fail_count > 0:
+        raise SystemExit(1)
+
+
+# ---------------------------------------------------------------------------
+# Main entry point
+# ---------------------------------------------------------------------------
 
 def main():
     ap = argparse.ArgumentParser(description="TRQP Conformance Suite runner")
@@ -199,11 +430,24 @@ def main():
                     help="Validate inputs and list applicable tests without executing any HTTP requests")
     ap.add_argument("--list-tests", action="store_true",
                     help="Print tests applicable to the selected profile and exit")
+    ap.add_argument("--generated-at", default=None,
+                    help="Fix the generated_at timestamp for deterministic/reproducible output "
+                         "(ISO 8601, e.g. 2026-01-15T00:00:00Z). When omitted, current UTC time is used.")
+    ap.add_argument("--fixture-set", default=None,
+                    help="Path to a fixture-set JSON file. When provided, canned responses are used "
+                         "instead of live HTTP requests, enabling fully deterministic CI runs.")
+    ap.add_argument("--replay", default=None,
+                    help="Path to a prior run output directory. Re-evaluates assertion logic "
+                         "against captured case files without hitting a live SUT. "
+                         "Emits replay-report.json in --out with per-assertion diffs.")
     args = ap.parse_args()
 
     profile = load_yaml(Path(args.profile))
     sut = load_yaml(Path(args.sut))
     out = Path(args.out)
+
+    # Resolve the timestamp to use throughout this run
+    generated_at = args.generated_at or now_iso()
 
     tests = load_yaml(ROOT/"tests/core_tests.yaml")["tests"]
     identifiers = resolve_identifiers(sut)
@@ -217,6 +461,22 @@ def main():
         list_tests(tests, profile)
         print("Dry run complete — no HTTP requests were made.")
         return
+
+    # --replay: re-evaluate over a prior run directory
+    if args.replay:
+        replay_dir = Path(args.replay)
+        if not replay_dir.is_dir():
+            raise SystemExit(f"--replay path does not exist or is not a directory: {replay_dir}")
+        run_replay(replay_dir, out, profile, generated_at)
+        return
+
+    # Load fixture set if provided
+    fixture_set = None
+    fixture_set_sha256 = None
+    if args.fixture_set:
+        fixture_path = Path(args.fixture_set)
+        fixture_set = load_fixture_set(fixture_path)
+        fixture_set_sha256 = sha256_file(fixture_path)
 
     ensure_dirs(out)
 
@@ -232,9 +492,22 @@ def main():
         "out_dir_label": out.name,
         "sut": {k:v for k,v in sut.items() if k != "signing_key_b64"},
         "target_id": target_id,
-        "started_at": now_iso(),
+        "started_at": generated_at,
         "tool": {"name": "trqp-cts", "version": VERSION},
     }
+
+    # Embed fixture set provenance when fixture mode is active
+    if fixture_set is not None:
+        run["fixture_set"] = {
+            "path": args.fixture_set,
+            "sha256": fixture_set_sha256,
+            "fixture_set_id": fixture_set.get("fixture_set_id"),
+        }
+
+    # Embed state reference when declared
+    state_ref = sut.get("state_reference")
+    if state_ref:
+        run["state_reference"] = state_ref
 
     verdicts = []
 
@@ -242,7 +515,6 @@ def main():
         _verdict_override = None
         tc_id = tc["id"]
 
-        # Profile gating: tests may declare 'profiles: [..]' to indicate applicability.
         applicable_profiles = tc.get("profiles")
         if applicable_profiles and profile.get("id") not in applicable_profiles:
             case = {
@@ -264,14 +536,35 @@ def main():
             body = tc.get("request", {}).get("body", None)
             body = apply_identifier_overrides(body, identifiers)
 
-            # If profile is HA, add HA headers for tests except TC-SEC-001 (which asserts unauth)
             if profile["id"] == "high_assurance" and tc_id != "TC-SEC-001":
                 nonce = "nonce-" + str(uuid.uuid4())
-                ts = now_iso()
+                ts = generated_at
                 add_ha_headers(headers, sut, nonce, ts)
 
             started = time.time()
-            resp = http_request(base_url, tc, headers, body)
+
+            # Use fixture set if provided, else make a live HTTP request
+            if fixture_set is not None:
+                resp = fixture_request(fixture_set, tc_id)
+                if resp is None:
+                    elapsed_ms = 0
+                    case = {
+                        "id": tc_id,
+                        "name": tc.get("name"),
+                        "request": {"method": tc.get("method", "POST"), "path": tc["path"], "headers": headers, "body": body},
+                        "response": {"status": None, "headers": {}, "text": ""},
+                        "elapsed_ms": 0,
+                        "assertions": [{"type": "fixture_missing", "pass": False,
+                                        "note": f"No fixture entry for {tc_id} in fixture set"}],
+                    }
+                    case_path = out/"cases"/f"{tc_id}.json"
+                    case_path.write_text(json.dumps(case, indent=2), encoding="utf-8")
+                    verdicts.append({"test_case_id": tc_id, "result": "SKIP",
+                                     "reason": "no fixture entry", "elapsed_ms": 0})
+                    continue
+            else:
+                resp = http_request(base_url, tc, headers, body)
+
             elapsed_ms = int((time.time() - started) * 1000)
 
             case = {
@@ -283,81 +576,34 @@ def main():
                 "assertions": []
             }
 
-            ok = True
+            resp_json = None
             exp = tc.get("expect", {})
 
-            if "status" in exp and "status_in" in exp:
-                ok = False
-                case["assertions"].append({"type":"expect_config","error":"expect.status and expect.status_in are mutually exclusive","pass":False})
-            
-            if "status" in exp:
-                passed = resp.status_code == exp["status"]
-                ok &= passed
-                case["assertions"].append({"type":"status", "expected":exp["status"], "actual":resp.status_code, "pass":passed})
-
-            if "status_in" in exp:
-                passed = resp.status_code in exp["status_in"]
-                ok &= passed
-                case["assertions"].append({"type":"status_in", "expected":exp["status_in"], "actual":resp.status_code, "pass":passed})
-
-            resp_json = None
             needs_json = any(k in exp for k in ["schema","json_path_exists","json_path_equals"]) or exp.get("response_json")
             if needs_json:
                 try:
                     resp_json = resp.json()
                     case["response"]["json"] = resp_json
-                    case["assertions"].append({"type":"json_parse","pass":True})
                 except Exception:
-                    ok = False
-                    case["assertions"].append({"type":"json_parse","pass":False})
+                    pass
 
-            if "response_header_contains" in exp:
-                for k,v in exp["response_header_contains"].items():
-                    actual = resp.headers.get(k)
-                    passed = (actual is not None and v in actual) if k.lower()=="content-type" else (actual == v)
-                    ok &= passed
-                    case["assertions"].append({"type":"header_contains","header":k,"expected":v,"actual":actual,"pass":passed})
-
-            if exp.get("schema") and resp_json is not None:
-                schema = load_json(ROOT/exp["schema"])
-                try:
-                    js_validate(instance=resp_json, schema=schema)
-                    case["assertions"].append({"type":"schema","schema":exp["schema"],"pass":True})
-                except Exception as e:
-                    ok = False
-                    case["assertions"].append({"type":"schema","schema":exp["schema"],"pass":False,"error":str(e)})
-
-            if exp.get("json_path_exists") and resp_json is not None:
-                for p in exp["json_path_exists"]:
-                    v = json_path_get(resp_json, p)
-                    passed = (v is not None) and (v != [])
-                    ok &= passed
-                    case["assertions"].append({"type":"json_path_exists","path":p,"pass":passed})
-
-            if exp.get("json_path_equals") and resp_json is not None:
-                for p, expected in exp["json_path_equals"]:
-                    actual = json_path_get(resp_json, p)
-                    passed = (actual == expected)
-                    ok &= passed
-                    case["assertions"].append({"type":"json_path_equals","path":p,"expected":expected,"actual":actual,"pass":passed})
-
-            if exp.get("json_path_in") and resp_json is not None:
-                for p, allowed in exp["json_path_in"]:
-                    actual = json_path_get(resp_json, p)
-                    passed = actual in allowed
-                    ok &= passed
-                    case["assertions"].append({"type":"json_path_in","path":p,"allowed":allowed,"actual":actual,"pass":passed})
+            ok, assertions = _evaluate_assertions(
+                tc,
+                resp.status_code,
+                dict(resp.headers),
+                resp_json,
+                resp.text,
+            )
+            case["assertions"] = assertions
 
             # Special replay test for HA: send the same nonce twice to trigger 409
-            if tc_id == "TC-SEC-002" and profile["id"] == "high_assurance":
-                # Reuse the same nonce/timestamp headers
+            if tc_id == "TC-SEC-002" and profile["id"] == "high_assurance" and fixture_set is None:
                 resp2 = http_request(base_url, tc, headers, body)
-                passed = resp2.status_code == exp["status"]
+                passed = resp2.status_code == exp.get("status")
                 ok &= passed
-                case["assertions"].append({"type":"replay","expected":exp["status"],"actual":resp2.status_code,"pass":passed})
+                case["assertions"].append({"type":"replay","expected":exp.get("status"),"actual":resp2.status_code,"pass":passed})
 
         except Exception as e:
-            # Record as ERROR to keep reports deterministic and audit-friendly
             elapsed_ms = int((time.time() - started) * 1000) if 'started' in locals() else 0
             case = {
                 "id": tc_id,
@@ -371,10 +617,9 @@ def main():
             _verdict_override = "ERROR"
         case_path = out/"cases"/f"{tc_id}.json"
         case_path.write_text(json.dumps(case, indent=2), encoding="utf-8")
-
         verdicts.append({"test_case_id": tc_id, "result": (_verdict_override if _verdict_override else ("PASS" if ok else "FAIL")), "elapsed_ms": elapsed_ms})
 
-    run["ended_at"] = now_iso()
+    run["ended_at"] = generated_at
     (out/"run.json").write_text(json.dumps(run, indent=2), encoding="utf-8")
     (out/"verdicts.json").write_text(json.dumps(verdicts, indent=2), encoding="utf-8")
 
@@ -402,7 +647,7 @@ def main():
     cts_report = {
         "run_id": run_id,
         "target_id": target_id,
-        "generated_at": now_iso(),
+        "generated_at": generated_at,
         "profile": profile["id"],
         "profile_id": profile["id"],
         "suite_version": VERSION,
@@ -412,7 +657,7 @@ def main():
     }
     (out/"cts-report.json").write_text(json.dumps(cts_report, indent=2), encoding="utf-8")
 
-    manifest = {"generated_at": now_iso(), "hashes": {}}
+    manifest = {"generated_at": generated_at, "hashes": {}}
     for p in sorted(out.rglob("*")):
         if p.is_file() and p.name not in ["bundle.zip","manifest.sig"]:
             manifest["hashes"][str(p.relative_to(out))] = sha256_file(p)
@@ -435,7 +680,6 @@ def main():
                 if p.is_file() and p.name != "bundle.zip":
                     z.write(p, arcname=str(p.relative_to(out)))
 
-    # Bundle descriptor (machine-readable index of key artifacts)
     descriptor = {
         "bundle_version": "0.1.0",
         "run": run,
@@ -449,10 +693,8 @@ def main():
     if (out/"manifest.sig").exists():
         descriptor["artifacts"]["signature"] = "manifest.sig"
 
-    # Normalized artifact index (canonical kinds where applicable)
     artifact_index = []
 
-    # Hub-aligned artifact_kind values (stable semantic labels)
     ARTIFACT_KIND_MAP = {
         "cts_run_json": "conformance_run_metadata",
         "cts_verdicts": "conformance_verdicts",
@@ -464,7 +706,6 @@ def main():
         "cts_checksums": "evidence_bundle_checksums",
         "cts_report": "conformance_report",
     }
-
 
     def add_idx(kind: str, rel_path: str, notes: str | None = None):
         p = out/rel_path
@@ -490,24 +731,19 @@ def main():
     if (out/"manifest.sig").exists():
         add_idx("cts_manifest_sig", "manifest.sig", notes="Signature over manifest.json (high-assurance profiles).")
 
-    # Case-level artifacts
     cases_dir = out/"cases"
     if cases_dir.exists():
         for p in sorted(cases_dir.glob("*.json")):
             add_idx("cts_case_file", str(p.relative_to(out)))
 
-    # Bundle zip is optional; add after creation if present
     if (out/"bundle.zip").exists():
         descriptor["artifacts"]["bundle_zip"] = "bundle.zip"
         add_idx("cts_bundle_zip", "bundle.zip")
 
     descriptor["artifact_index"] = artifact_index
     (out/"bundle_descriptor.json").write_text(json.dumps(descriptor, indent=2), encoding="utf-8")
-
-    # Add the bundle descriptor itself to the artifact index (and checksum it)
     add_idx("cts_bundle_descriptor", "bundle_descriptor.json")
 
-    # Checksums (machine-readable integrity metadata over key artifacts)
     checksums = []
     for a in artifact_index:
         if a.get("sha256") and a.get("path"):
@@ -516,12 +752,11 @@ def main():
         "checksums_version": "0.1.0",
         "algorithm": "sha256",
         "generated_by": "trqp-cts",
-        "generated_at": now_iso(),
+        "generated_at": generated_at,
         "entries": sorted(checksums, key=lambda e: e["path"]),
     }
     (out/"checksums.json").write_text(json.dumps(checksums_obj, indent=2), encoding="utf-8")
     add_idx("cts_checksums", "checksums.json")
-
 
     print(f"OK: evidence written to {out}")
 
