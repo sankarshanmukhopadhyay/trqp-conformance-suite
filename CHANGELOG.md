@@ -1,3 +1,8 @@
+## v1.2.0
+
+- Synchronize cross-repo version references to TRQP-TSPP v0.10.0 and trqp-assurance-hub v1.4.0 (Release Set B).
+- Update `docs/hub-crosswalk.md` version pins.
+
 ## v1.1.0
 
 - Add `--generated-at` flag to `cts/run.py` to pin timestamps for deterministic, reproducible evidence artifacts.
