@@ -1,6 +1,6 @@
 ---
 owner: maintainers
-last_reviewed: 2026-03-17
+last_reviewed: 2026-04-16
 tier: 0
 ---
 
@@ -12,7 +12,7 @@ tier: 0
 
 📘 **Documentation site (GitHub Pages):** https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/
 
-**Current version:** v1.0.0
+**Current version:** v1.2.1
 
 **Release line:** Operational Trust Stack v1
 
@@ -32,12 +32,13 @@ It turns protocol expectations into repeatable execution, structured verdicts, b
 | Conformance Suite | Protocol verification | Conformance Report |
 | Assurance Hub | Assurance orchestration and publication | Combined Assurance Manifest |
 
-## What is new in v1.0.0
+## What is new in v1.2.1
 
 - Canonical Conformance Report metrics: `coverage_index` and `evidence_completeness`
 - Golden flow example assets for stack integration
 - Public docs refreshed and aligned to the system-level narrative
-- Version synchronization with TSPP v0.8.0 and Assurance Hub v1.2.0
+- Cross-repo output contract refreshed for Assurance Hub v1.5.0 and TSPP v0.10.1
+- Operational Stack guidance now treats shared `run_id` and `target_id` as a required contract for combined assurance workflows
 
 ## Start here
 

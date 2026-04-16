@@ -1,6 +1,6 @@
 ---
 owner: maintainers
-last_reviewed: 2026-03-17
+last_reviewed: 2026-04-16
 tier: 0
 ---
 
@@ -12,7 +12,7 @@ This repository is the verification engine in the Operational Trust Stack v1 rel
 
 The Conformance Suite turns protocol expectations into repeatable evidence artifacts and a machine-readable Conformance Report.
 
-## What is new in v1.0.0
+## What is new in v1.2.1
 
 - Conformance Report now includes `coverage_index`
 - Evidence completeness is surfaced as an explicit runtime metric
@@ -22,3 +22,8 @@ The Conformance Suite turns protocol expectations into repeatable evidence artif
 ## Golden flow
 
 System under test -> TSPP Posture Report -> Conformance Report -> Combined Assurance Manifest -> Trust Registry publication
+
+
+## Required identity contract
+
+For combined assurance workflows, the CTS report MUST expose the same `run_id` and `target_id` as the paired TSPP report. The Assurance Hub now treats drift in these fields as a hard validation failure rather than an advisory warning.

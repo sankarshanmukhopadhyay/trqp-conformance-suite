@@ -1,3 +1,8 @@
+## v1.2.1
+
+- Refresh README and cross-repo docs for Assurance Hub v1.5.0 and TSPP v0.10.1.
+- Make the Operational Stack identity contract explicit: CTS reports participating in a Combined Assurance Manifest must share `run_id` and `target_id` with the paired TSPP report.
+
 ## v1.2.0
 
 - Synchronize cross-repo version references to TRQP-TSPP v0.10.0 and trqp-assurance-hub v1.4.0 (Release Set B).

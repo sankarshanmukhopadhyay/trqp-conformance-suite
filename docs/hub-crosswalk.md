@@ -1,6 +1,6 @@
 ---
 owner: maintainers
-last_reviewed: 2026-03-10
+last_reviewed: 2026-04-16
 tier: 1
 ---
 
@@ -64,9 +64,9 @@ This suite includes optional schemas and guidance for GRID-style artifacts.
 
 ## Version pins
 
-- TRQP Assurance Hub: v1.1.0
-- TRQP Conformance Suite: v0.9.1
-- TRQP TSPP: v0.7.1
+- TRQP Assurance Hub: v1.5.0
+- TRQP Conformance Suite: v1.2.1
+- TRQP TSPP: v0.10.1
 
 ## UNTP DIA considerations
 
@@ -87,4 +87,4 @@ Reference: `docs/reference/openssf-supply-chain.md`.
 
 ## Discovery surface
 
-When CTS reports are incorporated into a Combined Assurance Manifest, the resulting artifacts SHOULD be publishable through the Assurance Hub Trust Registry reference service so that conformance evidence becomes discoverable by ecosystem participants.
+When CTS reports are incorporated into a Combined Assurance Manifest, they MUST carry the same `run_id` and `target_id` as the paired TSPP report for the Operational Stack baseline. The Assurance Hub v1.5.0 generator validates this before publishing a manifest.
