@@ -1,0 +1,16 @@
+profile_id: scenario_agent_service_registry
+name: AI Agent Service Registry
+version: 0.1.0
+description: Validate registry claims used by agentic services and delegation workflows.
+required_assurance_level: AL3
+scenarios:
+  - protocol-conformance
+  - evidence-integrity
+  - freshness
+  - relying-party-use
+consumer_relevance:
+  decision_supported: agent service reliance
+  evidence_expected:
+    - cts-report.json
+    - interop-matrix.json
+    - combined-assurance-manifest.json

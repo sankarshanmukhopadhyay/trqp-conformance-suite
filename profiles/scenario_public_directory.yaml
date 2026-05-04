@@ -1,0 +1,16 @@
+profile_id: scenario_public_directory
+name: Public Directory
+version: 0.1.0
+description: Validate an authoritative public directory used by relying parties.
+required_assurance_level: AL3
+scenarios:
+  - protocol-conformance
+  - evidence-integrity
+  - freshness
+  - relying-party-use
+consumer_relevance:
+  decision_supported: public directory reliance
+  evidence_expected:
+    - cts-report.json
+    - interop-matrix.json
+    - combined-assurance-manifest.json

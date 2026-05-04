@@ -1,0 +1,16 @@
+profile_id: scenario_ecosystem_onboarding
+name: Ecosystem Registry Onboarding
+version: 0.1.0
+description: Validate a registry before admitting it into an ecosystem control plane.
+required_assurance_level: AL2
+scenarios:
+  - protocol-conformance
+  - evidence-integrity
+  - freshness
+  - relying-party-use
+consumer_relevance:
+  decision_supported: ecosystem onboarding
+  evidence_expected:
+    - cts-report.json
+    - interop-matrix.json
+    - combined-assurance-manifest.json

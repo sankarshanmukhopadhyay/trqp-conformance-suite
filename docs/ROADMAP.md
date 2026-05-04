@@ -38,7 +38,7 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 - ✅ Runner refactored into named functions for testability
 
 
-## Release readiness (v0.7.1)
+## Release readiness and adoption focus
 
 - `--dry-run` and `--list-tests` flags enable safer CI integration and developer inspection.
 - Identifier parameterization via `sut.yaml` allows real SUTs to run the suite without modifying core tests.

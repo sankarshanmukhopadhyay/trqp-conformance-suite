@@ -1,3 +1,9 @@
+## v1.3.0
+
+- Add scenario profiles for ecosystem onboarding, public directories, supply-chain registries, and AI agent service registries.
+- Add interop evidence matrix generator, docs, and sample outputs.
+- Refresh Hub/TSPP cross-repo references for the coordinated adoption-readiness release.
+
 ## v1.2.1
 
 - Refresh README and cross-repo docs for Assurance Hub v1.5.0 and TSPP v0.10.1.
