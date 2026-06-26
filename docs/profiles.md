@@ -12,6 +12,8 @@ Schema validation, structured errors, deterministic outcomes under stable state.
 
 Adds governance metadata expectations and operational discipline.
 
+Enterprise includes `TRQP-LIFE-001`, which validates the machine-readable lifecycle/status feed at `/.well-known/trqp-lifecycle`. The practical purpose is to make suspension, retirement, and revocation publication testable evidence rather than relying on operator narrative.
+
 ## High-Assurance
 
 Requires declared state reference, replay resistance expectations, and signed evidence bundles.
@@ -31,4 +33,3 @@ This validation is schema-focused and does not perform cryptographic verificatio
 See `docs/reference/dedi-mapping-matrix.md` for the shared DeDi mapping matrix (artifact → Hub control objective → CTS check → expected evidence).
 
 The DeDi mapping matrix is also available in machine-readable form: `docs/reference/dedi-mapping-matrix.yaml`.
-

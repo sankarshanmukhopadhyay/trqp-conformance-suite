@@ -8,6 +8,7 @@ requirements:
     - TRQP-ERR-010
     - TRQP-FRESH-001
     - TRQP-FRESH-002
+    - TRQP-LIFE-001
 evidence:
   sign_manifest: false
   bundle: true

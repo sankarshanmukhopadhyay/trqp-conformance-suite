@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/trqp/schemas/lifecycle-status-feed.schema.json",
+  "title": "TRQP Lifecycle Status Feed",
+  "type": "object",
+  "required": [
+    "feed_id",
+    "directory_id",
+    "generated_at",
+    "entries"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "feed_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "directory_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "published_by": {
+      "type": "string"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "entry_id",
+          "state",
+          "effective_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "entry_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "active",
+              "suspended",
+              "deprecated",
+              "revoked",
+              "retired"
+            ]
+          },
+          "effective_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "revocation": {
+      "type": "object",
+      "required": [
+        "supported",
+        "status_feed_uri",
+        "sla_seconds"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "supported": {
+          "type": "boolean"
+        },
+        "status_feed_uri": {
+          "type": "string",
+          "format": "uri"
+        },
+        "sla_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 31536000
+        }
+      }
+    }
+  }
+}

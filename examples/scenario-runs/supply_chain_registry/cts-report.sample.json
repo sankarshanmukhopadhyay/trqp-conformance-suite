@@ -1,6 +1,6 @@
 {
   "profile_id": "scenario_supply_chain_registry",
-  "suite_version": "1.3.0",
+  "suite_version": "1.3.1",
   "run_id": "scenario_supply_chain_registry-demo",
   "target_id": "demo-directory",
   "summary": {

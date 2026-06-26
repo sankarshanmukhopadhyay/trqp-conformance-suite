@@ -188,3 +188,18 @@ tests:
       json_path_exists:
         - "$.meta.time_evaluated"
         - "$.meta.expires_at"
+
+  - id: TC-LIFE-001
+    name: Lifecycle status feed is machine-readable
+    profiles: [enterprise, high_assurance]
+    method: GET
+    path: /.well-known/trqp-lifecycle
+    request:
+      headers:
+        Accept: application/json
+    expect:
+      status: 200
+      schema: schemas/lifecycle-status-feed.schema.json
+      json_path_exists:
+        - "$.generated_at"
+        - "$.entries"

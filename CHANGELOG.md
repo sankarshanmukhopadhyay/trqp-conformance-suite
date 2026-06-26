@@ -1,3 +1,10 @@
+## v1.3.1
+
+- Add `schemas/lifecycle-status-feed.schema.json` for machine-readable lifecycle and revocation status publication.
+- Add CTS test `TC-LIFE-001` for `/.well-known/trqp-lifecycle`, gated to Enterprise and High-Assurance profiles.
+- Update the Enterprise profile to include `TRQP-LIFE-001`, making lifecycle/status publication part of adoption-grade conformance evidence.
+- Extend the PoC service with a lifecycle/status feed so local implementers can test the new requirement.
+
 ## v1.3.0
 
 - Add scenario profiles for ecosystem onboarding, public directories, supply-chain registries, and AI agent service registries.

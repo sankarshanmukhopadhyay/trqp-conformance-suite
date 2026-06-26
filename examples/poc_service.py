@@ -136,3 +136,28 @@ async def discovery():
         "governance_reference": "https://example.org/gf/transport-v1",
         "profiles": ["baseline", "enterprise", "high_assurance"],
     }]
+
+
+@app.get("/.well-known/trqp-lifecycle")
+async def lifecycle_status_feed():
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return {
+        "feed_id": "transport-ministry-lifecycle",
+        "directory_id": "did:example:transport-ministry",
+        "generated_at": now,
+        "published_by": "did:example:transport-ministry",
+        "entries": [
+            {
+                "entry_id": "did:example:logistics-sp-123",
+                "state": "active",
+                "effective_at": "2024-01-01T00:00:00Z",
+                "reason": "authorization record currently valid",
+                "evidence_refs": ["https://example.org/evidence/lifecycle/transport-ministry"],
+            }
+        ],
+        "revocation": {
+            "supported": True,
+            "status_feed_uri": "http://127.0.0.1:8000/.well-known/trqp-lifecycle",
+            "sla_seconds": 86400,
+        },
+    }
