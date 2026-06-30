@@ -1,3 +1,11 @@
+## v1.4.0
+
+- Add `docs/tis-evidence-contract.md` to map CTS outputs to TIS v0.10.0 evidence and conformance artifact roles.
+- Extend evidence bundle descriptor schemas with optional `tis_projection` metadata.
+- Add golden-flow TIS-compatible conformance declaration and evidence bundle manifest samples.
+- Add portfolio release-impact and drift-review records under `docs/governance/`.
+- Refresh README and cross-repo references for Hub v1.7.0 and TSPP v0.12.0.
+
 ## v1.3.1
 
 - Add `schemas/lifecycle-status-feed.schema.json` for machine-readable lifecycle and revocation status publication.

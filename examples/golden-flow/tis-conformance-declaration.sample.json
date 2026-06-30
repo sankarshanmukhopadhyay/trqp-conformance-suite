@@ -1,0 +1,35 @@
+{
+  "declaration_id": "urn:example:trqp:cts:declaration:golden-flow",
+  "subject": {
+    "id": "demo-directory",
+    "type": "TRQP implementation",
+    "endpoint": "https://directory.example.org"
+  },
+  "profile": {
+    "id": "interop_demo",
+    "version": "v1.4.0"
+  },
+  "conformance_result": {
+    "status": "pass",
+    "run_id": "opstack-demo-001",
+    "target_id": "demo-directory",
+    "generated_at": "2026-06-29T00:00:00Z"
+  },
+  "evidence": [
+    {
+      "role": "conformance-report",
+      "path": "cts-report.json"
+    },
+    {
+      "role": "verdicts",
+      "path": "verdicts.json"
+    },
+    {
+      "role": "evidence-bundle-descriptor",
+      "path": "bundle_descriptor.json"
+    }
+  ],
+  "limitations": [
+    "This declaration records protocol conformance evidence only. Certification and relying-party policy are outside CTS scope."
+  ]
+}

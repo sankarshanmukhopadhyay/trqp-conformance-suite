@@ -1,0 +1,19 @@
+review_id: portfolio-drift-20260629-cts-v1-4-0
+source_repo: trqp-conformance-suite
+source_release: v1.4.0
+change_type: evidence_artifact_contract_alignment
+relationship_ids_reviewed:
+  - trqp-conformance-suite-to-trqp-assurance-hub
+  - trust-infrastructure-schemas-to-trqp-conformance-suite
+  - trust-systems-meta-model-to-trqp-conformance-suite
+drift_classification: artifact_drift
+downstream_review_targets:
+  - trqp-assurance-hub
+  - TRQP-TSPP
+evidence:
+  - path: docs/tis-evidence-contract.md
+  - path: schemas/evidence/bundle_descriptor.schema.json
+  - path: examples/golden-flow/tis-conformance-declaration.sample.json
+  - path: examples/golden-flow/tis-evidence-bundle-manifest.sample.json
+result: downstream_updates_completed_in_coordinated_release
+follow_up_issue: null

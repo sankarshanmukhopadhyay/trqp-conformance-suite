@@ -36,6 +36,7 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 
 - ✅ AL semantic lock to Assurance Hub (`al-contract.json` + explicit README/docs pointers)
 - ✅ Runner refactored into named functions for testability
+- ✅ TIS evidence contract and optional evidence descriptor projection metadata for Hub v1.7.0 runtime assurance.
 
 
 ## Release readiness and adoption focus
@@ -44,6 +45,7 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 - Identifier parameterization via `sut.yaml` allows real SUTs to run the suite without modifying core tests.
 - JSONPath wildcard bug fixed for correct assertion evaluation on array paths.
 - QUICKSTART and expanded SECURITY documentation complete.
+- TIS projection metadata allows CTS evidence to be consumed by downstream assurance workflows without changing core protocol test semantics.
 
 _Last updated: 2026-03-19_
 

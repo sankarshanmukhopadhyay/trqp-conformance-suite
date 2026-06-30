@@ -1,0 +1,36 @@
+{
+  "manifest_id": "urn:example:trqp:cts:evidence-bundle:golden-flow",
+  "bundle_version": "v1.4.0",
+  "generated_at": "2026-06-29T00:00:00Z",
+  "producer": {
+    "id": "trqp-conformance-suite",
+    "version": "v1.4.0"
+  },
+  "subject": {
+    "id": "demo-directory",
+    "run_id": "opstack-demo-001",
+    "target_id": "demo-directory"
+  },
+  "artifacts": [
+    {
+      "role": "conformance-run-metadata",
+      "path": "run.json"
+    },
+    {
+      "role": "conformance-verdict-evidence",
+      "path": "verdicts.json"
+    },
+    {
+      "role": "conformance-manifest",
+      "path": "manifest.json"
+    },
+    {
+      "role": "evidence-checksums",
+      "path": "checksums.json"
+    }
+  ],
+  "integrity": {
+    "canonicalization": "JCS",
+    "digest_algorithm": "sha-256"
+  }
+}

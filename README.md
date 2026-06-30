@@ -12,7 +12,7 @@ tier: 0
 
 📘 **Documentation site (GitHub Pages):** https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/
 
-**Current version:** v1.3.1
+**Current version:** v1.4.0
 
 **Release line:** Operational Trust Stack v1
 
@@ -32,16 +32,18 @@ It turns protocol expectations into repeatable execution, structured verdicts, b
 | Conformance Suite | Protocol verification | Conformance Report |
 | Assurance Hub | Assurance orchestration and publication | Combined Assurance Manifest |
 
-## What is new in v1.3.1
+## What is new in v1.4.0
 
-- Lifecycle/status feed validation is now available as `TC-LIFE-001`.
-- Enterprise and High-Assurance profiles can test `/.well-known/trqp-lifecycle` against a dedicated schema.
-- The PoC service publishes a lifecycle/status feed for local adoption testing.
-- Cross-repo release references align with Assurance Hub v1.6.1 and TSPP v0.11.1.
+- Adds a TIS evidence contract that maps CTS reports, verdicts, manifests, and case files to TIS v0.10.0 evidence and conformance artifact roles.
+- Extends evidence bundle descriptors with optional `tis_projection` metadata for Hub v1.7.0 ingestion.
+- Adds sample TIS-compatible conformance declaration and evidence bundle manifest artifacts for the golden flow.
+- Publishes portfolio release-impact and drift-review records for the coordinated Runtime Assurance Contract Pack.
+- Cross-repo release references align with Assurance Hub v1.7.0 and TSPP v0.12.0.
 
 ## Start here
 
 - Operational stack overview: [`docs/operational-stack.md`](docs/operational-stack.md)
+- TIS evidence contract: [`docs/tis-evidence-contract.md`](docs/tis-evidence-contract.md)
 - Start here guide: [`docs/START_HERE.md`](docs/START_HERE.md)
 - Quickstart: [`QUICKSTART.md`](QUICKSTART.md)
 - Hub repo: https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub
@@ -364,3 +366,17 @@ The CTS ships an **experimental** DeDi artifact validator (schema checks) to sup
 ## Operational Stack integration
 
 CTS now emits `cts-report.json` in each report directory and supports `--run-id` and `--target-id` so the Assurance Hub can build a combined manifest without translation glue.
+
+## TIS evidence projection
+
+CTS v1.4.0 does not make Trust Infrastructure Schemas a runtime dependency. Instead, it exposes structured metadata that downstream tooling can project into TIS-compatible artifacts.
+
+| CTS artifact | TIS role |
+|---|---|
+| `run.json` | conformance run metadata |
+| `verdicts.json` | conformance verdict evidence |
+| `manifest.json` and `checksums.json` | evidence bundle integrity metadata |
+| `cases/*.json` | replayable test case evidence |
+| `bundle_descriptor.json` | evidence index for Hub and TIS projection |
+
+See `docs/tis-evidence-contract.md` for the mapping used by the coordinated v1.4.0 release.
