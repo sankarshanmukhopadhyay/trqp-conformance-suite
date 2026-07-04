@@ -6,7 +6,7 @@ tier: 1
 
 # TIS Evidence Contract
 
-TRQP Conformance Suite v1.4.0 maps conformance evidence to Trust Infrastructure Schemas v0.10.0 without making TIS a runtime dependency.
+TRQP Conformance Suite v1.5.0 maps conformance evidence to Trust Infrastructure Schemas v0.10.0 without making TIS a runtime dependency.
 
 CTS remains responsible for protocol verification. TIS provides artifact contracts that downstream assurance tooling can use to package, reference, and audit CTS outputs.
 
@@ -84,4 +84,3 @@ Sample TIS-compatible artifacts are published in:
 
 - `examples/golden-flow/tis-conformance-declaration.sample.json`
 - `examples/golden-flow/tis-evidence-bundle-manifest.sample.json`
-

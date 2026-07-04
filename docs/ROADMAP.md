@@ -4,6 +4,7 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 
 ## 2026 Q1: Socialization and trust signaling
 
+- Done: Operational Trust Stack Maturity Release governance (`docs/governance/release-policy.md`, `docs/governance/change-intake.md`, `docs/release-validation.md`)
 - Done: onboarding docs (`START_HERE`, `SOCIALIZING_NOTES`, `FAQ`)
 - Done: reference evidence bundles (`docs/reference-reports/`)
 - Done: evidence bundle descriptor + checksums schemas (`schemas/evidence/`)
@@ -20,23 +21,23 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 - ✅ Deterministic replay mode (`--replay <run-dir>`): re-evaluates assertion logic over captured case files, emits `replay-report.json` with verdict diffs.
 - ✅ Fixture-pinned run mode (`--fixture-set <file>`): canned responses with SHA-256 provenance embedded in `run.json`.
 - ✅ `--generated-at` timestamp pinning: all evidence artifact timestamps are now deterministic when a value is supplied.
-- Planned: state snapshot verification (fetch, hash, and gate on declared `state_snapshot_url`)
+- Maturity backlog: state snapshot verification (fetch, hash, and gate on declared `state_snapshot_url`)
 
 ## 2026 Q3: Security profiles and plugfests
 
-- Planned: mTLS security profile
-- Planned: interoperability plugfest mode and matrix generation
+- Maturity backlog: mTLS security profile when adopter demand justifies the additional operational burden
+- Done: scenario interop matrix generation is available through `scripts/generate_interop_matrix.py`; future plugfest work should build on that artifact instead of introducing a new report shape.
 
 ## 2026 Q4: Performance and operational readiness
 
-- Planned: performance conformance harness and SLA-oriented checks
+- Maturity backlog: performance conformance harness and SLA-oriented checks.
 
 
 ## Completed
 
 - ✅ AL semantic lock to Assurance Hub (`al-contract.json` + explicit README/docs pointers)
 - ✅ Runner refactored into named functions for testability
-- ✅ TIS evidence contract and optional evidence descriptor projection metadata for Hub v1.7.0 runtime assurance.
+- ✅ TIS evidence contract and optional evidence descriptor projection metadata for Hub v1.8.0 runtime assurance.
 
 
 ## Release readiness and adoption focus
@@ -46,8 +47,9 @@ This roadmap is intentionally lightweight and focused on adoption and socializat
 - JSONPath wildcard bug fixed for correct assertion evaluation on array paths.
 - QUICKSTART and expanded SECURITY documentation complete.
 - TIS projection metadata allows CTS evidence to be consumed by downstream assurance workflows without changing core protocol test semantics.
+- Future releases follow the maturity release policy: small wording, link, and metadata edits are batched unless they correct a security, CI, schema, or adoption blocker.
 
-_Last updated: 2026-03-19_
+_Last updated: 2026-07-03_
 
 ## UNTP DIA considerations
 

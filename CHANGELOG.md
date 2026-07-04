@@ -1,3 +1,12 @@
+## v1.5.0
+
+- Publish the CTS portion of the Operational Trust Stack Maturity Release for the coordinated Hub v1.8.0 / CTS v1.5.0 / TSPP v0.13.0 release tuple.
+- Add `docs/governance/release-policy.md` to define patch, minor, maturity, and no-release thresholds for the conformance engine.
+- Add `docs/governance/change-intake.md` to require requirement impact, profile impact, evidence impact, validation impact, and cross-repo compatibility review.
+- Add `docs/release-validation.md` with maturity-release validation commands and acceptance criteria.
+- Refresh README and roadmap language to emphasize high-value, evidence-producing CTS commits.
+- Align GitHub PR and release templates with the maturity gate.
+
 ## v1.4.0
 
 - Add `docs/tis-evidence-contract.md` to map CTS outputs to TIS v0.10.0 evidence and conformance artifact roles.

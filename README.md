@@ -1,6 +1,6 @@
 ---
 owner: maintainers
-last_reviewed: 2026-04-16
+last_reviewed: 2026-07-03
 tier: 0
 ---
 
@@ -12,7 +12,7 @@ tier: 0
 
 📘 **Documentation site (GitHub Pages):** https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/
 
-**Current version:** v1.4.0
+**Current version:** v1.5.0
 
 **Release line:** Operational Trust Stack v1
 
@@ -32,7 +32,17 @@ It turns protocol expectations into repeatable execution, structured verdicts, b
 | Conformance Suite | Protocol verification | Conformance Report |
 | Assurance Hub | Assurance orchestration and publication | Combined Assurance Manifest |
 
-## What is new in v1.4.0
+## What is new in v1.5.0
+
+v1.5.0 is the Conformance Suite portion of the **Operational Trust Stack Maturity Release**. It keeps CTS focused on protocol verification while adding the release governance and validation evidence expected of an adoption-ready test engine.
+
+- Adds release governance that prevents low-signal CTS releases for minor wording or reference churn.
+- Adds a release validation record covering documentation tests, schema checks, deterministic profile inspection, and evidence contract review.
+- Adds change-intake criteria for requirement, profile, evidence, and compatibility changes.
+- Refreshes cross-repo references for the Hub v1.8.0 / CTS v1.5.0 / TSPP v0.13.0 maturity tuple.
+- Clarifies that CTS output is release-worthy when it improves executable conformance, evidence portability, interoperability, or adopter evaluation.
+
+## Prior release: v1.4.0
 
 - Adds a TIS evidence contract that maps CTS reports, verdicts, manifests, and case files to TIS v0.10.0 evidence and conformance artifact roles.
 - Extends evidence bundle descriptors with optional `tis_projection` metadata for Hub v1.7.0 ingestion.
@@ -42,6 +52,9 @@ It turns protocol expectations into repeatable execution, structured verdicts, b
 
 ## Start here
 
+- Maturity release validation: [`docs/release-validation.md`](docs/release-validation.md)
+- Release policy: [`docs/governance/release-policy.md`](docs/governance/release-policy.md)
+- Change intake: [`docs/governance/change-intake.md`](docs/governance/change-intake.md)
 - Operational stack overview: [`docs/operational-stack.md`](docs/operational-stack.md)
 - TIS evidence contract: [`docs/tis-evidence-contract.md`](docs/tis-evidence-contract.md)
 - Start here guide: [`docs/START_HERE.md`](docs/START_HERE.md)
@@ -60,6 +73,10 @@ This suite ships schemas and a lightweight validator:
 
 - Docs: `docs/directory-artifact-validation.md`
 - Tool: `scripts/validate_directory_artifacts.py`
+
+## Release posture
+
+v1.5.0 is additive and governance-focused. Existing v1.4.0 evidence bundle consumers remain compatible. Future CTS releases should be cut only for security fixes, broken validation, new executable conformance coverage, evidence contract changes, or coordinated Operational Trust Stack maturity increments.
 
 ## Start Here
 

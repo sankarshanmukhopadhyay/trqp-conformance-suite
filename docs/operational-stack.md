@@ -1,6 +1,6 @@
 ---
 owner: maintainers
-last_reviewed: 2026-04-16
+last_reviewed: 2026-07-03
 tier: 0
 ---
 
@@ -12,12 +12,12 @@ This repository is the verification engine in the Operational Trust Stack v1 rel
 
 The Conformance Suite turns protocol expectations into repeatable evidence artifacts and a machine-readable Conformance Report.
 
-## What is new in v1.2.1
+## Current maturity release
 
-- Conformance Report now includes `coverage_index`
-- Evidence completeness is surfaced as an explicit runtime metric
-- Golden flow example assets are included for stack integration
-- README, Quickstart, and index content are synchronized for public release
+- CTS v1.5.0 is part of the Hub v1.8.0 / CTS v1.5.0 / TSPP v0.13.0 maturity tuple.
+- Release governance now distinguishes patch, minor, maturity, and no-release changes.
+- Release validation is recorded in `docs/release-validation.md`.
+- The CTS evidence contract remains compatible with Hub ingestion while future releases are gated on executable conformance or evidence value.
 
 ## Golden flow
 
