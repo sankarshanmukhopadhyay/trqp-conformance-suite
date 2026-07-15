@@ -1,0 +1,22 @@
+schema_version: "1.0"
+repository: trqp-conformance-suite
+portfolio_tier: flagship
+lifecycle: active
+role: protocol-conformance-engine
+stability: beta
+current_version: "1.5.0"
+primary_output: Conformance Report and evidence bundle
+authority:
+  owns:
+    - executable TRQP conformance requirements
+    - deterministic verdict production
+    - portable conformance evidence bundles
+  does_not_own:
+    - the TRQP protocol specification
+    - security posture policy
+    - final ecosystem assurance decisions
+validation_command: make validate
+documentation_url: https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/
+release_policy: substantive
+last_portfolio_review: 2026-07-15
+next_portfolio_review: 2026-10-15
