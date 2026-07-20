@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Certification Baseline Alignment (CTR-ACB)"
+nav_exclude: true
+---
+
 # Certification Baseline Alignment (CTR-ACB)
 
 This document explains how **TRQP Conformance Suite (CTS)** supports the *Candidate Trust Registry Assurance & Certification Baseline (CTR-ACB)* published in the TRQP Assurance Hub.

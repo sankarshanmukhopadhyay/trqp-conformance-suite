@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Contributing"
+nav_exclude: true
+---
+
 # Contributing
 
 All contributions must map to requirement IDs, include explicit pass/fail criteria, and produce verifiable evidence.

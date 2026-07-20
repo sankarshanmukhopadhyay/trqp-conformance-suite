@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Architecture"
+nav_exclude: true
+---
+
 # Architecture
 
 ## Components

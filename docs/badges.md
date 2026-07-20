@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Badges"
+nav_exclude: true
+---
+
 # Badges
 
 ```markdown

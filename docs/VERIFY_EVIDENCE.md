@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Verify Evidence Bundles"
+nav_exclude: true
+---
+
 # Verify Evidence Bundles
 
 This guide explains how to verify conformance evidence bundles produced by the TRQP Conformance Suite.

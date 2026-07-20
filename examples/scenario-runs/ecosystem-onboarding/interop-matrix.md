@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Interop Evidence Matrix"
+nav_exclude: true
+---
+
 # Interop Evidence Matrix
 
 Profile: `scenario_ecosystem_onboarding`

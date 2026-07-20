@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Profiles"
+nav_exclude: true
+---
+
 # Profiles
 
 ## Smoke

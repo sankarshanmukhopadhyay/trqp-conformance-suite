@@ -1,3 +1,9 @@
+---
+layout: default
+title: "GRID support (optional)"
+nav_exclude: true
+---
+
 # GRID support (optional)
 
 The Conformance Suite can optionally validate the **shape** of GRID-style artifacts used by directory operators.

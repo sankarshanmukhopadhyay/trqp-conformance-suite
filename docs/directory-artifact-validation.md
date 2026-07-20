@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Directory artifact validation (SAD-1 / GRID)"
+nav_exclude: true
+---
+
 # Directory artifact validation (SAD-1 / GRID)
 
 The CTS primarily validates TRQP API conformance. However, many authoritative directories publish **verifier-first**

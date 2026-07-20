@@ -1,3 +1,9 @@
+---
+layout: default
+title: "TRQP Conformance Philosophy"
+nav_exclude: true
+---
+
 # TRQP Conformance Philosophy
 
 ## Status

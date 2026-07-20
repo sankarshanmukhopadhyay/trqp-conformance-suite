@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Evidence Bundles"
+nav_exclude: true
+---
+
 # Evidence Bundles
 
 Evidence bundles are generated artifacts that make conformance results **auditable** and **replayable**.

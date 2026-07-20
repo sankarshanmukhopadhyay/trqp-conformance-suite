@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Roadmap"
+nav_exclude: true
+---
+
 # Roadmap
 
 The maintained roadmap is [`docs/ROADMAP.md`](docs/ROADMAP.md).

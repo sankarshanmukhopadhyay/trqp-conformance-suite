@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Interop Evidence Matrix"
+nav_exclude: true
+---
+
 # Interop Evidence Matrix
 
 The interop evidence matrix translates CTS output into an adoption-facing table. It connects requirements, tests, results, evidence artifacts, and consumer/relying-party relevance.

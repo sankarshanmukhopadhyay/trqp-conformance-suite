@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Scenario Profiles"
+nav_exclude: true
+---
+
 # Scenario Profiles
 
 Scenario profiles bind protocol conformance testing to business decisions. They are designed for adoption workflows where an operator needs to select a profile by use case rather than by implementation detail.

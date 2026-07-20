@@ -1,3 +1,9 @@
+---
+layout: default
+title: "TRACE ↔ TSAM Reference (Conformance Context)"
+nav_exclude: true
+---
+
 # TRACE ↔ TSAM Reference (Conformance Context)
 
 This repository implements conformance verification artifacts within a broader assurance architecture.

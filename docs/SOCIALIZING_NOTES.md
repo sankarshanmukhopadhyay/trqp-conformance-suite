@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Socializing Notes"
+nav_exclude: true
+---
+
 # Socializing Notes
 
 ## What this repo is

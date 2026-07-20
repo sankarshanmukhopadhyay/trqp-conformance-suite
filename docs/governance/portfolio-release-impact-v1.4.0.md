@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Portfolio Release Impact: TRQP Conformance Suite v1.4.0"
+nav_exclude: true
+---
+
 # Portfolio Release Impact: TRQP Conformance Suite v1.4.0
 
 | Field | Value |

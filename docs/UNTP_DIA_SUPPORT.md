@@ -1,3 +1,9 @@
+---
+layout: default
+title: "UNTP Digital Identity Anchor (DIA) support"
+nav_exclude: true
+---
+
 # UNTP Digital Identity Anchor (DIA) support
 
 Some authoritative directories (including sovereign registries) may use the UN/CEFACT UN Transparency Protocol (UNTP) **Digital Identity Anchor (DIA)** credential and related **Identity Resolver (IDR)** patterns.

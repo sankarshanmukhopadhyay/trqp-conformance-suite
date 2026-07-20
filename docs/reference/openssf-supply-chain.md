@@ -1,3 +1,9 @@
+---
+layout: default
+title: "OpenSSF-aligned Supply Chain Evidence (Reference)"
+nav_exclude: true
+---
+
 # OpenSSF-aligned Supply Chain Evidence (Reference)
 
 The TRQP Conformance Suite (CTS) recognizes supply chain integrity evidence as part of an audit-ready assurance posture.

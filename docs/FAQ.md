@@ -1,3 +1,9 @@
+---
+layout: default
+title: "FAQ"
+nav_exclude: true
+---
+
 # FAQ
 
 ## Is this official?

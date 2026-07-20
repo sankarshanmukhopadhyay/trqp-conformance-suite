@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Assurance Hub integration"
+nav_exclude: true
+---
+
 # Assurance Hub integration
 
 The Operational Stack baseline expects CTS to emit a machine-readable report that the Assurance Hub can ingest directly.
