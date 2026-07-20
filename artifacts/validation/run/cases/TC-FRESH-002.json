@@ -1,0 +1,59 @@
+{
+  "id": "TC-FRESH-002",
+  "name": "Recognition response includes freshness meta",
+  "request": {
+    "method": "POST",
+    "path": "/recognition",
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "authority_id": "did:example:transport-ministry",
+      "subject_authority_id": "did:example:foreign-authority-xyz"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "text": "{\"authority_id\": \"did:example:transport-ministry\", \"subject_authority_id\": \"did:example:foreign-authority-xyz\", \"statement\": {\"recognized\": true, \"reason\": \"Recognized.\", \"valid_until\": \"2026-12-31T00:00:00Z\"}, \"meta\": {\"time_evaluated\": \"2026-01-15T00:00:00Z\", \"expires_at\": \"2026-01-15T00:05:00Z\"}}",
+    "json": {
+      "authority_id": "did:example:transport-ministry",
+      "subject_authority_id": "did:example:foreign-authority-xyz",
+      "statement": {
+        "recognized": true,
+        "reason": "Recognized.",
+        "valid_until": "2026-12-31T00:00:00Z"
+      },
+      "meta": {
+        "time_evaluated": "2026-01-15T00:00:00Z",
+        "expires_at": "2026-01-15T00:05:00Z"
+      }
+    }
+  },
+  "elapsed_ms": 0,
+  "assertions": [
+    {
+      "type": "status",
+      "expected": 200,
+      "actual": 200,
+      "pass": true
+    },
+    {
+      "type": "json_parse",
+      "pass": true
+    },
+    {
+      "type": "json_path_exists",
+      "path": "$.meta.time_evaluated",
+      "pass": true
+    },
+    {
+      "type": "json_path_exists",
+      "path": "$.meta.expires_at",
+      "pass": true
+    }
+  ]
+}

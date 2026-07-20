@@ -1,0 +1,92 @@
+{
+  "run_id": "ots-local-validation",
+  "target_id": "trqp-reference-fixture",
+  "generated_at": "2026-07-20T00:00:00Z",
+  "profile": "baseline",
+  "profile_id": "baseline",
+  "suite_version": "1.6.0",
+  "tool": {
+    "name": "trqp-cts",
+    "version": "1.6.0"
+  },
+  "summary": {
+    "PASS": 7,
+    "FAIL": 4,
+    "SKIP": 0,
+    "NOT_APPLICABLE": 2,
+    "ERROR": 0,
+    "XFAIL": 0,
+    "coverage_index": 100.0,
+    "evidence_completeness": 63.64,
+    "exit_status": 1
+  },
+  "results": [
+    {
+      "test_case_id": "TC-HTTP-001",
+      "result": "PASS",
+      "elapsed_ms": 0
+    },
+    {
+      "test_case_id": "TC-HTTP-002",
+      "result": "PASS",
+      "elapsed_ms": 0
+    },
+    {
+      "test_case_id": "TC-ERR-001",
+      "result": "FAIL",
+      "elapsed_ms": 0
+    },
+    {
+      "test_case_id": "TC-AUTHZ-001",
+      "result": "FAIL",
+      "elapsed_ms": 0
+    },
+    {
+      "test_case_id": "TC-RECOG-001",
+      "result": "FAIL",
+      "elapsed_ms": 0
+    },
+    {
+      "test_case_id": "TC-OPS-001",
+      "result": "PASS",
+      "elapsed_ms": 0
+    },
+    {
+      "test_case_id": "TC-ERR-010",
+      "result": "PASS",
+      "elapsed_ms": 0
+    },
+    {
+      "test_case_id": "TC-SEC-001",
+      "result": "PASS",
+      "elapsed_ms": 0
+    },
+    {
+      "test_case_id": "TC-SEC-002",
+      "result": "NOT_APPLICABLE",
+      "reason": "not applicable to profile baseline",
+      "elapsed_ms": 0
+    },
+    {
+      "test_case_id": "TC-CTX-001",
+      "result": "FAIL",
+      "elapsed_ms": 0
+    },
+    {
+      "test_case_id": "TC-FRESH-001",
+      "result": "PASS",
+      "elapsed_ms": 0
+    },
+    {
+      "test_case_id": "TC-FRESH-002",
+      "result": "PASS",
+      "elapsed_ms": 0
+    },
+    {
+      "test_case_id": "TC-LIFE-001",
+      "result": "NOT_APPLICABLE",
+      "reason": "not applicable to profile baseline",
+      "elapsed_ms": 0
+    }
+  ]
+}

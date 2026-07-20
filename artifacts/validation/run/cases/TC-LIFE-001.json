@@ -1,0 +1,28 @@
+{
+  "test_case_id": "TC-LIFE-001",
+  "name": "Lifecycle status feed is machine-readable",
+  "request": {
+    "method": "GET",
+    "path": "/.well-known/trqp-lifecycle",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": null,
+    "headers": {},
+    "text": ""
+  },
+  "elapsed_ms": 0,
+  "assertions": [
+    {
+      "type": "profile_gate",
+      "profiles": [
+        "enterprise",
+        "high_assurance"
+      ],
+      "profile_id": "baseline",
+      "pass": true
+    }
+  ],
+  "skipped": true
+}

@@ -1,0 +1,26 @@
+{
+  "test_run_id": "cts-local-assurance",
+  "profile_id": "baseline",
+  "out_dir_label": "run",
+  "sut": {
+    "base_url": "http://127.0.0.1:8000",
+    "state_reference": "fixtureset:v1",
+    "default_headers": {
+      "Accept": "application/json"
+    },
+    "api_key": "demo-secret"
+  },
+  "target_id": "trqp-reference-fixture",
+  "started_at": "2026-07-20T00:00:00Z",
+  "tool": {
+    "name": "trqp-cts",
+    "version": "1.6.0"
+  },
+  "fixture_set": {
+    "path": "fixtures/baseline.fixture-set.json",
+    "sha256": "5cf34db2e6bbadaaac41d3477f547cd4e8ee036c226fdbe0e6c5cc80f40e138b",
+    "fixture_set_id": "baseline-v1"
+  },
+  "state_reference": "fixtureset:v1",
+  "ended_at": "2026-07-20T00:00:00Z"
+}

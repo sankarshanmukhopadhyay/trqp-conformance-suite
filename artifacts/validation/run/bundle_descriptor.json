@@ -1,0 +1,183 @@
+{
+  "bundle_version": "0.1.0",
+  "run": {
+    "test_run_id": "cts-local-assurance",
+    "profile_id": "baseline",
+    "out_dir_label": "run",
+    "sut": {
+      "base_url": "http://127.0.0.1:8000",
+      "state_reference": "fixtureset:v1",
+      "default_headers": {
+        "Accept": "application/json"
+      },
+      "api_key": "demo-secret"
+    },
+    "target_id": "trqp-reference-fixture",
+    "started_at": "2026-07-20T00:00:00Z",
+    "tool": {
+      "name": "trqp-cts",
+      "version": "1.6.0"
+    },
+    "fixture_set": {
+      "path": "fixtures/baseline.fixture-set.json",
+      "sha256": "5cf34db2e6bbadaaac41d3477f547cd4e8ee036c226fdbe0e6c5cc80f40e138b",
+      "fixture_set_id": "baseline-v1"
+    },
+    "state_reference": "fixtureset:v1",
+    "ended_at": "2026-07-20T00:00:00Z"
+  },
+  "artifacts": {
+    "run_json": "run.json",
+    "verdicts": "verdicts.json",
+    "manifest": "manifest.json",
+    "cases_dir": "cases",
+    "bundle_zip": "bundle.zip"
+  },
+  "artifact_index": [
+    {
+      "kind": "cts_run_json",
+      "artifact_kind": "conformance_run_metadata",
+      "path": "run.json",
+      "produced_by": "trqp-cts",
+      "sha256": "e14f75d7653515b94f199e068d914c35c9bc276ddecb2dd5fab05a0561e22beb",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_report",
+      "artifact_kind": "conformance_report",
+      "path": "cts-report.json",
+      "produced_by": "trqp-cts",
+      "sha256": "dad37d01298c2618948c8d56470d4c7dba67820b02137dc80be5b4f5265d3b61",
+      "media_type": "application/json",
+      "notes": "Operational Stack conformance report."
+    },
+    {
+      "kind": "cts_verdicts",
+      "artifact_kind": "conformance_verdicts",
+      "path": "verdicts.json",
+      "produced_by": "trqp-cts",
+      "sha256": "fd586d4f1b094b82ac712a3d49804845b06a4ad2d403da16968f7a70951b3a0e",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_manifest",
+      "artifact_kind": "conformance_manifest",
+      "path": "manifest.json",
+      "produced_by": "trqp-cts",
+      "sha256": "25761f051a352b23911c1134c34ca76e0f3c1ade9e37bc6766c22ba17927f664",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_case_file",
+      "artifact_kind": "conformance_case_artifact",
+      "path": "cases/TC-AUTHZ-001.json",
+      "produced_by": "trqp-cts",
+      "sha256": "ebc94b86b8c85a560c85a038a303c361fe9afb8dbf2a4630777b9930cf12252e",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_case_file",
+      "artifact_kind": "conformance_case_artifact",
+      "path": "cases/TC-CTX-001.json",
+      "produced_by": "trqp-cts",
+      "sha256": "4af469adef8160e0ba0378b0328c435cf3bc258f9de8f2a0dd41db1fef16b0bb",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_case_file",
+      "artifact_kind": "conformance_case_artifact",
+      "path": "cases/TC-ERR-001.json",
+      "produced_by": "trqp-cts",
+      "sha256": "6b32e6365e234b6a9a2df6f47323c2947203ce5e682b78565e815f862e7c1e7f",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_case_file",
+      "artifact_kind": "conformance_case_artifact",
+      "path": "cases/TC-ERR-010.json",
+      "produced_by": "trqp-cts",
+      "sha256": "b46714c68faca2e058dd3bf8578dbb3be9d67e119426b977c6f338c7f11515ee",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_case_file",
+      "artifact_kind": "conformance_case_artifact",
+      "path": "cases/TC-FRESH-001.json",
+      "produced_by": "trqp-cts",
+      "sha256": "81f1338d8c84f69739df71516b3163b3b1ded6dbff4647eb2ddcc3913f3f76a8",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_case_file",
+      "artifact_kind": "conformance_case_artifact",
+      "path": "cases/TC-FRESH-002.json",
+      "produced_by": "trqp-cts",
+      "sha256": "4f47976462985bc1173a02e2d83e99b4ba6a0cb0f5437328b058d38405633a97",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_case_file",
+      "artifact_kind": "conformance_case_artifact",
+      "path": "cases/TC-HTTP-001.json",
+      "produced_by": "trqp-cts",
+      "sha256": "224903a415dde4c3d3f7933f36e492c11c6095e2093c844e26d38a6690d3965e",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_case_file",
+      "artifact_kind": "conformance_case_artifact",
+      "path": "cases/TC-HTTP-002.json",
+      "produced_by": "trqp-cts",
+      "sha256": "8dbc731fe48640c41e2089ed1dd8c7a07b08431244c376e50c24c88bc5513c82",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_case_file",
+      "artifact_kind": "conformance_case_artifact",
+      "path": "cases/TC-LIFE-001.json",
+      "produced_by": "trqp-cts",
+      "sha256": "4a10be82df101da2cae1ae1de3e289cb7dba7c2b8bc3be5b4ad16c4b1b564462",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_case_file",
+      "artifact_kind": "conformance_case_artifact",
+      "path": "cases/TC-OPS-001.json",
+      "produced_by": "trqp-cts",
+      "sha256": "315d32e8a3a464bd522423a2e04c2360464a864efe154ed2829f5b860a53b931",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_case_file",
+      "artifact_kind": "conformance_case_artifact",
+      "path": "cases/TC-RECOG-001.json",
+      "produced_by": "trqp-cts",
+      "sha256": "ff6b75cdd8fb81b17a84bd1b4a59d7d1bd8858c505c9cd43511c0d4ab330fca6",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_case_file",
+      "artifact_kind": "conformance_case_artifact",
+      "path": "cases/TC-SEC-001.json",
+      "produced_by": "trqp-cts",
+      "sha256": "013816a8cc1c40314a71d634bb8b4517a45a7c3c9df85dab7e1a03cab7aebfe6",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_case_file",
+      "artifact_kind": "conformance_case_artifact",
+      "path": "cases/TC-SEC-002.json",
+      "produced_by": "trqp-cts",
+      "sha256": "c79071122fbfbb85622de24768dab82f4d717e1b9d3593c94d34e8a47bea68f2",
+      "media_type": "application/json"
+    },
+    {
+      "kind": "cts_bundle_zip",
+      "artifact_kind": "conformance_evidence_bundle_zip",
+      "path": "bundle.zip",
+      "produced_by": "trqp-cts",
+      "sha256": "fae105010eeec7ef9feb93d1bbc4c242cd03b78d9bd1d701144bc9f3f7047c24",
+      "media_type": "application/zip"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "TC-FRESH-001",
+  "name": "Authorization response includes freshness meta",
+  "request": {
+    "method": "POST",
+    "path": "/authorization",
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "authority_id": "did:example:transport-ministry",
+      "entity_id": "did:example:logistics-sp-123",
+      "action": "issue-transport-credential",
+      "resource": "TransportCredentialV1"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "text": "{\"authority_id\": \"did:example:transport-ministry\", \"entity_id\": \"did:example:logistics-sp-123\", \"action\": \"issue-transport-credential\", \"decision\": {\"authorized\": \"true\", \"reason\": \"Authorized.\"}, \"meta\": {\"time_evaluated\": \"2026-01-15T00:00:00Z\", \"expires_at\": \"2026-01-15T00:05:00Z\"}}",
+    "json": {
+      "authority_id": "did:example:transport-ministry",
+      "entity_id": "did:example:logistics-sp-123",
+      "action": "issue-transport-credential",
+      "decision": {
+        "authorized": "true",
+        "reason": "Authorized."
+      },
+      "meta": {
+        "time_evaluated": "2026-01-15T00:00:00Z",
+        "expires_at": "2026-01-15T00:05:00Z"
+      }
+    }
+  },
+  "elapsed_ms": 0,
+  "assertions": [
+    {
+      "type": "status",
+      "expected": 200,
+      "actual": 200,
+      "pass": true
+    },
+    {
+      "type": "json_parse",
+      "pass": true
+    },
+    {
+      "type": "json_path_exists",
+      "path": "$.meta.time_evaluated",
+      "pass": true
+    },
+    {
+      "type": "json_path_exists",
+      "path": "$.meta.expires_at",
+      "pass": true
+    }
+  ]
+}

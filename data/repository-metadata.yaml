@@ -4,7 +4,7 @@ portfolio_tier: flagship
 lifecycle: active
 role: protocol-conformance-engine
 stability: beta
-current_version: "1.5.0"
+current_version: "1.6.0"
 primary_output: Conformance Report and evidence bundle
 authority:
   owns:
@@ -18,5 +18,5 @@ authority:
 validation_command: make validate
 documentation_url: https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/
 release_policy: substantive
-last_portfolio_review: 2026-07-15
-next_portfolio_review: 2026-10-15
+last_portfolio_review: 2026-07-20
+next_portfolio_review: 2026-10-20

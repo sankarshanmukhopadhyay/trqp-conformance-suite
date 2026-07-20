@@ -411,3 +411,15 @@ CTS v1.4.0 does not make Trust Infrastructure Schemas a runtime dependency. Inst
 | `bundle_descriptor.json` | evidence index for Hub and TIS projection |
 
 See `docs/tis-evidence-contract.md` for the mapping used by the coordinated v1.4.0 release.
+
+
+## End-to-end assurance evidence chain
+
+This repository participates in the coordinated TRQP Operational Trust Stack. The supported execution path binds CTS conformance evidence and TSPP posture evidence to the same `run_id` and `target_id`, then composes them through the Assurance Hub.
+
+```bash
+make validate
+make assurance-check
+```
+
+The resulting artifacts are machine-readable and retain producer version, execution context, checksums, findings, and the repository authorised to remediate each finding. Example or self-generated evidence does not constitute independent certification. See [`PROJECT-STATUS.yaml`](PROJECT-STATUS.yaml) for maturity, authority, intended-use, and evidence declarations.

@@ -1,0 +1,36 @@
+{
+  "id": "TC-SEC-001",
+  "name": "High-Assurance requires auth",
+  "request": {
+    "method": "POST",
+    "path": "/authorization",
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "authority_id": "did:example:transport-ministry",
+      "entity_id": "did:example:logistics-sp-123",
+      "action": "issue-transport-credential"
+    }
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "text": "{\"error\": \"unauthorized\", \"message\": \"Authentication required.\"}"
+  },
+  "elapsed_ms": 0,
+  "assertions": [
+    {
+      "type": "status_in",
+      "expected": [
+        401,
+        403
+      ],
+      "actual": 401,
+      "pass": true
+    }
+  ]
+}

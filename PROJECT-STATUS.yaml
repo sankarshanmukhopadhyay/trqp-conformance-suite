@@ -1,0 +1,48 @@
+schema_version: "1.0"
+project:
+  name: trqp-conformance-suite
+  portfolio_disposition: included
+  strategic_tier: flagship
+  maturity: implementation-draft
+  lifecycle: active
+  operational_status: active-validation
+  specification_status: candidate-specification
+  provenance: original
+  intended_use:
+    - evaluation
+    - interoperability testing
+    - pilot preparation
+  not_asserted:
+    - production certification
+    - independent assurance
+    - ownership of the TRQP protocol specification
+authority:
+  normative_scope:
+    - executable TRQP conformance requirements
+    - deterministic verdict production
+    - portable conformance evidence bundles
+  does_not_own:
+    - the TRQP protocol specification
+    - security posture policy
+    - final ecosystem assurance decisions
+  approval: Maintainers approve normative, status, and release changes through reviewed pull requests.
+  delegation: Delegation is limited to the artefact scope stated in GOVERNANCE.md and may be withdrawn by maintainers.
+  revocation_or_supersession: Releases, profiles, evidence, and status claims are superseded or revoked through versioned notices and machine-readable lifecycle records.
+evidence:
+  validation_commands:
+    - make validate
+    - make assurance-check
+  evidence_outputs:
+    - artifacts/validation/cts-report.json
+    - artifacts/traceability/cts-requirement-coverage.json
+    - artifacts/traceability/negative-test-coverage.json
+  known_limitations:
+    - Example and self-generated evidence is not independent assurance.
+    - Supported cross-repository conclusions require a compatibility-registry release tuple.
+relationships:
+  - type: supports
+    target: TRQP operational trust stack
+    constraint: Participation does not transfer protocol or external certification authority.
+review:
+  last_review: 2026-07-20
+  next_review: 2026-10-20

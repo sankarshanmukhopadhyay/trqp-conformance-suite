@@ -1,5 +1,12 @@
 ## v1.5.0
 
+## 1.6.0 - 2026-07-20
+
+- Added the shared machine-readable project-status contract and validation.
+- Added coordinated end-to-end assurance evidence, traceability, and compatibility controls.
+- Added material local assurance validation and adoption guidance.
+
+
 - Publish the CTS portion of the Operational Trust Stack Maturity Release for the coordinated Hub v1.8.0 / CTS v1.5.0 / TSPP v0.13.0 release tuple.
 - Add `docs/governance/release-policy.md` to define patch, minor, maturity, and no-release thresholds for the conformance engine.
 - Add `docs/governance/change-intake.md` to require requirement impact, profile impact, evidence impact, validation impact, and cross-repo compatibility review.

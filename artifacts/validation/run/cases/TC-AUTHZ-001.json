@@ -1,0 +1,57 @@
+{
+  "id": "TC-AUTHZ-001",
+  "name": "Authorization decision present",
+  "request": {
+    "method": "POST",
+    "path": "/authorization",
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "authority_id": "did:example:transport-ministry",
+      "entity_id": "did:example:logistics-sp-123",
+      "action": "issue-transport-credential",
+      "resource": "TransportCredentialV1"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "text": "{\"authority_id\": \"did:example:transport-ministry\", \"entity_id\": \"did:example:logistics-sp-123\", \"action\": \"issue-transport-credential\", \"decision\": {\"authorized\": \"true\", \"reason\": \"Entity is authorized by the authority for this action.\"}, \"meta\": {\"time_evaluated\": \"2026-01-15T00:00:00Z\", \"expires_at\": \"2026-01-15T00:05:00Z\"}}",
+    "json": {
+      "authority_id": "did:example:transport-ministry",
+      "entity_id": "did:example:logistics-sp-123",
+      "action": "issue-transport-credential",
+      "decision": {
+        "authorized": "true",
+        "reason": "Entity is authorized by the authority for this action."
+      },
+      "meta": {
+        "time_evaluated": "2026-01-15T00:00:00Z",
+        "expires_at": "2026-01-15T00:05:00Z"
+      }
+    }
+  },
+  "elapsed_ms": 0,
+  "assertions": [
+    {
+      "type": "status",
+      "expected": 200,
+      "actual": 200,
+      "pass": true
+    },
+    {
+      "type": "json_parse",
+      "pass": true
+    },
+    {
+      "type": "schema",
+      "schema": "schemas/authz_response.schema.json",
+      "pass": false,
+      "error": "'authorized' is a required property\n\nFailed validating 'required' in schema:\n    {'$schema': 'https://json-schema.org/draft/2020-12/schema',\n     '$id': 'https://example.org/schemas/ayra/authz_response.schema.json',\n     'title': 'Ayra TRQP Authorization Response',\n     'description': 'Authorization response schema conforming to the Ayra '\n                    'TRQP Profile v0.5.0-draft. Uses the flat response '\n                    'shape from the Ayra Implementers Guide rather than '\n                    'the wrapped decision object in the core CTS schema. '\n                    'See: '\n                    'https://ayraforum.github.io/ayra-trust-registry-resources/guides/',\n     'type': 'object',\n     'required': ['entity_id',\n                  'authority_id',\n                  'action',\n                  'authorized',\n                  'time_evaluated'],\n     'properties': {'entity_id': {'type': 'string',\n                                  'minLength': 1,\n                                  'description': 'The entity being tested. '\n                                                 'MUST be a did:webvh DID '\n                                                 'in Ayra deployments.'},\n                    'authority_id': {'type': 'string',\n                                     'minLength': 1,\n                                     'description': 'The ecosystem DID '\n                                                    'governing this '\n                                                    'authorization. MUST '\n                                                    'be a did:webvh DID.'},\n                    'action': {'type': 'string',\n                               'minLength': 1,\n                               'description': 'The action being checked '\n                                              \"(e.g. 'issue', 'verify').\"},\n                    'resource': {'type': ['string', 'null'],\n                                 'description': 'The resource the action '\n                                                'applies to (e.g. '\n                                                \"'credential:driverlicense').\"},\n                    'authorized': {'type': 'boolean',\n                                   'description': 'Authorization decision. '\n                                                  'true = authorized, '\n                                                  'false = not '\n                                                  'authorized.'},\n                    'time_evaluated': {'type': 'string',\n                                       'format': 'date-time',\n                                       'description': 'RFC 3339 UTC '\n                                                      'timestamp when the '\n                                                      'authorization '\n                                                      'decision was '\n                                                      'evaluated.'},\n                    'time_requested': {'type': ['string', 'null'],\n                                       'format': 'date-time',\n                                       'description': 'RFC 3339 UTC '\n                                                      'timestamp from the '\n                                                      'request context, if '\n                                                      'provided.'},\n                    'message': {'type': ['string', 'null'],\n                                'description': 'Human-readable explanation '\n                                               'of the decision.'}},\n     'additionalProperties': True,\n     '$comment': 'Ayra uses a flat response shape. The core CTS schema '\n                 \"wraps the decision in a 'decision' object. This override \"\n                 'is applied via profiles/ayra_baseline.yaml '\n                 'schema_overrides. Both schemas validate the same '\n                 'semantic content but with different field structure.'}\n\nOn instance:\n    {'authority_id': 'did:example:transport-ministry',\n     'entity_id': 'did:example:logistics-sp-123',\n     'action': 'issue-transport-credential',\n     'decision': {'authorized': 'true',\n                  'reason': 'Entity is authorized by the authority for '\n                            'this action.'},\n     'meta': {'time_evaluated': '2026-01-15T00:00:00Z',\n              'expires_at': '2026-01-15T00:05:00Z'}}"
+    }
+  ]
+}

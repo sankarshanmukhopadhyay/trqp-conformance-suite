@@ -1,0 +1,27 @@
+{
+  "test_case_id": "TC-SEC-002",
+  "name": "Replay detection rejects reused nonce",
+  "request": {
+    "method": "POST",
+    "path": "/authorization",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": null,
+    "headers": {},
+    "text": ""
+  },
+  "elapsed_ms": 0,
+  "assertions": [
+    {
+      "type": "profile_gate",
+      "profiles": [
+        "high_assurance"
+      ],
+      "profile_id": "baseline",
+      "pass": true
+    }
+  ],
+  "skipped": true
+}

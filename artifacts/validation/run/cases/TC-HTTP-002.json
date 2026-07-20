@@ -1,0 +1,43 @@
+{
+  "id": "TC-HTTP-002",
+  "name": "Success response is JSON",
+  "request": {
+    "method": "POST",
+    "path": "/recognition",
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "authority_id": "did:example:transport-ministry",
+      "subject_authority_id": "did:example:foreign-authority-xyz"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "text": "{\"authority_id\": \"did:example:transport-ministry\", \"subject_authority_id\": \"did:example:foreign-authority-xyz\", \"statement\": {\"recognized\": true, \"reason\": \"Subject authority is recognized.\", \"valid_until\": \"2026-12-31T00:00:00Z\"}, \"meta\": {\"time_evaluated\": \"2026-01-15T00:00:00Z\", \"expires_at\": \"2026-01-15T00:05:00Z\"}}"
+  },
+  "elapsed_ms": 0,
+  "assertions": [
+    {
+      "type": "status_in",
+      "expected": [
+        200,
+        401,
+        403
+      ],
+      "actual": 200,
+      "pass": true
+    },
+    {
+      "type": "header_contains",
+      "header": "Content-Type",
+      "expected": "application/json",
+      "actual": "application/json",
+      "pass": true
+    }
+  ]
+}

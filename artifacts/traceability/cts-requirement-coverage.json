@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "producer": "trqp-conformance-suite",
+  "version": "1.6.0",
+  "requirements": [
+    "TRQP-HTTP-001",
+    "TRQP-HTTP-002",
+    "TRQP-ERR-001",
+    "TRQP-AUTHZ-001",
+    "TRQP-RECOG-001",
+    "TRQP-OPS-001",
+    "TRQP-ERR-010",
+    "TRQP-SEC-001",
+    "TRQP-SEC-002",
+    "TRQP-CTX-001",
+    "TRQP-FRESH-001",
+    "TRQP-FRESH-002"
+  ],
+  "tests": [
+    "TC-HTTP-001",
+    "TC-HTTP-002",
+    "TC-ERR-001",
+    "TC-AUTHZ-001",
+    "TC-RECOG-001",
+    "TC-OPS-001",
+    "TC-ERR-010",
+    "TC-SEC-001",
+    "TC-SEC-002",
+    "TC-CTX-001",
+    "TC-FRESH-001",
+    "TC-FRESH-002",
+    "TC-LIFE-001"
+  ],
+  "requirement_count": 12,
+  "test_count": 13,
+  "evidence": "artifacts/validation/cts-report.json"
+}

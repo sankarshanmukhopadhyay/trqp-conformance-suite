@@ -1,0 +1,49 @@
+{
+  "id": "TC-ERR-001",
+  "name": "Invalid schema yields structured error",
+  "request": {
+    "method": "POST",
+    "path": "/authorization",
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "authority_id": "did:example:transport-ministry",
+      "action": "issue-transport-credential"
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "text": "{\"error\": \"invalid_request\", \"message\": \"Request body is missing required field: entity_id\"}",
+    "json": {
+      "error": "invalid_request",
+      "message": "Request body is missing required field: entity_id"
+    }
+  },
+  "elapsed_ms": 0,
+  "assertions": [
+    {
+      "type": "status_in",
+      "expected": [
+        400,
+        422
+      ],
+      "actual": 400,
+      "pass": true
+    },
+    {
+      "type": "json_parse",
+      "pass": true
+    },
+    {
+      "type": "schema",
+      "schema": "schemas/error.schema.json",
+      "pass": false,
+      "error": "Unresolvable: ./core/error.schema.json"
+    }
+  ]
+}

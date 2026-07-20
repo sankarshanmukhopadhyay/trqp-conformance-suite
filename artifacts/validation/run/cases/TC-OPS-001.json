@@ -1,0 +1,46 @@
+{
+  "id": "TC-OPS-001",
+  "name": "Correlation id echo",
+  "request": {
+    "method": "POST",
+    "path": "/authorization",
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "X-Correlation-Id": "corr-123"
+    },
+    "body": {
+      "authority_id": "did:example:transport-ministry",
+      "entity_id": "did:example:logistics-sp-123",
+      "action": "issue-transport-credential"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json",
+      "X-Correlation-Id": "corr-123"
+    },
+    "text": "{\"authority_id\": \"did:example:transport-ministry\", \"entity_id\": \"did:example:logistics-sp-123\", \"action\": \"issue-transport-credential\", \"decision\": {\"authorized\": \"true\", \"reason\": \"Authorized.\"}, \"meta\": {\"time_evaluated\": \"2026-01-15T00:00:00Z\", \"expires_at\": \"2026-01-15T00:05:00Z\"}}"
+  },
+  "elapsed_ms": 0,
+  "assertions": [
+    {
+      "type": "status_in",
+      "expected": [
+        200,
+        401,
+        403
+      ],
+      "actual": 200,
+      "pass": true
+    },
+    {
+      "type": "header_contains",
+      "header": "X-Correlation-Id",
+      "expected": "corr-123",
+      "actual": "corr-123",
+      "pass": true
+    }
+  ]
+}

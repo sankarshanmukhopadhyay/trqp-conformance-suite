@@ -1,0 +1,54 @@
+{
+  "id": "TC-HTTP-001",
+  "name": "Accept JSON Content-Type",
+  "request": {
+    "method": "POST",
+    "path": "/authorization",
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "authority_id": "did:example:transport-ministry",
+      "entity_id": "did:example:logistics-sp-123",
+      "action": "issue-transport-credential"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "text": "{\"authority_id\": \"did:example:transport-ministry\", \"entity_id\": \"did:example:logistics-sp-123\", \"action\": \"issue-transport-credential\", \"decision\": {\"authorized\": \"true\", \"reason\": \"Entity is authorized by the authority for this action.\"}, \"meta\": {\"time_evaluated\": \"2026-01-15T00:00:00Z\", \"expires_at\": \"2026-01-15T00:05:00Z\"}}",
+    "json": {
+      "authority_id": "did:example:transport-ministry",
+      "entity_id": "did:example:logistics-sp-123",
+      "action": "issue-transport-credential",
+      "decision": {
+        "authorized": "true",
+        "reason": "Entity is authorized by the authority for this action."
+      },
+      "meta": {
+        "time_evaluated": "2026-01-15T00:00:00Z",
+        "expires_at": "2026-01-15T00:05:00Z"
+      }
+    }
+  },
+  "elapsed_ms": 0,
+  "assertions": [
+    {
+      "type": "status_in",
+      "expected": [
+        200,
+        401,
+        403
+      ],
+      "actual": 200,
+      "pass": true
+    },
+    {
+      "type": "json_parse",
+      "pass": true
+    }
+  ]
+}
