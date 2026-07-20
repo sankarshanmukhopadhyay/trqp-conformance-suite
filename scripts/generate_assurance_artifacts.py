@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import json, yaml, hashlib, subprocess, sys, shutil
+import os, json, yaml, hashlib, subprocess, sys, shutil
 root=Path(__file__).resolve().parents[1]
 out=root/'artifacts'; val=out/'validation'; tr=out/'traceability'
 shutil.rmtree(val,ignore_errors=True); val.mkdir(parents=True); tr.mkdir(parents=True,exist_ok=True)
-run='cts-local-assurance'; target='trqp-reference-fixture'
+run=os.environ.get('TRQP_RUN_ID','cts-local-assurance'); target=os.environ.get('TRQP_TARGET_ID','trqp-reference-fixture')
 cmd=[sys.executable,'cts/run.py','--profile','profiles/baseline.yaml','--sut','examples/sut.local.yaml.example','--out',str(val/'run'),'--fixture-set','fixtures/baseline.fixture-set.json','--run-id',run,'--target-id',target,'--generated-at','2026-07-20T00:00:00Z']
 subprocess.run(cmd,cwd=root,check=True)
 reports=list((val/'run').glob('*.json'))

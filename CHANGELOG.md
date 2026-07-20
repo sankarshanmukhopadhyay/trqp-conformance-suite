@@ -1,3 +1,18 @@
+## v1.6.0
+
+### Added
+- Shared `PROJECT-STATUS.yaml` governance contract and schema validation.
+- Fixture-backed conformance evidence generation with run and target binding.
+- Requirement coverage, negative-test coverage, and evidence checksum index.
+- Cross-stack execution guidance for Hub v1.9.0 and TSPP v0.14.0.
+
+### Changed
+- Added `make assurance-check` and `make evidence` as material validation entry points.
+- Updated current-version, compatibility, release-validation, and adoption documentation.
+
+### Assurance
+- Genuine failing fixture assertions remain visible and propagate to Hub decisions.
+
 ## v1.5.0
 
 ## 1.6.0 - 2026-07-20

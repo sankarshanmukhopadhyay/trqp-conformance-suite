@@ -1,5 +1,5 @@
 {
-  "run_id": "cts-local-assurance",
+  "run_id": "ots-validation",
   "target_id": "trqp-reference-fixture",
   "generated_at": "2026-07-20T00:00:00Z",
   "profile": "baseline",

@@ -6,15 +6,15 @@ tier: 0
 
 # Release Validation
 
-This record defines the validation gate for CTS v1.5.0 in the Operational Trust Stack Maturity Release.
+This record defines the validation gate for CTS v1.6.0 in the Operational Trust Stack Maturity Release.
 
 ## Compatibility tuple
 
 | Repository | Version | Role |
 |---|---:|---|
-| TRQP Conformance Suite | v1.5.0 | Protocol conformance evidence producer |
-| TRQP-TSPP | v0.13.0 | Security and privacy posture evidence producer |
-| TRQP Assurance Hub | v1.8.0 | Combined assurance orchestration and publication |
+| TRQP Conformance Suite | v1.6.0 | Protocol conformance evidence producer |
+| TRQP-TSPP | v0.14.0 | Security and privacy posture evidence producer |
+| TRQP Assurance Hub | v1.9.0 | Combined assurance orchestration and publication |
 
 ## Required commands
 
@@ -32,7 +32,7 @@ python cts/run.py --profile profiles/smoke.yaml --sut examples/sut.local.yaml.ex
 - Schema checks complete without regression.
 - Profile inspection lists deterministic test coverage.
 - Dry-run validation succeeds without network access to a live SUT.
-- Evidence bundle semantics remain compatible with Hub v1.8.0 ingestion.
+- Evidence bundle semantics remain compatible with Hub v1.9.0 ingestion.
 
 ## Local validation status
 
@@ -46,4 +46,4 @@ python cts/run.py --profile profiles/smoke.yaml --sut examples/sut.local.yaml.ex
 
 ## Release decision
 
-CTS v1.5.0 is release-worthy because it establishes the governance and validation threshold for future conformance-suite releases while preserving compatibility with v1.4.0 evidence consumers.
+CTS v1.6.0 is release-worthy because it establishes the governance and validation threshold for future conformance-suite releases while preserving compatibility with v1.4.0 evidence consumers.

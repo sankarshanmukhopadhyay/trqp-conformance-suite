@@ -65,7 +65,7 @@ This suite includes optional schemas and guidance for GRID-style artifacts.
 ## Version pins
 
 - TRQP Assurance Hub: v1.8.0
-- TRQP Conformance Suite: v1.5.0
+- TRQP Conformance Suite: v1.6.0
 - TRQP TSPP: v0.13.0
 
 ## UNTP DIA considerations
@@ -87,4 +87,4 @@ Reference: `docs/reference/openssf-supply-chain.md`.
 
 ## Discovery surface
 
-When CTS reports are incorporated into a Combined Assurance Manifest, they MUST carry the same `run_id` and `target_id` as the paired TSPP report for the Operational Stack baseline. The Assurance Hub v1.8.0 generator validates this before publishing a manifest and can include TSMM/TIS runtime assurance references.
+When CTS reports are incorporated into a Combined Assurance Manifest, they MUST carry the same `run_id` and `target_id` as the paired TSPP report for the Operational Stack baseline. The Assurance Hub v1.9.0 generator validates this before publishing a manifest and can include TSMM/TIS runtime assurance references.

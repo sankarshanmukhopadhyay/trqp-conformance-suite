@@ -14,8 +14,8 @@
     "cases/TC-RECOG-001.json": "ff6b75cdd8fb81b17a84bd1b4a59d7d1bd8858c505c9cd43511c0d4ab330fca6",
     "cases/TC-SEC-001.json": "013816a8cc1c40314a71d634bb8b4517a45a7c3c9df85dab7e1a03cab7aebfe6",
     "cases/TC-SEC-002.json": "c79071122fbfbb85622de24768dab82f4d717e1b9d3593c94d34e8a47bea68f2",
-    "cts-report.json": "dad37d01298c2618948c8d56470d4c7dba67820b02137dc80be5b4f5265d3b61",
-    "run.json": "e14f75d7653515b94f199e068d914c35c9bc276ddecb2dd5fab05a0561e22beb",
+    "cts-report.json": "2e819a93ed421fd0c4514fa7af19617a7a10e0e3a5f171425dd22ce34791ab99",
+    "run.json": "6db8ecbecfc5bb900db004c1b60898958b8acd66114275458ff96b9480caba70",
     "verdicts.json": "fd586d4f1b094b82ac712a3d49804845b06a4ad2d403da16968f7a70951b3a0e"
   }
 }

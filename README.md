@@ -26,7 +26,7 @@ tier: 0
 
 📘 **Documentation site (GitHub Pages):** https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/
 
-**Current version:** v1.5.0
+**Current version:** v1.6.0
 
 **Release line:** Operational Trust Stack v1
 
@@ -46,14 +46,14 @@ It turns protocol expectations into repeatable execution, structured verdicts, b
 | Conformance Suite | Protocol verification | Conformance Report |
 | Assurance Hub | Assurance orchestration and publication | Combined Assurance Manifest |
 
-## What is new in v1.5.0
+## What is new in v1.6.0
 
-v1.5.0 is the Conformance Suite portion of the **Operational Trust Stack Maturity Release**. It keeps CTS focused on protocol verification while adding the release governance and validation evidence expected of an adoption-ready test engine.
+v1.6.0 is the Conformance Suite portion of the **Operational Trust Stack Maturity Release**. It keeps CTS focused on protocol verification while adding the release governance and validation evidence expected of an adoption-ready test engine.
 
 - Adds release governance that prevents low-signal CTS releases for minor wording or reference churn.
 - Adds a release validation record covering documentation tests, schema checks, deterministic profile inspection, and evidence contract review.
 - Adds change-intake criteria for requirement, profile, evidence, and compatibility changes.
-- Refreshes cross-repo references for the Hub v1.8.0 / CTS v1.5.0 / TSPP v0.13.0 maturity tuple.
+- Refreshes cross-repo references for the Hub v1.9.0 / CTS v1.6.0 / TSPP v0.14.0 maturity tuple.
 - Clarifies that CTS output is release-worthy when it improves executable conformance, evidence portability, interoperability, or adopter evaluation.
 
 ## Prior release: v1.4.0
@@ -90,7 +90,7 @@ This suite ships schemas and a lightweight validator:
 
 ## Release posture
 
-v1.5.0 is additive and governance-focused. Existing v1.4.0 evidence bundle consumers remain compatible. Future CTS releases should be cut only for security fixes, broken validation, new executable conformance coverage, evidence contract changes, or coordinated Operational Trust Stack maturity increments.
+v1.6.0 is additive and governance-focused. Existing v1.4.0 evidence bundle consumers remain compatible. Future CTS releases should be cut only for security fixes, broken validation, new executable conformance coverage, evidence contract changes, or coordinated Operational Trust Stack maturity increments.
 
 ## Start Here
 

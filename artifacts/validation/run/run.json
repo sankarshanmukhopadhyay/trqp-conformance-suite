@@ -1,5 +1,5 @@
 {
-  "test_run_id": "cts-local-assurance",
+  "test_run_id": "ots-validation",
   "profile_id": "baseline",
   "out_dir_label": "run",
   "sut": {

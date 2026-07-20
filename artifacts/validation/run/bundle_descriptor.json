@@ -1,7 +1,7 @@
 {
   "bundle_version": "0.1.0",
   "run": {
-    "test_run_id": "cts-local-assurance",
+    "test_run_id": "ots-validation",
     "profile_id": "baseline",
     "out_dir_label": "run",
     "sut": {
@@ -39,7 +39,7 @@
       "artifact_kind": "conformance_run_metadata",
       "path": "run.json",
       "produced_by": "trqp-cts",
-      "sha256": "e14f75d7653515b94f199e068d914c35c9bc276ddecb2dd5fab05a0561e22beb",
+      "sha256": "6db8ecbecfc5bb900db004c1b60898958b8acd66114275458ff96b9480caba70",
       "media_type": "application/json"
     },
     {
@@ -47,7 +47,7 @@
       "artifact_kind": "conformance_report",
       "path": "cts-report.json",
       "produced_by": "trqp-cts",
-      "sha256": "dad37d01298c2618948c8d56470d4c7dba67820b02137dc80be5b4f5265d3b61",
+      "sha256": "2e819a93ed421fd0c4514fa7af19617a7a10e0e3a5f171425dd22ce34791ab99",
       "media_type": "application/json",
       "notes": "Operational Stack conformance report."
     },
@@ -64,7 +64,7 @@
       "artifact_kind": "conformance_manifest",
       "path": "manifest.json",
       "produced_by": "trqp-cts",
-      "sha256": "25761f051a352b23911c1134c34ca76e0f3c1ade9e37bc6766c22ba17927f664",
+      "sha256": "1e30d2e1e1a95c12002b21f6f356723882a7e25637f68693d0182f97c2e48693",
       "media_type": "application/json"
     },
     {
@@ -176,7 +176,7 @@
       "artifact_kind": "conformance_evidence_bundle_zip",
       "path": "bundle.zip",
       "produced_by": "trqp-cts",
-      "sha256": "fae105010eeec7ef9feb93d1bbc4c242cd03b78d9bd1d701144bc9f3f7047c24",
+      "sha256": "8008642a68095d2c3d8d72daca5198fd450739bbbe3de5c8b2b3d6fab07c9d45",
       "media_type": "application/zip"
     }
   ]
