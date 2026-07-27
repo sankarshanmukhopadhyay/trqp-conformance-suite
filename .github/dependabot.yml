@@ -6,9 +6,23 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    rebase-strategy: "auto"
+    labels:
+      - "dependencies"
+      - "github_actions"
+    commit-message:
+      prefix: "build(deps)"
+      include: "scope"
 
   - package-ecosystem: "pip"
     directory: "/cts"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    rebase-strategy: "auto"
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "build(deps)"
+      include: "scope"
