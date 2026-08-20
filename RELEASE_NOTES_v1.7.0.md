@@ -1,3 +1,10 @@
+---
+layout: default
+title: "TRQP Conformance Suite v1.7.0"
+nav_exclude: true
+permalink: /RELEASE_NOTES_v1.7.0/
+---
+
 # TRQP Conformance Suite v1.7.0
 
 ## Portfolio integration release
