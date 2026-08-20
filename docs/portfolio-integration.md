@@ -1,0 +1,15 @@
+# Portfolio Integration
+
+The TRQP Conformance Suite participates in the coordinated TRQP repository set through `portfolio/integration-contract.json`.
+
+## Repository responsibilities
+
+The Conformance Suite owns executable tests and conformance evidence for TRQP requirements. TRQP-TSPP remains the source of normative protocol requirements. Shared semantic definitions are referenced from `trust-systems-meta-model` v0.24.0, while shared portfolio and repository schemas are referenced from `trust-infrastructure-schemas` v0.14.1.
+
+The resulting conformance evidence is made available to the TRQP Assurance Hub for combined assurance decisions.
+
+## Automated validation
+
+`tools/validate_portfolio_contract.py` checks the release version, upstream version pins, required local evidence, repository relationships, and invalidation conditions. `.github/workflows/portfolio-contract.yml` runs these checks for pull requests and pushes to `main` and uploads a JSON validation result.
+
+Missing traceability evidence, incompatible upstream versions, or an incompatible normative source invalidates the portfolio integration status.
