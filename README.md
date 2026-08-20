@@ -1,431 +1,218 @@
 ---
 owner: maintainers
-last_reviewed: 2026-07-03
+last_reviewed: 2026-08-20
 tier: 0
 ---
 
-## Documentation site
-
-The complete repository documentation is published through GitHub Pages using Just the Docs. Every public Markdown file is included in the generated documentation catalogue, and Mermaid fenced diagrams are rendered client-side. The Pages workflow performs a production build for pull requests and deploys from `main`.
-
-For repository administrators, enable **Settings → Pages → Source: GitHub Actions** once. No branch-specific generated site content is committed.
-
-## Documentation
-
-- Documentation governance: [`docs/governance/README.md`](docs/governance/README.md)
-
 # TRQP Conformance Suite
 
-> **Portfolio status:** Tier 1 flagship · Active · Beta
+The TRQP Conformance Suite is the **executable protocol-conformance authority** in the TRQP Operational Trust Stack. It maps TRQP requirements to repeatable tests, produces structured verdicts and replayable evidence, and exposes machine-readable outputs that downstream assurance tooling can consume without reinterpretation.
+
+> **Current release:** v1.7.0  
+> **Lifecycle:** Active  
+> **Maturity:** Implementation draft  
+> **Operational status:** Active validation  
+> **Specification status:** Candidate specification
 
 | Attribute | Value |
 |---|---|
 | Portfolio tier | Flagship |
-| Lifecycle | Active |
-| Primary role | protocol conformance engine |
-| Primary output | Conformance Report and evidence bundle |
+| Primary role | Protocol conformance engine |
+| Portfolio contract role | `conformance-test-authority` |
+| Primary output | Conformance Report and portable evidence bundle |
 | Validation | `make validate` |
-| Evidence output | See repository-specific output contract and examples |
-| Governance authority | [`GOVERNANCE.md`](GOVERNANCE.md) |
-| Stack adoption path | [`docs/trqp-adoption-path.md`](docs/trqp-adoption-path.md) |
-
-
-📘 **Documentation site (GitHub Pages):** https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/
-
-**Current version:** v1.6.0
-
-**Release line:** Operational Trust Stack v1
+| Assurance evidence | `make assurance-check` |
+| Evidence output | `artifacts/validation/cts-report.json`, `artifacts/traceability/cts-requirement-coverage.json`, `artifacts/traceability/negative-test-coverage.json` |
+| Governance authority | [`GOVERNANCE.md`](GOVERNANCE.md) and [`PROJECT-STATUS.yaml`](PROJECT-STATUS.yaml) |
+| Portfolio integration | [`portfolio/integration-contract.json`](portfolio/integration-contract.json) |
+| Documentation site | https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/ |
 
 ![CI](https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite/actions/workflows/cts.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
-![Status](https://img.shields.io/badge/status-Operational%20Baseline-brightgreen)
+![Status](https://img.shields.io/badge/status-Active%20Validation-brightgreen)
 
-The Conformance Suite is the **verification engine** in the three-repository Operational Trust Stack v1 release line.
-It turns protocol expectations into repeatable execution, structured verdicts, bundleable evidence, and a machine-readable
-**Conformance Report** that downstream assurance workflows can ingest directly.
+## What v1.7.0 establishes
+
+v1.7.0 connects CTS to the current executable governance layer and makes its normative-source and portfolio relationships machine-verifiable.
+
+- Pins **Trust Systems Meta-Model (TSMM) v0.24.0** as semantic authority for the TRQP binding.
+- Pins **Trust Infrastructure Schemas (TIS) v0.14.1** as schema and portfolio-authority baseline.
+- Declares TRQP-TSPP v0.15.0 as the normative profile source it tests.
+- Declares the Assurance Hub v1.10.0 as the downstream consumer of CTS evidence.
+- Validates release pins, required traceability evidence, repository relationships, and integration invalidation conditions in CI.
+- Separates **conformance outcome** from **replay determinism**: a FAIL reproduced as FAIL is deterministic evidence, not replay drift.
+
+See [`RELEASE_NOTES_v1.7.0.md`](RELEASE_NOTES_v1.7.0.md) for the release record.
+
+## Authority and scope
+
+CTS has repository-local authority over:
+
+- executable TRQP conformance requirements;
+- deterministic verdict production;
+- portable conformance evidence bundles; and
+- the test/evidence interpretation implemented by this suite.
+
+CTS **does not** own the TRQP protocol specification, TSPP security-posture policy, final ecosystem assurance decisions, or external certification. Those boundaries are declared in [`PROJECT-STATUS.yaml`](PROJECT-STATUS.yaml) and [`portfolio/integration-contract.json`](portfolio/integration-contract.json).
 
 ## Where this fits
 
 | Layer | Repository role | Primary output |
 |---|---|---|
-| TSPP | Posture computation | Posture Report |
-| Conformance Suite | Protocol verification | Conformance Report |
-| Assurance Hub | Assurance orchestration and publication | Combined Assurance Manifest |
+| TRQP-TSPP v0.15.0 | Security/privacy posture computation | Posture Report and control evidence |
+| TRQP Conformance Suite v1.7.0 | Executable protocol conformance | Conformance Report and evidence bundle |
+| TRQP Assurance Hub v1.10.0 | Evidence aggregation and assurance publication | Combined Assurance Manifest and assurance decision |
 
-## What is new in v1.6.0
+Shared authorities:
 
-v1.6.0 is the Conformance Suite portion of the **Operational Trust Stack Maturity Release**. It keeps CTS focused on protocol verification while adding the release governance and validation evidence expected of an adoption-ready test engine.
+| Authority | Version | Purpose |
+|---|---:|---|
+| Trust Systems Meta-Model | 0.24.0 | TRQP semantic binding and semantic concepts |
+| Trust Infrastructure Schemas | 0.14.1 | Portfolio relationships, repository authority and validation-result contracts |
 
-- Adds release governance that prevents low-signal CTS releases for minor wording or reference churn.
-- Adds a release validation record covering documentation tests, schema checks, deterministic profile inspection, and evidence contract review.
-- Adds change-intake criteria for requirement, profile, evidence, and compatibility changes.
-- Refreshes cross-repo references for the Hub v1.9.0 / CTS v1.6.0 / TSPP v0.14.0 maturity tuple.
-- Clarifies that CTS output is release-worthy when it improves executable conformance, evidence portability, interoperability, or adopter evaluation.
+The CTS portfolio integration is invalid when required evidence is missing, the normative TSPP source is incompatible, or the declared semantic/schema authority versions no longer match.
 
-## Prior release: v1.4.0
+## Conformance model
 
-- Adds a TIS evidence contract that maps CTS reports, verdicts, manifests, and case files to TIS v0.10.0 evidence and conformance artifact roles.
-- Extends evidence bundle descriptors with optional `tis_projection` metadata for Hub v1.7.0 ingestion.
-- Adds sample TIS-compatible conformance declaration and evidence bundle manifest artifacts for the golden flow.
-- Publishes portfolio release-impact and drift-review records for the coordinated Runtime Assurance Contract Pack.
-- Cross-repo release references align with Assurance Hub v1.7.0 and TSPP v0.12.0.
+Every executable requirement is intended to provide:
 
-## Start here
+- a stable requirement identifier;
+- one or more executable tests;
+- explicit pass/fail criteria;
+- required evidence artifacts; and
+- a profile-defined applicability/assurance context.
 
-- Maturity release validation: [`docs/release-validation.md`](docs/release-validation.md)
-- Release policy: [`docs/governance/release-policy.md`](docs/governance/release-policy.md)
-- Change intake: [`docs/governance/change-intake.md`](docs/governance/change-intake.md)
-- Operational stack overview: [`docs/operational-stack.md`](docs/operational-stack.md)
-- TIS evidence contract: [`docs/tis-evidence-contract.md`](docs/tis-evidence-contract.md)
-- Start here guide: [`docs/START_HERE.md`](docs/START_HERE.md)
-- Quickstart: [`QUICKSTART.md`](QUICKSTART.md)
-- Hub repo: https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub
-
-## Why this exists
-
-A protocol is not operational just because a spec exists. This suite gives implementers a CI-friendly way to prove
-what they satisfy, what they skipped, and how complete their evidence is. That matters because interoperability has a
-nasty habit of collapsing into vibes unless someone makes the checks executable.
-
-The TRQP ecosystem can evaluate **authoritative digital trust directories** (including sovereign registry patterns) by treating published directory artifacts as evidence.
-
-This suite ships schemas and a lightweight validator:
-
-- Docs: `docs/directory-artifact-validation.md`
-- Tool: `scripts/validate_directory_artifacts.py`
-
-## Release posture
-
-v1.6.0 is additive and governance-focused. Existing v1.4.0 evidence bundle consumers remain compatible. Future CTS releases should be cut only for security fixes, broken validation, new executable conformance coverage, evidence contract changes, or coordinated Operational Trust Stack maturity increments.
-
-## Start Here
-
-Choose the path that matches your role:
-
-- **TRQP implementer**: run the **Baseline** profile, review `docs/START_HERE.md`, then compare results to the reference reports in `docs/reference-reports/`.
-- **Spec author / working group participant**: review `docs/TRQP_Conformance_Philosophy.md` and `docs/ROADMAP.md` to see how requirements map to executable tests and evidence.
-- **Ecosystem / governance / assurance**: read `docs/SOCIALIZING_NOTES.md`, `docs/evidence_bundles.md`, and the Hub crosswalk (`docs/hub-crosswalk.md`) to understand the evidence contract and profile model.
-- **Ayra registry operator**: run the `ayra_baseline` profile and see `docs/ayra-crosswalk.md` for the pre-certification evidence checklist.
-
----
-
-## Local example configuration
-
-The example SUT configuration is now shipped as `examples/sut.local.yaml.example`. Copy it to `examples/sut.local.yaml` and generate a fresh Ed25519 signing key before running the high-assurance profile locally.
-
-## Evidence artifacts produced by CTS
-
-CTS produces a **self-describing evidence bundle** per run under `reports/<run-id>/`.
-
-For a fast deterministic sanity check, use the **Smoke** profile: `profiles/smoke.yaml`. The bundle includes a machine-readable descriptor (`bundle_descriptor.json`) that indexes artifacts using canonical `kind` labels (aligned where possible with the Assurance Hub / TSPP vocabulary).
-
-| Canonical kind | Produced by CTS | Where in bundle | Notes |
-|---|---:|---|---|
-| `cts_bundle_descriptor` | Yes | `bundle_descriptor.json` | Bundle index (paths + hashes). Includes Hub-aligned `artifact_kind` values. |
-| `cts_checksums` | Yes | `checksums.json` | SHA-256 checksums for key artifacts. |
-| `cts_run_json` | Yes | `run.json` | Run metadata (profile, SUT, timing, tool version) |
-| `cts_verdicts` | Yes | `verdicts.json` | Per-test verdicts |
-| `cts_manifest` | Yes | `manifest.json` | Hash manifest for integrity verification |
-| `cts_manifest_sig` | Profile-dependent | `manifest.sig` | Present for high-assurance profiles when signing enabled |
-| `cts_case_file` | Yes | `cases/<case-id>.json` | Captured case transcript (requests/responses/notes where applicable) |
-| `cts_bundle_zip` | Profile-dependent | `bundle.zip` | Convenience zip of the run directory |
-| `jwks_snapshot` | Sometimes | `cases/...` | Emitted when a test case captures JWKS material; referenced via `bundle_descriptor.json` when present |
-| `signed_response_sample` | Sometimes | `cases/...` | Emitted when a test captures a signed response envelope |
-
-For auditors and integrators, treat `bundle_descriptor.json` as the **index of record** for what was produced and how to reference it downstream.
-
-## Why This Exists
-
-Specifications describe behavior. Deployments require proof.
-
-TRQP is designed as a lightweight verification rail across trust ecosystems. Without structured conformance testing, implementations may diverge in subtle but critical ways:
-
-- Non-deterministic authorization outcomes
-- Inconsistent lifecycle semantics
-- Fragmented security posture
-- Weak or undefined error modeling
-- "Pass" results without verifiable evidence
-
-This suite addresses those risks through executable, assertion-based testing.
-
----
-
-## What You Get
-
-- **Profiles** that scale assurance without changing core protocol semantics
-  - Baseline, Enterprise, High-Assurance, Ayra Baseline
-- **Requirement IDs** mapped to executable tests
-- **Deterministic verdict model** (PASS/FAIL/INCONCLUSIVE/NOT_APPLICABLE)
-- **Evidence bundles** that are audit-friendly
-  - transcripts, canonical payloads, hashes, manifest
-  - signatures for High-Assurance runs (where configured)
-
----
-
-## Core Principles
-
-### Profile-Based Conformance
-
-Different ecosystems require different assurance levels.
-
-Profiles:
-
-- **Baseline** — Minimal interoperable TRQP behavior
-- **Enterprise** — Governance metadata and operational discipline
-- **High-Assurance** — Deterministic state reference, replay resistance, stronger security enforcement
-- **Ayra Baseline** — Extends Enterprise for Ayra Trust Network pre-certification
-
-Profiles determine which requirements are mandatory.
-
----
-
-### Assertion-Based Testing
-
-Every normative requirement is mapped to:
-
-- A stable requirement ID
-- One or more executable tests
-- Explicit pass/fail criteria
-- Required evidence artifacts
-
-A test does not pass without evidence.
-
----
-
-### Deterministic Verdict Model
-
-Each test produces one of:
+Verdicts are assertion-derived rather than inferred from HTTP status alone:
 
 - `PASS`
 - `FAIL`
 - `INCONCLUSIVE`
 - `NOT_APPLICABLE`
 
-Verdicts are derived from requirement-level assertions, not HTTP status codes.
+A failing verdict is valid conformance evidence. Replay determinism evaluates whether the same semantic verdict is reproduced, not whether every verdict is PASS.
 
----
+## Profiles
 
-### Evidence-First Reporting
+The suite supports multiple assurance postures without changing core TRQP semantics:
 
-Each test run generates:
+- **Smoke** — fast deterministic sanity check.
+- **Baseline** — minimum interoperable TRQP behavior.
+- **Enterprise** — governance metadata and stronger operational discipline.
+- **High-Assurance** — deterministic state reference, stronger security controls, evidence integrity and replay expectations.
+- **Ayra Baseline** — Ayra-specific pre-certification profile.
+- **DeDi Experimental** — schema-oriented experimental support for decentralized-directory artifacts.
 
-- Canonicalized request/response pairs
-- Full HTTP transcripts
-- Hashes of payloads
-- A structured verdict manifest
-- A signed evidence bundle (High-Assurance profile)
+Profiles determine which requirements are mandatory and what evidence must be emitted.
 
-This enables auditability and reproducibility.
+## Evidence bundle
 
----
+A CTS run produces a self-describing bundle under `reports/<run-id>/`. Treat `bundle_descriptor.json` as the index of record.
 
-## Why Determinism Matters
-
-TRQP decisions depend on registry state.
-
-If identical inputs can produce different outputs under unclear state conditions, interoperability collapses.
-
-High-Assurance profile requires:
-
-- A declared `state_reference`
-- Controlled fixture conditions
-- Deterministic decision behavior for identical inputs
-
-Without stable state reference, semantic conformance cannot be validated.
-
----
-
-## Conformance Architecture Overview
-
-```mermaid
-graph TD
-    A[Verifier / Client] --> B[TRQP Conformance Runner]
-    B --> C[System Under Test]
-    B --> D[Evidence Artifacts]
-    D --> E[Manifest + Signature]
-```
-
-The runner executes profile-bound tests, captures transcripts, validates assertions, and produces a cryptographically verifiable evidence bundle.
-
----
-
-## Repository Structure
-
-```
-profiles/         Conformance profiles (including ayra_baseline.yaml)
-requirements/     Requirement catalog with stable IDs
-tests/            Declarative test definitions
-schemas/          JSON schemas for validation (including schemas/ayra/)
-cts/              Conformance test runner
-examples/         Example TRQP-like service and configuration
-docs/             Design philosophy, evidence model, and crosswalks
-```
-
----
-
-## Running the Suite
-
-### 1. Start the Example SUT
-
-```
-uvicorn examples.poc_service:app --reload
-```
-
-### 2. Run Baseline Profile
-
-```
-python cts/run.py   --profile profiles/baseline.yaml   --sut examples/sut.local.yaml   --out reports/run1
-```
-
-### 3. Run High-Assurance Profile
-
-```
-python cts/run.py   --profile profiles/high_assurance.yaml   --sut examples/sut.local.yaml   --out reports/runHA
-```
-
-### 4. Run Ayra Baseline Profile
-
-```
-python cts/run.py   --profile profiles/ayra_baseline.yaml   --sut examples/sut.local.yaml   --out reports/ayra-run
-```
-
----
-
-## Evidence Artifacts
-
-Each run produces:
-
-```
-reports/<run-id>/
-  run.json
-  verdicts.json
-  manifest.json
-  manifest.sig   (High-Assurance)
-  cases/
-  bundle.zip
-```
-
-The manifest includes cryptographic hashes of all artifacts.
-High-Assurance profile signs the manifest for integrity verification.
-
-See `docs/evidence_bundle.schema.json` for the evidence contract.
-
----
-
-## Reference Reports
-
-This repo includes sample evidence bundles under:
-
-- `docs/reference-reports/sample_run_baseline/`
-- `docs/reference-reports/sample_run_high_assurance/`
-
-These are intended as concrete examples of what "good evidence" looks like, and how to verify manifests and signatures.
-
----
-
-## Status
-
-**Status:** Experimental
-
-This repository is evolving and intended to inform structured conformance approaches for TRQP. It does not represent a formal certification authority.
-
----
-
-## Roadmap
-
-See `docs/ROADMAP.md`.
-
----
-
-## Contributing
-
-All additions must:
-
-- Map to a requirement ID
-- Produce structured evidence
-- Respect profile definitions
-- Avoid introducing undefined semantic assumptions
-
-See `CONTRIBUTING.md` for guidelines.
-
----
-
-## Strategic Positioning
-
-This suite is intended to:
-
-- Encourage interoperable TRQP implementations
-- Support production-readiness discussions
-- Provide a structured foundation for future conformance programs
-- Reduce ambiguity in multi-ecosystem deployments
-
-It does not assert normative authority over the TRQP specification.
-
-
-## Repo hygiene and assurance artifacts
-
-- Schema checks: `python scripts/schema_check.py`
-- Preflight (optional): `python scripts/preflight.py --base-url https://your-sut/ --endpoint /.well-known/jwks.json`
-- Traceability template: `docs/traceability.md`
-- Evidence bundle guidance: `docs/evidence_bundles.md`
-
-
-## Certification Baseline Alignment (CTR-ACB)
-
-This repository is the **executable verification engine** for the *Candidate Trust Registry Assurance & Certification Baseline (CTR-ACB)* defined in the TRQP Assurance Hub.
-
-In practice:
-
-- The Assurance Hub defines **what** a trust registry claims (assurance profile, controls, lifecycle, recognition).
-- The Conformance Suite provides **how to verify** those claims and produce evidence artifacts that can be referenced from:
-  - Control Satisfaction Declarations
-  - Certification Attestations (if/when an ecosystem chooses to operationalize certification)
-
-See: `docs/certification-alignment.md`.
-
-## UNTP Digital Identity Anchor (DIA)
-
-Some authoritative directories use UNTP DIA for issuer identity anchoring. See [`docs/UNTP_DIA_SUPPORT.md`](docs/UNTP_DIA_SUPPORT.md).
-
-### Supply chain integrity evidence
-
-CTS supports evidence bundle descriptors that can include SBOM, build provenance, and Scorecard outputs for audit-ready evaluations.
-
-## Experimental: DeDi support
-
-The CTS ships an **experimental** DeDi artifact validator (schema checks) to support decentralized directory ecosystems.
-
-- See `docs/profiles.md` and `profiles/dedi_experimental.yaml` (snapshot 2026-03-03).
-
-- DeDi mapping matrix: `docs/reference/dedi-mapping-matrix.md`
-
-
-## Operational Stack integration
-
-CTS now emits `cts-report.json` in each report directory and supports `--run-id` and `--target-id` so the Assurance Hub can build a combined manifest without translation glue.
-
-## TIS evidence projection
-
-CTS v1.4.0 does not make Trust Infrastructure Schemas a runtime dependency. Instead, it exposes structured metadata that downstream tooling can project into TIS-compatible artifacts.
-
-| CTS artifact | TIS role |
+| Artifact | Purpose |
 |---|---|
-| `run.json` | conformance run metadata |
-| `verdicts.json` | conformance verdict evidence |
-| `manifest.json` and `checksums.json` | evidence bundle integrity metadata |
-| `cases/*.json` | replayable test case evidence |
-| `bundle_descriptor.json` | evidence index for Hub and TIS projection |
+| `run.json` | Run metadata, profile, SUT, timing and tool version |
+| `verdicts.json` | Per-test semantic verdicts |
+| `manifest.json` | Integrity manifest |
+| `checksums.json` | SHA-256 checksums for key artifacts |
+| `manifest.sig` | High-assurance signature when signing is configured |
+| `cases/*.json` | Replayable case evidence/transcripts |
+| `bundle_descriptor.json` | Machine-readable evidence index |
+| `cts-report.json` | Hub-ready conformance report |
+| `bundle.zip` | Optional portable package |
 
-See `docs/tis-evidence-contract.md` for the mapping used by the coordinated v1.4.0 release.
+## Start here
 
+- [`docs/START_HERE.md`](docs/START_HERE.md) — role-based entry point.
+- [`QUICKSTART.md`](QUICKSTART.md) — run the suite.
+- [`docs/TRQP_Conformance_Philosophy.md`](docs/TRQP_Conformance_Philosophy.md) — conformance design principles.
+- [`docs/evidence_bundles.md`](docs/evidence_bundles.md) — evidence bundle model.
+- [`docs/reference-reports/`](docs/reference-reports/) — reference output examples.
+- [`docs/portfolio-integration.md`](docs/portfolio-integration.md) — synchronized TRQP portfolio integration.
+- [`docs/tis-evidence-contract.md`](docs/tis-evidence-contract.md) — TIS evidence projection.
+- [`docs/governance/release-policy.md`](docs/governance/release-policy.md) — release governance.
+- [`docs/governance/change-intake.md`](docs/governance/change-intake.md) — change intake criteria.
 
-## End-to-end assurance evidence chain
+## Quick validation
 
-This repository participates in the coordinated TRQP Operational Trust Stack. The supported execution path binds CTS conformance evidence and TSPP posture evidence to the same `run_id` and `target_id`, then composes them through the Assurance Hub.
+Run the repository governance/schema gate:
 
 ```bash
 make validate
+```
+
+Run the cross-stack negative-case assurance checks:
+
+```bash
 make assurance-check
 ```
 
-The resulting artifacts are machine-readable and retain producer version, execution context, checksums, findings, and the repository authorised to remediate each finding. Example or self-generated evidence does not constitute independent certification. See [`PROJECT-STATUS.yaml`](PROJECT-STATUS.yaml) for maturity, authority, intended-use, and evidence declarations.
+A typical local conformance run is:
+
+```bash
+uvicorn examples.poc_service:app --reload
+python cts/run.py \
+  --profile profiles/baseline.yaml \
+  --sut examples/sut.local.yaml \
+  --out reports/run1
+```
+
+For high-assurance evaluation:
+
+```bash
+python cts/run.py \
+  --profile profiles/high_assurance.yaml \
+  --sut examples/sut.local.yaml \
+  --out reports/runHA
+```
+
+Copy `examples/sut.local.yaml.example` to `examples/sut.local.yaml` and generate fresh local signing material before running profiles that require it.
+
+## Determinism and replay
+
+Deterministic evidence is a first-class conformance property. CTS distinguishes:
+
+1. **whether the SUT conforms**, and
+2. **whether the conformance result can be reproduced**.
+
+Replay fails when a verdict changes or a captured case can no longer be mapped to the current suite. A source FAIL reproduced as FAIL remains deterministic evidence and does not, by itself, invalidate the replay pipeline.
+
+## Repository map
+
+| Path | Purpose |
+|---|---|
+| `requirements/` | Stable conformance requirement catalogue |
+| `profiles/` | Conformance profiles |
+| `tests/` | Declarative test definitions |
+| `cts/` | Conformance runner and replay logic |
+| `schemas/` | Report, evidence and ecosystem schemas |
+| `examples/` | Example SUT/configuration and fixtures |
+| `artifacts/validation/` | Generated validation evidence |
+| `artifacts/traceability/` | Requirement and negative-test coverage evidence |
+| `portfolio/` | Cross-repository integration contract |
+| `docs/` | Conformance philosophy, evidence model, mappings and adoption guidance |
+
+## Additional interoperability support
+
+- [`docs/directory-artifact-validation.md`](docs/directory-artifact-validation.md) — authoritative directory artifact validation.
+- [`docs/UNTP_DIA_SUPPORT.md`](docs/UNTP_DIA_SUPPORT.md) — UNTP Digital Identity Anchor support.
+- [`docs/ayra-crosswalk.md`](docs/ayra-crosswalk.md) — Ayra pre-certification crosswalk.
+- [`docs/certification-alignment.md`](docs/certification-alignment.md) — Candidate Trust Registry Assurance & Certification Baseline alignment.
+- [`docs/reference/dedi-mapping-matrix.md`](docs/reference/dedi-mapping-matrix.md) — experimental DeDi mapping.
+
+## Evidence and auditability
+
+CTS evidence retains the producer version, execution context, requirement/test identity, verdict, checksums, and captured case material needed for downstream review. Example or self-generated evidence does not constitute independent assurance or certification.
+
+## Documentation site
+
+GitHub Pages uses Just the Docs and is deployed from `main` through GitHub Actions. Repository administrators should configure **Settings → Pages → Source: GitHub Actions**.
+
+Documentation governance: [`docs/governance/README.md`](docs/governance/README.md).
+
+## Contributing
+
+Changes to executable conformance behavior should map to stable requirement IDs, produce structured evidence, respect profile semantics, and avoid introducing undefined protocol assumptions. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+## License
+
+Apache 2.0. See [`LICENSE`](LICENSE).
