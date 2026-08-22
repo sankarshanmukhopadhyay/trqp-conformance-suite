@@ -4,6 +4,24 @@ title: "Changelog"
 nav_exclude: true
 ---
 
+## v1.8.0
+
+### Added
+- Versioned replay determinism policy separating permitted execution volatility from prohibited conformance-semantic drift.
+- Canonical semantic comparison with JSON Pointer-level difference reporting.
+- Schema-valid determinism reports with policy ID, version, SHA-256 provenance, semantic hashes, and aggregate decision counts.
+- Negative tests proving semantic mutation fails while declared volatile changes remain permitted.
+- Determinism evidence attachment to fixture-pinned Baseline bundles for downstream assurance consumption.
+
+### Changed
+- Moved the normative replay determinism gate from the live Baseline run to the fixture-pinned deterministic Baseline execution domain.
+- Updated the replay verifier to consume policy-aware determinism reports while retaining legacy verdict-only compatibility.
+- Aligned README, portfolio integration contract, Pages catalogue, and release metadata to v1.8.0.
+
+### Assurance
+- A passing replay now means conformance-semantic evidence is equivalent under a declared, versioned comparison policy rather than merely preserving top-level verdicts.
+- Comparison-policy incompatibility is an explicit portfolio integration invalidation trigger.
+
 ## v1.6.0
 
 ### Added

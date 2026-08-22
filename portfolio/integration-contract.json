@@ -1,7 +1,7 @@
 {
   "contractVersion": "1.0",
   "repository": "sankarshanmukhopadhyay/trqp-conformance-suite",
-  "release": "1.7.0",
+  "release": "1.8.0",
   "role": "conformance-test-authority",
   "authority": {
     "semanticAuthority": {
@@ -35,7 +35,9 @@
   ],
   "evidence": [
     {"path": "artifacts/traceability/cts-requirement-coverage.json", "purpose": "requirement coverage"},
-    {"path": "artifacts/traceability/negative-test-coverage.json", "purpose": "negative-test coverage"}
+    {"path": "artifacts/traceability/negative-test-coverage.json", "purpose": "negative-test coverage"},
+    {"path": "policies/replay-determinism.v1.json", "purpose": "replay determinism policy"},
+    {"path": "schemas/evidence/replay-determinism-report.schema.json", "purpose": "replay determinism report contract"}
   ],
   "relationships": [
     {"repository": "sankarshanmukhopadhyay/TRQP-TSPP", "relation": "tests"},
@@ -46,7 +48,8 @@
       "semantic-authority-version-incompatible",
       "schema-authority-version-incompatible",
       "required-evidence-missing",
-      "normative-source-version-incompatible"
+      "normative-source-version-incompatible",
+      "replay-determinism-policy-incompatible"
     ],
     "effect": "integration-status-invalid"
   }

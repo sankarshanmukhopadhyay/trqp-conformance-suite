@@ -1,6 +1,6 @@
 ---
 owner: maintainers
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-22
 tier: 0
 ---
 
@@ -8,7 +8,7 @@ tier: 0
 
 The TRQP Conformance Suite is the **executable protocol-conformance authority** in the TRQP Operational Trust Stack. It maps TRQP requirements to repeatable tests, produces structured verdicts and replayable evidence, and exposes machine-readable outputs that downstream assurance tooling can consume without reinterpretation.
 
-> **Current release:** v1.7.0  
+> **Current release:** v1.8.0  
 > **Lifecycle:** Active  
 > **Maturity:** Implementation draft  
 > **Operational status:** Active validation  
@@ -31,25 +31,27 @@ The TRQP Conformance Suite is the **executable protocol-conformance authority** 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Status](https://img.shields.io/badge/status-Active%20Validation-brightgreen)
 
-## What v1.7.0 establishes
+## What v1.8.0 establishes
 
-v1.7.0 connects CTS to the current executable governance layer and makes its normative-source and portfolio relationships machine-verifiable.
+v1.8.0 makes deterministic replay a first-class, machine-verifiable conformance invariant.
 
-- Pins **Trust Systems Meta-Model (TSMM) v0.24.0** as semantic authority for the TRQP binding.
-- Pins **Trust Infrastructure Schemas (TIS) v0.14.1** as schema and portfolio-authority baseline.
-- Declares TRQP-TSPP v0.15.0 as the normative profile source it tests.
-- Declares the Assurance Hub v1.10.0 as the downstream consumer of CTS evidence.
-- Validates release pins, required traceability evidence, repository relationships, and integration invalidation conditions in CI.
-- Separates **conformance outcome** from **replay determinism**: a FAIL reproduced as FAIL is deterministic evidence, not replay drift.
+- Retains **Trust Systems Meta-Model (TSMM) v0.24.0** as semantic authority for the TRQP binding.
+- Retains **Trust Infrastructure Schemas (TIS) v0.14.1** as schema and portfolio-authority baseline.
+- Introduces the versioned `trqp-replay-determinism` comparison policy.
+- Canonicalizes conformance-semantic evidence separately from volatile execution metadata.
+- Emits schema-valid replay determinism reports with policy identity/version/hash provenance and JSON Pointer-level differences.
+- Fails closed on semantic drift while allowing explicitly declared execution volatility.
+- Attaches replay determinism evidence to the fixture-pinned Baseline evidence bundle for downstream Assurance Hub consumption.
+- Keeps live Baseline execution as an interoperability check rather than treating live transport timing and metadata as deterministic evidence.
 
-See [`RELEASE_NOTES_v1.7.0.md`](RELEASE_NOTES_v1.7.0.md) for the release record.
+See [`RELEASE_NOTES_v1.8.0.md`](RELEASE_NOTES_v1.8.0.md) for the release record.
 
 ## Authority and scope
 
 CTS has repository-local authority over:
 
 - executable TRQP conformance requirements;
-- deterministic verdict production;
+- deterministic verdict and replay-evidence production;
 - portable conformance evidence bundles; and
 - the test/evidence interpretation implemented by this suite.
 
@@ -60,7 +62,7 @@ CTS **does not** own the TRQP protocol specification, TSPP security-posture poli
 | Layer | Repository role | Primary output |
 |---|---|---|
 | TRQP-TSPP v0.15.0 | Security/privacy posture computation | Posture Report and control evidence |
-| TRQP Conformance Suite v1.7.0 | Executable protocol conformance | Conformance Report and evidence bundle |
+| TRQP Conformance Suite v1.8.0 | Executable protocol conformance | Conformance Report, determinism report and evidence bundle |
 | TRQP Assurance Hub v1.10.0 | Evidence aggregation and assurance publication | Combined Assurance Manifest and assurance decision |
 
 Shared authorities:
@@ -70,7 +72,7 @@ Shared authorities:
 | Trust Systems Meta-Model | 0.24.0 | TRQP semantic binding and semantic concepts |
 | Trust Infrastructure Schemas | 0.14.1 | Portfolio relationships, repository authority and validation-result contracts |
 
-The CTS portfolio integration is invalid when required evidence is missing, the normative TSPP source is incompatible, or the declared semantic/schema authority versions no longer match.
+The CTS portfolio integration is invalid when required evidence is missing, the normative TSPP source is incompatible, the replay comparison policy is incompatible, or the declared semantic/schema authority versions no longer match.
 
 ## Conformance model
 
@@ -89,7 +91,7 @@ Verdicts are assertion-derived rather than inferred from HTTP status alone:
 - `INCONCLUSIVE`
 - `NOT_APPLICABLE`
 
-A failing verdict is valid conformance evidence. Replay determinism evaluates whether the same semantic verdict is reproduced, not whether every verdict is PASS.
+A failing verdict is valid conformance evidence. Deterministic replay asks whether conformance-semantic evidence is equivalent under the declared comparison policy, not whether every verdict is PASS.
 
 ## Profiles
 
@@ -116,6 +118,8 @@ A CTS run produces a self-describing bundle under `reports/<run-id>/`. Treat `bu
 | `checksums.json` | SHA-256 checksums for key artifacts |
 | `manifest.sig` | High-assurance signature when signing is configured |
 | `cases/*.json` | Replayable case evidence/transcripts |
+| `determinism-report.json` | Policy-aware deterministic replay verdict and JSON Pointer differences |
+| `replay-determinism-policy.json` | Versioned comparison policy captured with deterministic evidence |
 | `bundle_descriptor.json` | Machine-readable evidence index |
 | `cts-report.json` | Hub-ready conformance report |
 | `bundle.zip` | Optional portable package |
@@ -172,9 +176,11 @@ Copy `examples/sut.local.yaml.example` to `examples/sut.local.yaml` and generate
 Deterministic evidence is a first-class conformance property. CTS distinguishes:
 
 1. **whether the SUT conforms**, and
-2. **whether the conformance result can be reproduced**.
+2. **whether the conformance-semantic evidence can be reproduced**.
 
-Replay fails when a verdict changes or a captured case can no longer be mapped to the current suite. A source FAIL reproduced as FAIL remains deterministic evidence and does not, by itself, invalidate the replay pipeline.
+The normative CI determinism gate uses the fixture-pinned Baseline run, where inputs, responses, timestamp and run identity are controlled. The replay comparison policy explicitly classifies volatile paths such as run identifiers, output labels and elapsed timings. All other differences are prohibited by default.
+
+`determinism-report.json` records every differing JSON Pointer, whether it is permitted, the policy identity/version/hash, and semantic SHA-256 digests. A source FAIL reproduced without semantic change remains deterministic evidence; a controlled semantic mutation fails the determinism gate.
 
 ## Repository map
 
@@ -182,8 +188,9 @@ Replay fails when a verdict changes or a captured case can no longer be mapped t
 |---|---|
 | `requirements/` | Stable conformance requirement catalogue |
 | `profiles/` | Conformance profiles |
-| `tests/` | Declarative test definitions |
-| `cts/` | Conformance runner and replay logic |
+| `tests/` | Declarative and determinism test definitions |
+| `cts/` | Conformance runner and replay/determinism logic |
+| `policies/` | Versioned executable comparison/governance policies |
 | `schemas/` | Report, evidence and ecosystem schemas |
 | `examples/` | Example SUT/configuration and fixtures |
 | `artifacts/validation/` | Generated validation evidence |
@@ -201,7 +208,7 @@ Replay fails when a verdict changes or a captured case can no longer be mapped t
 
 ## Evidence and auditability
 
-CTS evidence retains the producer version, execution context, requirement/test identity, verdict, checksums, and captured case material needed for downstream review. Example or self-generated evidence does not constitute independent assurance or certification.
+CTS evidence retains the producer version, execution context, requirement/test identity, verdict, checksums, captured case material, determinism decision and comparison-policy provenance needed for downstream review. Example or self-generated evidence does not constitute independent assurance or certification.
 
 ## Documentation site
 
@@ -211,7 +218,7 @@ Documentation governance: [`docs/governance/README.md`](docs/governance/README.m
 
 ## Contributing
 
-Changes to executable conformance behavior should map to stable requirement IDs, produce structured evidence, respect profile semantics, and avoid introducing undefined protocol assumptions. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+Changes to executable conformance behavior should map to stable requirement IDs, produce structured evidence, respect profile semantics, and avoid introducing undefined protocol assumptions. Changes to replay determinism policy alter the assurance claim and therefore require explicit review and versioned policy provenance. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## License
 

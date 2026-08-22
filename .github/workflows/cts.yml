@@ -38,12 +38,13 @@ jobs:
           PY
 
       - name: Schema hygiene checks
-        run: |
-          python scripts/schema_check.py
+        run: python scripts/schema_check.py
 
       - name: Verify AL contract pin
-        run: |
-          python scripts/verify_al_contract.py
+        run: python scripts/verify_al_contract.py
+
+      - name: Test replay determinism policy
+        run: python -m unittest tests.test_replay_determinism
 
       - name: Run Baseline profile (fixture-pinned, deterministic)
         run: |
@@ -54,6 +55,37 @@ jobs:
             --generated-at "2026-01-15T00:00:00Z" \
             --run-id "ci-fixture-baseline" \
             --out reports/ci_baseline_fixture
+
+      - name: Replay fixture Baseline (determinism verification)
+        run: |
+          set +e
+          python cts/run.py \
+            --profile profiles/baseline.yaml \
+            --sut examples/sut.local.yaml \
+            --replay reports/ci_baseline_fixture \
+            --generated-at "2026-01-15T00:00:00Z" \
+            --out reports/ci_baseline_fixture_replay
+          replay_exit=$?
+          set -e
+
+          if [ ! -f reports/ci_baseline_fixture_replay/replay-report.json ]; then
+            echo "Replay runner exited ${replay_exit} without producing replay evidence."
+            exit "${replay_exit:-1}"
+          fi
+
+          python scripts/build_replay_determinism_report.py \
+            --source reports/ci_baseline_fixture \
+            --replay-report reports/ci_baseline_fixture_replay/replay-report.json \
+            --policy policies/replay-determinism.v1.json \
+            --out reports/ci_baseline_fixture_replay/determinism-report.json
+
+          python scripts/verify_replay_determinism.py \
+            reports/ci_baseline_fixture_replay/determinism-report.json
+
+          python scripts/attach_determinism_evidence.py \
+            --run-dir reports/ci_baseline_fixture \
+            --report reports/ci_baseline_fixture_replay/determinism-report.json \
+            --policy policies/replay-determinism.v1.json
 
       - name: Start example SUT (for live run)
         run: |
@@ -67,31 +99,10 @@ jobs:
           done
 
       - name: Run Baseline profile (live SUT)
-        run: |
-          python cts/run.py --profile profiles/baseline.yaml --sut examples/sut.local.yaml --out reports/ci_baseline
+        run: python cts/run.py --profile profiles/baseline.yaml --sut examples/sut.local.yaml --out reports/ci_baseline
 
       - name: Run High-Assurance profile
-        run: |
-          python cts/run.py --profile profiles/high_assurance.yaml --sut examples/sut.local.yaml --out reports/ci_high_assurance
-
-      - name: Replay baseline run (determinism verification)
-        run: |
-          set +e
-          python cts/run.py \
-            --profile profiles/baseline.yaml \
-            --sut examples/sut.local.yaml \
-            --replay reports/ci_baseline \
-            --generated-at "2026-01-15T00:00:00Z" \
-            --out reports/ci_baseline_replay
-          replay_exit=$?
-          set -e
-
-          if [ ! -f reports/ci_baseline_replay/replay-report.json ]; then
-            echo "Replay runner exited ${replay_exit} without producing replay evidence."
-            exit "${replay_exit:-1}"
-          fi
-
-          python scripts/verify_replay_determinism.py reports/ci_baseline_replay/replay-report.json
+        run: python cts/run.py --profile profiles/high_assurance.yaml --sut examples/sut.local.yaml --out reports/ci_high_assurance
 
       - name: Ensure bundle.zip exists (Baseline)
         run: |
@@ -99,9 +110,7 @@ jobs:
           ./scripts/create_bundle.sh reports/ci_baseline
 
       - name: Ensure bundle.zip exists (High-Assurance)
-        run: |
-          chmod +x scripts/create_bundle.sh
-          ./scripts/create_bundle.sh reports/ci_high_assurance
+        run: ./scripts/create_bundle.sh reports/ci_high_assurance
 
       - name: Upload Fixture-pinned Baseline bundle
         uses: actions/upload-artifact@v7
@@ -113,6 +122,10 @@ jobs:
             reports/ci_baseline_fixture/verdicts.json
             reports/ci_baseline_fixture/run.json
             reports/ci_baseline_fixture/cts-report.json
+            reports/ci_baseline_fixture/determinism-report.json
+            reports/ci_baseline_fixture/replay-determinism-policy.json
+            reports/ci_baseline_fixture/bundle_descriptor.json
+            reports/ci_baseline_fixture/checksums.json
           if-no-files-found: error
 
       - name: Upload Baseline bundle
@@ -138,12 +151,14 @@ jobs:
             reports/ci_high_assurance/run.json
           if-no-files-found: warn
 
-      - name: Upload replay report
+      - name: Upload replay determinism evidence
         uses: actions/upload-artifact@v7
         with:
-          name: trqp-cts-baseline-replay-report
-          path: reports/ci_baseline_replay/replay-report.json
-          if-no-files-found: warn
+          name: trqp-cts-baseline-replay-determinism
+          path: |
+            reports/ci_baseline_fixture_replay/replay-report.json
+            reports/ci_baseline_fixture_replay/determinism-report.json
+          if-no-files-found: error
 
       - name: Upload full reports (debug)
         uses: actions/upload-artifact@v7
@@ -152,6 +167,6 @@ jobs:
           path: |
             reports/ci_baseline/**
             reports/ci_baseline_fixture/**
-            reports/ci_baseline_replay/**
+            reports/ci_baseline_fixture_replay/**
             reports/ci_high_assurance/**
           if-no-files-found: warn
