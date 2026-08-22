@@ -6,13 +6,15 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 
-from jsonschema import validate
-
-from cts.determinism import classify_differences, diff_documents, semantic_sha256, summarize_differences
-
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from jsonschema import validate
+from cts.determinism import classify_differences, diff_documents, semantic_sha256, summarize_differences
 
 
 def load_json(path: Path):
@@ -24,14 +26,8 @@ def sha256_file(path: Path) -> str:
 
 
 def build_case_projection(source_dir: Path, replay_report: dict) -> tuple[dict, dict]:
-    original_verdicts = {
-        item["test_case_id"]: item
-        for item in load_json(source_dir / "verdicts.json")
-    }
-    replay_verdicts = {
-        item["test_case_id"]: item
-        for item in replay_report.get("verdicts", [])
-    }
+    original_verdicts = {item["test_case_id"]: item for item in load_json(source_dir / "verdicts.json")}
+    replay_verdicts = {item["test_case_id"]: item for item in replay_report.get("verdicts", [])}
 
     original_cases = {}
     replay_cases = {}
@@ -66,6 +62,23 @@ def build_case_projection(source_dir: Path, replay_report: dict) -> tuple[dict, 
     return original_cases, replay_cases
 
 
+def semantic_projection(document: dict) -> dict:
+    """Remove fields explicitly classified as execution volatility before hashing."""
+    run = document["run"]
+    cases = {
+        tc_id: {key: value for key, value in case.items() if key != "elapsed_ms"}
+        for tc_id, case in document["cases"].items()
+    }
+    return {
+        "run": {
+            "profile_id": run.get("profile_id"),
+            "target_id": run.get("target_id"),
+            "tool": run.get("tool"),
+        },
+        "cases": cases,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", required=True, type=Path)
@@ -77,8 +90,8 @@ def main() -> int:
     source_run = load_json(args.source / "run.json")
     replay_report = load_json(args.replay_report)
     policy = load_json(args.policy)
-
     original_cases, replay_cases = build_case_projection(args.source, replay_report)
+
     original = {
         "run": {
             "test_run_id": source_run.get("test_run_id"),
@@ -110,6 +123,8 @@ def main() -> int:
     classified = classify_differences(diff_documents(original, replay), policy)
     summary = summarize_differences(classified)
     prohibited = summary["prohibited_difference_count"]
+    original_semantic = semantic_projection(original)
+    replay_semantic = semantic_projection(replay)
 
     report = {
         "report_version": "1.0.0",
@@ -120,11 +135,11 @@ def main() -> int:
         },
         "source": {
             "run_id": source_run.get("test_run_id"),
-            "semantic_sha256": semantic_sha256(original),
+            "semantic_sha256": semantic_sha256(original_semantic),
         },
         "replay": {
             "run_id": replay_report.get("replay_run_id"),
-            "semantic_sha256": semantic_sha256(replay),
+            "semantic_sha256": semantic_sha256(replay_semantic),
         },
         "deterministic": prohibited == 0,
         "summary": summary,
