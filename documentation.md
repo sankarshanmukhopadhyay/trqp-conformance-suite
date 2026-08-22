@@ -17,6 +17,7 @@ Every public Markdown document in the repository is rendered by Jekyll and index
 - [Governance]({{ '/GOVERNANCE/' | relative_url }})  `/GOVERNANCE.md`
 - [Quickstart — TRQP Conformance Suite]({{ '/QUICKSTART/' | relative_url }})  `/QUICKSTART.md`
 - [TRQP Conformance Suite]({{ '/README/' | relative_url }})  `/README.md`
+- [TRQP Conformance Suite v1.8.0 Release Notes]({{ '/RELEASE_NOTES_v1.8.0/' | relative_url }})  `/RELEASE_NOTES_v1.8.0.md`
 - [Roadmap]({{ '/ROADMAP/' | relative_url }})  `/ROADMAP.md`
 - [Security Policy]({{ '/SECURITY/' | relative_url }})  `/SECURITY.md`
 
@@ -95,6 +96,7 @@ Every public Markdown document in the repository is rendered by Jekyll and index
 - [v1.3.0 — Scenario Profiles and Interop Evidence Matrix]({{ '/releases/v1.3.0/' | relative_url }})  `/releases/v1.3.0.md`
 - [TRQP Conformance Suite v1.5.0 Release Notes]({{ '/releases/v1.5.0/' | relative_url }})  `/releases/v1.5.0.md`
 - [TRQP Conformance Suite v1.6.0 — Reproducible Conformance Evidence]({{ '/releases/v1.6.0/' | relative_url }})  `/releases/v1.6.0.md`
+- [TRQP Conformance Suite v1.8.0 — Deterministic Evidence Replay]({{ '/releases/v1.8.0/' | relative_url }})  `/releases/v1.8.0.md`
 
 ## schemas
 
