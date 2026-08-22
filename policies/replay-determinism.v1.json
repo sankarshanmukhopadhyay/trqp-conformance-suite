@@ -1,0 +1,21 @@
+{
+  "policy_id": "trqp-replay-determinism",
+  "policy_version": "1.0.0",
+  "description": "Defines which replay differences are permitted execution volatility and which are prohibited conformance-semantic drift.",
+  "allowed_difference_pointers": [
+    "/run/test_run_id",
+    "/run/replay_run_id",
+    "/run/generated_at",
+    "/run/started_at",
+    "/run/ended_at",
+    "/run/out_dir_label",
+    "/cases/*/elapsed_ms"
+  ],
+  "prohibited_by_default": true,
+  "canonicalization": {
+    "json_object_keys": "lexicographic",
+    "array_order": "preserve",
+    "encoding": "utf-8",
+    "serialization": "json-compact"
+  }
+}
