@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/trqp/replay-determinism-report.schema.json",
+  "title": "TRQP Replay Determinism Report",
+  "type": "object",
+  "required": ["report_version", "policy", "source", "replay", "deterministic", "summary", "differences"],
+  "properties": {
+    "report_version": {"type": "string"},
+    "policy": {
+      "type": "object",
+      "required": ["id", "version", "sha256"],
+      "properties": {
+        "id": {"type": "string"},
+        "version": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "source": {"$ref": "#/$defs/runDigest"},
+    "replay": {"$ref": "#/$defs/runDigest"},
+    "deterministic": {"type": "boolean"},
+    "summary": {
+      "type": "object",
+      "required": ["difference_count", "permitted_difference_count", "prohibited_difference_count"],
+      "properties": {
+        "difference_count": {"type": "integer", "minimum": 0},
+        "permitted_difference_count": {"type": "integer", "minimum": 0},
+        "prohibited_difference_count": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "differences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pointer", "classification", "permitted"],
+        "properties": {
+          "pointer": {"type": "string"},
+          "classification": {"enum": ["volatile", "semantic"]},
+          "permitted": {"type": "boolean"},
+          "original": {},
+          "replay": {}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "runDigest": {
+      "type": "object",
+      "required": ["semantic_sha256"],
+      "properties": {
+        "run_id": {"type": ["string", "null"]},
+        "semantic_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
