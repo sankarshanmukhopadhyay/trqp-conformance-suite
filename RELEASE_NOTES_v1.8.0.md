@@ -1,3 +1,9 @@
+---
+layout: default
+title: "TRQP Conformance Suite v1.8.0 Release Notes"
+nav_exclude: true
+---
+
 # TRQP Conformance Suite v1.8.0
 
 ## Deterministic Evidence Replay
