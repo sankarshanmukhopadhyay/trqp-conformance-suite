@@ -1,0 +1,41 @@
+{
+  "contract_version": "1.0",
+  "producer": {
+    "repository": "sankarshanmukhopadhyay/trqp-conformance-suite",
+    "role": "protocol-conformance-and-replay-producer"
+  },
+  "consumer": "sankarshanmukhopadhyay/trqp-assurance-hub",
+  "required_correlators": ["run_id", "target_id"],
+  "required_outputs": [
+    {
+      "type": "conformance-evidence",
+      "requirement": "Machine-readable protocol conformance result"
+    },
+    {
+      "type": "replay-determinism-report",
+      "requirement": "Machine-readable semantic replay equivalence result"
+    },
+    {
+      "type": "replay-comparison-policy",
+      "requirement": "Versioned comparison policy identity and digest"
+    }
+  ],
+  "integrity": {
+    "version_or_commit_provenance_required": true,
+    "comparison_policy_digest_required": true,
+    "artifact_hashing_required_by_stack_release": true
+  },
+  "invalidation_conditions": [
+    "missing required output",
+    "run_id mismatch",
+    "target_id mismatch",
+    "schema-invalid evidence",
+    "failed replay determinism",
+    "unrecognised replay comparison policy",
+    "unsupported semantic or schema authority"
+  ],
+  "authority_boundary": {
+    "owns": ["protocol conformance execution", "CTS evidence semantics", "replay comparison policy", "replay determinism verdict"],
+    "does_not_own": ["TSPP control definitions", "combined assurance decision", "coordinated stack release declaration"]
+  }
+}
