@@ -1,38 +1,14 @@
 {
   "contractVersion": "1.0",
   "repository": "sankarshanmukhopadhyay/trqp-conformance-suite",
-  "release": "1.8.0",
+  "release": "1.9.0",
   "role": "conformance-test-authority",
   "authority": {
-    "semanticAuthority": {
-      "repository": "sankarshanmukhopadhyay/trust-systems-meta-model",
-      "version": "0.24.0",
-      "artifacts": [
-        "bindings/trqp/tsmm-trqp-binding.json",
-        "model/semantic-concepts.json",
-        "schemas/semantic-projection.schema.json"
-      ]
-    },
-    "schemaAuthority": {
-      "repository": "sankarshanmukhopadhyay/trust-infrastructure-schemas",
-      "version": "0.14.1",
-      "artifacts": [
-        "portfolio/portfolio-relationship.schema.json",
-        "portfolio/repository-authority.schema.json",
-        "portfolio/portfolio-validation-result.schema.json"
-      ]
-    }
+    "semanticAuthority": {"repository": "sankarshanmukhopadhyay/trust-systems-meta-model", "version": "0.24.0", "artifacts": ["bindings/trqp/tsmm-trqp-binding.json","model/semantic-concepts.json","schemas/semantic-projection.schema.json"]},
+    "schemaAuthority": {"repository": "sankarshanmukhopadhyay/trust-infrastructure-schemas", "version": "0.15.0", "artifacts": ["portfolio/portfolio-relationship.schema.json","portfolio/repository-authority.schema.json","portfolio/portfolio-validation-result.schema.json","assurance/assurance-lifecycle-event.schema.json"]}
   },
-  "provides": [
-    "TRQP requirement conformance results",
-    "negative-test coverage",
-    "deterministic execution evidence"
-  ],
-  "consumes": [
-    "TRQP-TSPP normative requirements and assurance-level semantics",
-    "TSMM TRQP semantic binding",
-    "TIS conformance and portfolio contracts"
-  ],
+  "provides": ["TRQP requirement conformance results","negative-test coverage","deterministic execution evidence","impact-aware reassessment plans"],
+  "consumes": ["TRQP-TSPP normative requirements and assurance-level semantics","TSMM TRQP semantic binding","TIS conformance, portfolio, and assurance lifecycle contracts"],
   "evidence": [
     {"path": "artifacts/traceability/cts-requirement-coverage.json", "purpose": "requirement coverage"},
     {"path": "artifacts/traceability/negative-test-coverage.json", "purpose": "negative-test coverage"},
@@ -43,14 +19,5 @@
     {"repository": "sankarshanmukhopadhyay/TRQP-TSPP", "relation": "tests"},
     {"repository": "sankarshanmukhopadhyay/trqp-assurance-hub", "relation": "feeds-evidence-to"}
   ],
-  "revocation": {
-    "triggers": [
-      "semantic-authority-version-incompatible",
-      "schema-authority-version-incompatible",
-      "required-evidence-missing",
-      "normative-source-version-incompatible",
-      "replay-determinism-policy-incompatible"
-    ],
-    "effect": "integration-status-invalid"
-  }
+  "revocation": {"triggers": ["semantic-authority-version-incompatible","schema-authority-version-incompatible","required-evidence-missing","normative-source-version-incompatible","replay-determinism-policy-incompatible"], "effect": "integration-status-invalid"}
 }
