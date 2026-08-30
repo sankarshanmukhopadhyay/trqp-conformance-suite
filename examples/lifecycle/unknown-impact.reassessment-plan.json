@@ -1,0 +1,15 @@
+{
+  "source_event_ref": "https://github.com/sankarshanmukhopadhyay/TRQP-TSPP/blob/e952641fe28dd03b8015ed0ce22da053d9160a4a/examples/lifecycle/unknown-impact.lifecycle-event.json",
+  "source_authority": "TRQP-TSPP",
+  "source_impact": "unknown",
+  "policy_id": "cts-impact-policy-v1",
+  "impact": {
+    "known": false,
+    "affected_tests": [],
+    "reusable_tests": [],
+    "full_rerun_required": true,
+    "rationale_code": "UNKNOWN_IMPACT_FULL_RERUN"
+  },
+  "decision_authority": "TRQP-CTS",
+  "rationale": "CTS cannot establish a safe bounded impact set from an unknown upstream materiality result, so deterministic conformance must be rerun in full."
+}
