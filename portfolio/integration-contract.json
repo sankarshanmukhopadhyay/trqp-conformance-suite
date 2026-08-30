@@ -1,7 +1,7 @@
 {
   "contractVersion": "1.0",
   "repository": "sankarshanmukhopadhyay/trqp-conformance-suite",
-  "release": "1.9.0",
+  "release": "1.9.1",
   "role": "conformance-test-authority",
   "authority": {
     "semanticAuthority": {"repository": "sankarshanmukhopadhyay/trust-systems-meta-model", "version": "0.24.0", "artifacts": ["bindings/trqp/tsmm-trqp-binding.json","model/semantic-concepts.json","schemas/semantic-projection.schema.json"]},
