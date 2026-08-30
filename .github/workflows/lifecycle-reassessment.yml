@@ -1,0 +1,20 @@
+name: Lifecycle Reassessment
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+
+jobs:
+  validate-reassessment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Validate reassessment plans and pressure tests
+        run: python scripts/validate_reassessment_plans.py
+      - name: Syntax smoke check
+        run: python -m compileall -q scripts/

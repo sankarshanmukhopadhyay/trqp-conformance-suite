@@ -1,0 +1,15 @@
+{
+  "source_event_ref": "https://github.com/sankarshanmukhopadhyay/TRQP-TSPP/blob/e952641fe28dd03b8015ed0ce22da053d9160a4a/examples/lifecycle/material-change.lifecycle-event.json",
+  "source_authority": "TRQP-TSPP",
+  "source_impact": "material",
+  "policy_id": "cts-impact-policy-v1",
+  "impact": {
+    "known": true,
+    "affected_tests": ["security-posture", "affected-controls"],
+    "reusable_tests": ["protocol-determinism-baseline"],
+    "full_rerun_required": false,
+    "rationale_code": "MATERIAL_SCOPE_EXPLICIT"
+  },
+  "decision_authority": "TRQP-CTS",
+  "rationale": "The TSPP event declares material impact with explicit reassessment scope; CTS may bound rerun to mapped conformance tests while preserving unrelated deterministic replay evidence."
+}
