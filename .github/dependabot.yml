@@ -13,6 +13,10 @@ updates:
     commit-message:
       prefix: "build(deps)"
       include: "scope"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: "pip"
     directory: "/cts"
@@ -26,3 +30,8 @@ updates:
     commit-message:
       prefix: "build(deps)"
       include: "scope"
+    groups:
+      python-minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
