@@ -4,6 +4,24 @@ title: "Changelog"
 nav_exclude: true
 ---
 
+## v1.10.0 — 2026-09-10
+
+### Added
+- Added a profile-consumable conformance evidence schema and deterministic exporter for downstream profile-aware assurance composition.
+- Added exact suite, test-set, TRQP protocol/binding, run, target, evidence-reference, and lifecycle provenance.
+- Added producer-contract falsification tests and CI evidence generation.
+
+### Changed
+- Extended the Stack producer contract to v1.1 with explicit profile-aware evidence and invalidation conditions.
+- Documented that profile metadata is correlation-only and cannot rewrite CTS-owned core conformance semantics.
+- Declared the candidate coordinated tuple CTS v1.10.0 / TSPP v0.17.0 / Assurance Hub v1.13.0 while retaining Stack 2026.2 — Ashoka as the current published Stack.
+
+### Assurance
+- Operational `ERROR`, `SKIP`, and unresolved observations export as `INDETERMINATE`, never as negative authorization or recognition decisions.
+- `NOT_APPLICABLE` remains distinct from failure.
+- Stale, invalid, wrong-protocol, wrong-binding, or otherwise inapplicable CTS evidence cannot become current PASS through profile metadata.
+- CTS remains authoritative for core conformance and replay semantics; the Hub owns composition only.
+
 ## v1.8.0
 
 ### Added
