@@ -9,8 +9,8 @@ tier: 0
 The TRQP Conformance Suite is the **executable protocol-conformance authority** in the TRQP Operational Trust Stack. It maps TRQP requirements to repeatable tests, produces structured verdicts and replayable evidence, and exposes machine-readable outputs that downstream assurance tooling can consume without reinterpretation.
 
 > **Current component release:** v1.10.0  
-> **Current coordinated stack:** TRQP Stack 2026.2 — Ashoka  
-> **Coordinated release candidate:** TRQP Stack 2026.3 — Banyan  
+> **Current coordinated stack:** TRQP Stack 2026.3 — Banyan  
+> **Previous coordinated stack:** TRQP Stack 2026.2 — Ashoka  
 > **Lifecycle:** Active  
 > **Maturity:** Implementation draft  
 > **Operational status:** Active validation
@@ -32,7 +32,7 @@ The TRQP Conformance Suite is the **executable protocol-conformance authority** 
 
 ## Start here
 
-For the validated multi-repository adoption path, start with the coordinated TRQP Stack release in the TRQP Assurance Hub. If you are implementing or evaluating CTS directly, use:
+For the validated multi-repository adoption path, start with **TRQP Stack 2026.3 — Banyan** in the TRQP Assurance Hub. If you are implementing or evaluating CTS directly, use:
 
 - [`docs/START_HERE.md`](docs/START_HERE.md) — role-based entry point;
 - [`QUICKSTART.md`](QUICKSTART.md) — run the suite;
@@ -48,7 +48,7 @@ Profile metadata is correlation context only. It cannot modify CTS core test sem
 
 The release retains the v1.9.x impact-aware reassessment capability: bounded reassessment is permitted only when material impact and affected tests are explicit; unknown impact fails toward a full rerun. CTS remains authoritative for conformance/replay reassessment consequences.
 
-The candidate coordinated compatibility tuple is **CTS v1.10.0 / TSPP v0.17.0 / Assurance Hub v1.13.0**. Until Stack 2026.3 passes its coordinated release gate, **TRQP Stack 2026.2 — Ashoka remains the current coordinated Stack release**.
+The published coordinated compatibility tuple is **CTS v1.10.0 / TSPP v0.17.0 / Assurance Hub v1.13.0**, released as **TRQP Stack 2026.3 — Banyan**. Stack 2026.2 — Ashoka remains an immutable historical baseline, not the current coordinated release.
 
 ## Profile-aware evidence producer boundary
 
