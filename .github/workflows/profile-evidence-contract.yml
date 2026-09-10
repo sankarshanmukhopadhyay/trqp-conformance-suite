@@ -1,0 +1,73 @@
+name: Profile Evidence Contract
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+
+jobs:
+  profile-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f cts/requirements.txt ]; then pip install -r cts/requirements.txt; fi
+          pip install fastapi uvicorn
+
+      - name: Validate schemas
+        run: python scripts/schema_check.py
+
+      - name: Falsify producer-contract boundaries
+        run: python -m unittest tests.test_profile_consumable_evidence
+
+      - name: Prepare deterministic SUT config
+        run: |
+          cp examples/sut.local.yaml.example examples/sut.local.yaml
+          python - <<'PY'
+          from pathlib import Path
+          from nacl.signing import SigningKey
+          from nacl.encoding import Base64Encoder
+          p = Path("examples/sut.local.yaml")
+          key = SigningKey.generate().encode(Base64Encoder).decode()
+          p.write_text(p.read_text(encoding="utf-8").replace("REPLACE_WITH_BASE64_ED25519_PRIVATE_KEY", key), encoding="utf-8")
+          PY
+
+      - name: Produce deterministic CTS report
+        run: |
+          python cts/run.py \
+            --profile profiles/baseline.yaml \
+            --sut examples/sut.local.yaml \
+            --fixture-set fixtures/baseline.fixture-set.json \
+            --generated-at "2026-01-15T00:00:00Z" \
+            --run-id "ci-profile-evidence" \
+            --target-id "trqp-reference-fixture" \
+            --out reports/profile-evidence
+
+      - name: Export profile-consumable evidence
+        run: |
+          python scripts/build_profile_consumable_evidence.py \
+            --report reports/profile-evidence/cts-report.json \
+            --protocol-version "2.0" \
+            --binding "https-json" \
+            --out reports/profile-evidence/profile-consumable-conformance.json
+
+      - name: Verify evidence artifact exists
+        run: test -s reports/profile-evidence/profile-consumable-conformance.json
+
+      - name: Upload producer-contract evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: trqp-cts-profile-consumable-evidence
+          path: reports/profile-evidence/profile-consumable-conformance.json
+          if-no-files-found: error

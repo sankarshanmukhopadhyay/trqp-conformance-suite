@@ -1,6 +1,6 @@
 ---
 owner: maintainers
-last_reviewed: 2026-08-30
+last_reviewed: 2026-09-10
 tier: 0
 ---
 
@@ -25,6 +25,7 @@ The TRQP Conformance Suite is the **executable protocol-conformance authority** 
 | Evidence output | `artifacts/validation/cts-report.json`, replay determinism and traceability evidence |
 | Governance authority | [`GOVERNANCE.md`](GOVERNANCE.md) and [`PROJECT-STATUS.yaml`](PROJECT-STATUS.yaml) |
 | Producer contract | [`portfolio/stack-producer-contract.json`](portfolio/stack-producer-contract.json) |
+| Profile-consumable evidence schema | [`schemas/evidence/profile-consumable-conformance.schema.json`](schemas/evidence/profile-consumable-conformance.schema.json) |
 | Portfolio integration | [`docs/portfolio-integration.md`](docs/portfolio-integration.md) |
 | Documentation site | https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/ |
 
@@ -44,9 +45,38 @@ The v1.9 line adds impact-aware reassessment: bounded reassessment when material
 
 CTS remains authoritative for conformance/replay reassessment consequences. It consumes TSPP materiality through the portable TIS lifecycle contract without redefining posture materiality or Hub assurance validity.
 
+## Profile-aware evidence producer boundary
+
+CTS may produce evidence that a named profile-aware consumer, such as the TRQP Assurance Hub, can correlate to a profile assessment. That does **not** make CTS a profile-policy authority.
+
+The profile-consumable producer contract preserves:
+
+- exact CTS suite version;
+- test-set identity and content revision;
+- TRQP protocol version and binding;
+- target and run identity;
+- individual CTS test results and evidence references; and
+- current/reassessment/invalid lifecycle state.
+
+Optional `profile_context` is correlation metadata only. It MUST NOT modify CTS core test semantics or convert an existing CTS result into a different conformance conclusion.
+
+The responsibility boundary is:
+
+| Observation | Authority |
+|---|---|
+| TRQP core/binding conformance and deterministic replay | CTS |
+| Ecosystem-profile narrowing and extensions | Profile authority + Assurance Hub projection |
+| Security/privacy posture and control semantics | TRQP-TSPP |
+| DID/governance legitimacy and other external authority evidence | Applicable external authority/evidence source |
+| Composition of independent evidence into a profile assurance conclusion | TRQP Assurance Hub |
+
+Operational or processing errors are exported as `INDETERMINATE` observations rather than being reinterpreted as semantic negative authorization or recognition decisions. `NOT_APPLICABLE` remains distinct from failure.
+
+The export helper is `scripts/build_profile_consumable_evidence.py`; its schema is `schemas/evidence/profile-consumable-conformance.schema.json`. Reassessment state is carried forward from the lifecycle model established by CTS #32 so stale or materially affected core evidence cannot be presented as current merely because a consumer supplies matching profile metadata.
+
 ## Authority and scope
 
-CTS is authoritative for executable TRQP conformance requirements, deterministic verdict and replay-evidence production, portable conformance evidence bundles, and replay/test interpretation implemented by the suite. CTS is **not** authoritative for the upstream TRQP protocol specification, TSPP security/privacy posture policy, Hub combined-assurance decisions, or external certification.
+CTS is authoritative for executable TRQP conformance requirements, deterministic verdict and replay-evidence production, portable conformance evidence bundles, and replay/test interpretation implemented by the suite. CTS is **not** authoritative for the upstream TRQP protocol specification, TSPP security/privacy posture policy, Hub combined-assurance decisions, ecosystem-profile policy, or external certification.
 
 ## Conformance and replay model
 
@@ -54,7 +84,7 @@ A CTS requirement has a stable identifier, executable tests, explicit pass/fail 
 
 ## Evidence and auditability
 
-Primary downstream artifacts include `artifacts/validation/cts-report.json`, replay determinism evidence, policy identity/version/hash provenance, and requirement/negative-test traceability artifacts. The machine-consumption boundary is declared in [`portfolio/stack-producer-contract.json`](portfolio/stack-producer-contract.json). Example or self-generated evidence is not independent certification.
+Primary downstream artifacts include `artifacts/validation/cts-report.json`, replay determinism evidence, policy identity/version/hash provenance, requirement/negative-test traceability artifacts, and the profile-consumable conformance projection when requested. The machine-consumption boundary is declared in [`portfolio/stack-producer-contract.json`](portfolio/stack-producer-contract.json). Example or self-generated evidence is not independent certification.
 
 ## Quick validation
 
