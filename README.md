@@ -8,8 +8,9 @@ tier: 0
 
 The TRQP Conformance Suite is the **executable protocol-conformance authority** in the TRQP Operational Trust Stack. It maps TRQP requirements to repeatable tests, produces structured verdicts and replayable evidence, and exposes machine-readable outputs that downstream assurance tooling can consume without reinterpretation.
 
-> **Current component release:** v1.9.1  
-> **Current coordinated stack:** TRQP Stack 2026.1 — Coconut  
+> **Current component release:** v1.10.0  
+> **Current coordinated stack:** TRQP Stack 2026.2 — Ashoka  
+> **Coordinated release candidate:** TRQP Stack 2026.3 — Banyan  
 > **Lifecycle:** Active  
 > **Maturity:** Implementation draft  
 > **Operational status:** Active validation
@@ -39,11 +40,15 @@ For the validated multi-repository adoption path, start with the coordinated TRQ
 - [`docs/evidence_bundles.md`](docs/evidence_bundles.md) — portable evidence model; and
 - [`docs/portfolio-integration.md`](docs/portfolio-integration.md) — coordinated Stack relationship.
 
-## v1.9.x reassessment capability
+## v1.10.0 profile-aware evidence producer
 
-The v1.9 line adds impact-aware reassessment: bounded reassessment when material impact and affected tests are explicit, full rerun when impact is unknown, and attributable reuse for legitimate non-material change. v1.9.1 is a patch release that repairs the repository-status contract exposed by clean-room Stack execution; it does not change reassessment semantics.
+v1.10.0 makes profile-consumable core-conformance evidence an explicit CTS producer contract. The exported artifact binds CTS results to the suite version, exact test-set revision, TRQP protocol version and binding, target/run identity, individual evidence references, and lifecycle/reassessment state.
 
-CTS remains authoritative for conformance/replay reassessment consequences. It consumes TSPP materiality through the portable TIS lifecycle contract without redefining posture materiality or Hub assurance validity.
+Profile metadata is correlation context only. It cannot modify CTS core test semantics. Operational `ERROR`, `SKIP`, or unresolved states are exported as `INDETERMINATE`, never reinterpreted as negative authorization or recognition decisions. `NOT_APPLICABLE` remains distinct from failure.
+
+The release retains the v1.9.x impact-aware reassessment capability: bounded reassessment is permitted only when material impact and affected tests are explicit; unknown impact fails toward a full rerun. CTS remains authoritative for conformance/replay reassessment consequences.
+
+The candidate coordinated compatibility tuple is **CTS v1.10.0 / TSPP v0.17.0 / Assurance Hub v1.13.0**. Until Stack 2026.3 passes its coordinated release gate, **TRQP Stack 2026.2 — Ashoka remains the current coordinated Stack release**.
 
 ## Profile-aware evidence producer boundary
 
@@ -70,9 +75,7 @@ The responsibility boundary is:
 | DID/governance legitimacy and other external authority evidence | Applicable external authority/evidence source |
 | Composition of independent evidence into a profile assurance conclusion | TRQP Assurance Hub |
 
-Operational or processing errors are exported as `INDETERMINATE` observations rather than being reinterpreted as semantic negative authorization or recognition decisions. `NOT_APPLICABLE` remains distinct from failure.
-
-The export helper is `scripts/build_profile_consumable_evidence.py`; its schema is `schemas/evidence/profile-consumable-conformance.schema.json`. Reassessment state is carried forward from the lifecycle model established by CTS #32 so stale or materially affected core evidence cannot be presented as current merely because a consumer supplies matching profile metadata.
+The export helper is `scripts/build_profile_consumable_evidence.py`; its schema is `schemas/evidence/profile-consumable-conformance.schema.json`. Reassessment state is carried forward from the CTS lifecycle model so stale or materially affected core evidence cannot be presented as current merely because a consumer supplies matching profile metadata.
 
 ## Authority and scope
 
