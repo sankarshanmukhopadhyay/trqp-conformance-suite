@@ -1,0 +1,45 @@
+# TRQP Conformance Suite v1.10.0 — Profile-Aware Evidence Producer
+
+v1.10.0 publishes the CTS side of the profile-aware compositional assurance contract planned for TRQP Stack 2026.3 — Banyan.
+
+## Added
+
+- Profile-consumable conformance evidence schema and deterministic exporter.
+- Exact suite, test-set, protocol/binding, run and target provenance.
+- Producer-owned reassessment state in downstream-consumable evidence.
+- Falsification tests proving profile metadata cannot rewrite core CTS results.
+- CI generation and upload of profile-consumable CTS evidence.
+
+## Assurance impact
+
+CTS remains authoritative for executable TRQP core/binding conformance and replay semantics. `profile_context` is correlation metadata only. Operational `ERROR`, `SKIP`, or otherwise unresolved observations export as `INDETERMINATE`; they never become semantic negative authorization or recognition results. `NOT_APPLICABLE` remains distinct from failure.
+
+## Evidence impact
+
+New/updated evidence surfaces include:
+
+- `schemas/evidence/profile-consumable-conformance.schema.json`;
+- `scripts/build_profile_consumable_evidence.py`;
+- `reports/profile-evidence/profile-consumable-conformance.json` in CI;
+- Stack producer contract v1.1; and
+- producer-contract falsification coverage.
+
+## Compatibility tuple
+
+Candidate coordinated tuple:
+
+- CTS `v1.10.0`;
+- TRQP-TSPP `v0.17.0`;
+- TRQP Assurance Hub `v1.13.0`.
+
+TRQP Stack 2026.2 — Ashoka remains the current coordinated release until the 2026.3 eligibility and human release judgment gates pass.
+
+## Upgrade note
+
+Existing CTS consumers that use the prior conformance report/bundle surfaces remain supported. Profile-aware consumers should prefer the new producer artifact when composing CTS-owned core results and must preserve its lifecycle state and provenance. Consumers must not use profile metadata to reinterpret CTS verdicts.
+
+## Validation
+
+Release preparation requires green CTS, Profile Evidence Contract, Lifecycle Reassessment, Portfolio Integration Contract, and GitHub Pages checks. Coordinated publication additionally requires the Hub `stack-release-eligibility` gate over the frozen 2026.3 tuple.
+
+This release is project assurance tooling, not independent certification.
