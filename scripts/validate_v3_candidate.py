@@ -3,7 +3,8 @@
 
 This is deliberately dependency-free so that candidate semantic evidence can be
 replayed in repository CI without requiring a live SUT. It validates the pinned
-candidate source, complete requirement coverage, and fail-closed outcomes.
+candidate source, complete requirement coverage, fail-closed outcomes, and the
+machine-readable evidence map consumed by downstream assurance tooling.
 """
 from __future__ import annotations
 
@@ -14,6 +15,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 PIN_PATH = ROOT / "experimental" / "trqp-v3" / "source-pin.json"
 VECTORS_PATH = ROOT / "experimental" / "trqp-v3" / "vectors.json"
+EVIDENCE_PATH = ROOT / "experimental" / "trqp-v3" / "evidence.json"
 
 CANDIDATE_SHA = "532a570ed8b7b468b7a317030077577b9859c14f"
 AUTHORITY_STATUS = "DOWNSTREAM_EXPERIMENTAL_NOT_ADOPTED"
@@ -150,15 +152,17 @@ def evaluate(overrides: dict[str, Any]) -> dict[str, str]:
 def validate() -> dict[str, Any]:
     pin = load_json(PIN_PATH)
     corpus = load_json(VECTORS_PATH)
+    evidence = load_json(EVIDENCE_PATH)
 
     if pin.get("commit") != CANDIDATE_SHA:
         raise AssertionError("candidate source pin moved without explicit reassessment")
     if pin.get("authority_status") != AUTHORITY_STATUS:
         raise AssertionError("candidate authority boundary is missing or changed")
-    if corpus.get("candidate_commit") != CANDIDATE_SHA:
-        raise AssertionError("vector corpus is not bound to the pinned candidate")
-    if corpus.get("authority_status") != AUTHORITY_STATUS:
-        raise AssertionError("vector corpus authority status is invalid")
+    for name, artifact in (("vector corpus", corpus), ("evidence map", evidence)):
+        if artifact.get("candidate_commit") != CANDIDATE_SHA:
+            raise AssertionError(f"{name} is not bound to the pinned candidate")
+        if artifact.get("authority_status") != AUTHORITY_STATUS:
+            raise AssertionError(f"{name} authority status is invalid")
 
     vectors = corpus.get("vectors")
     if not isinstance(vectors, list) or not vectors:
@@ -201,6 +205,19 @@ def validate() -> dict[str, Any]:
         raise AssertionError(
             f"candidate requirements without executable vectors: {sorted(missing)}"
         )
+
+    evidence_rows = evidence.get("requirements")
+    if not isinstance(evidence_rows, list):
+        raise AssertionError("evidence map requirements must be a list")
+    evidence_by_id = {row.get("id"): row for row in evidence_rows}
+    if set(evidence_by_id) != REQUIRED_REQUIREMENTS:
+        raise AssertionError("evidence map must contain exactly the candidate requirement register")
+    for requirement_id, row in evidence_by_id.items():
+        if row.get("status") != "PASS":
+            raise AssertionError(f"{requirement_id}: CTS vector evidence is not PASS")
+        row_vectors = set(row.get("vectors") or [])
+        if not row_vectors or not row_vectors.issubset(ids):
+            raise AssertionError(f"{requirement_id}: evidence references unknown vectors")
 
     return {
         "candidate_commit": CANDIDATE_SHA,
