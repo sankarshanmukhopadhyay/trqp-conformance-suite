@@ -1,0 +1,25 @@
+name: Experimental TRQP v3 candidate
+
+on:
+  push:
+    branches:
+      - experiment/trqp-v3-candidate
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  candidate-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Validate pinned candidate vectors
+        run: python scripts/validate_v3_candidate.py
+      - name: Run candidate invariant regression tests
+        run: python -m unittest tests.test_v3_candidate
