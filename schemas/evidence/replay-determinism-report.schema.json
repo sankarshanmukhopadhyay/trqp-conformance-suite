@@ -3,29 +3,69 @@
   "$id": "https://example.org/trqp/replay-determinism-report.schema.json",
   "title": "TRQP Replay Determinism Report",
   "type": "object",
-  "required": ["report_version", "policy", "source", "replay", "deterministic", "summary", "differences"],
+  "required": [
+    "report_version",
+    "policy",
+    "source",
+    "replay",
+    "deterministic",
+    "summary",
+    "differences"
+  ],
   "properties": {
-    "report_version": {"type": "string"},
+    "report_version": {
+      "type": "string"
+    },
     "policy": {
       "type": "object",
-      "required": ["id", "version", "sha256"],
+      "required": [
+        "id",
+        "version",
+        "sha256"
+      ],
       "properties": {
-        "id": {"type": "string"},
-        "version": {"type": "string"},
-        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
       },
       "additionalProperties": false
     },
-    "source": {"$ref": "#/$defs/runDigest"},
-    "replay": {"$ref": "#/$defs/runDigest"},
-    "deterministic": {"type": "boolean"},
+    "source": {
+      "$ref": "#/$defs/runDigest"
+    },
+    "replay": {
+      "$ref": "#/$defs/runDigest"
+    },
+    "deterministic": {
+      "type": "boolean"
+    },
     "summary": {
       "type": "object",
-      "required": ["difference_count", "permitted_difference_count", "prohibited_difference_count"],
+      "required": [
+        "difference_count",
+        "permitted_difference_count",
+        "prohibited_difference_count"
+      ],
       "properties": {
-        "difference_count": {"type": "integer", "minimum": 0},
-        "permitted_difference_count": {"type": "integer", "minimum": 0},
-        "prohibited_difference_count": {"type": "integer", "minimum": 0}
+        "difference_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "permitted_difference_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "prohibited_difference_count": {
+          "type": "integer",
+          "minimum": 0
+        }
       },
       "additionalProperties": false
     },
@@ -33,11 +73,24 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["pointer", "classification", "permitted"],
+        "required": [
+          "pointer",
+          "classification",
+          "permitted"
+        ],
         "properties": {
-          "pointer": {"type": "string"},
-          "classification": {"enum": ["volatile", "semantic"]},
-          "permitted": {"type": "boolean"},
+          "pointer": {
+            "type": "string"
+          },
+          "classification": {
+            "enum": [
+              "volatile",
+              "semantic"
+            ]
+          },
+          "permitted": {
+            "type": "boolean"
+          },
           "original": {},
           "replay": {}
         },
@@ -48,10 +101,55 @@
   "$defs": {
     "runDigest": {
       "type": "object",
-      "required": ["semantic_sha256"],
+      "required": [
+        "semantic_sha256",
+        "target_state"
+      ],
       "properties": {
-        "run_id": {"type": ["string", "null"]},
-        "semantic_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        "run_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "semantic_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "target_state": {
+          "$ref": "#/$defs/targetState"
+        }
+      },
+      "additionalProperties": false
+    },
+    "targetState": {
+      "type": "object",
+      "required": [
+        "algorithm",
+        "digest",
+        "identity",
+        "source",
+        "status"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "identity": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "const": "verified"
+        }
       },
       "additionalProperties": false
     }
