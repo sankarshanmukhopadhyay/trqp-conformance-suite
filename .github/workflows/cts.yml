@@ -54,6 +54,7 @@ jobs:
             --fixture-set fixtures/baseline.fixture-set.json \
             --generated-at "2026-01-15T00:00:00Z" \
             --run-id "ci-fixture-baseline" \
+            --target-state-file examples/state-snapshot.json \
             --out reports/ci_baseline_fixture
 
       - name: Replay fixture Baseline (determinism verification)
@@ -99,10 +100,10 @@ jobs:
           done
 
       - name: Run Baseline profile (live SUT)
-        run: python cts/run.py --profile profiles/baseline.yaml --sut examples/sut.local.yaml --out reports/ci_baseline
+        run: python cts/run.py --profile profiles/baseline.yaml --sut examples/sut.local.yaml --target-state-file examples/state-snapshot.json --out reports/ci_baseline
 
       - name: Run High-Assurance profile
-        run: python cts/run.py --profile profiles/high_assurance.yaml --sut examples/sut.local.yaml --out reports/ci_high_assurance
+        run: python cts/run.py --profile profiles/high_assurance.yaml --sut examples/sut.local.yaml --target-state-file examples/state-snapshot.json --out reports/ci_high_assurance
 
       - name: Ensure bundle.zip exists (Baseline)
         run: |
