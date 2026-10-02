@@ -52,6 +52,7 @@ jobs:
             --generated-at "2026-01-15T00:00:00Z" \
             --run-id "ci-profile-evidence" \
             --target-id "trqp-reference-fixture" \
+            --target-state-file examples/state-snapshot.json \
             --out reports/profile-evidence
 
       - name: Export profile-consumable evidence
