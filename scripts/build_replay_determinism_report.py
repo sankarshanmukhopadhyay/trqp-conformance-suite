@@ -126,6 +126,9 @@ def main() -> int:
     original_semantic = semantic_projection(original)
     replay_semantic = semantic_projection(replay)
 
+    if not source_run.get("target_state") or source_run.get("target_state") != replay_report.get("target_state"):
+        raise SystemExit("Target-state evidence missing or changed between source run and replay")
+
     report = {
         "report_version": "1.0.0",
         "policy": {
@@ -136,10 +139,12 @@ def main() -> int:
         "source": {
             "run_id": source_run.get("test_run_id"),
             "semantic_sha256": semantic_sha256(original_semantic),
+            "target_state": source_run.get("target_state"),
         },
         "replay": {
             "run_id": replay_report.get("replay_run_id"),
             "semantic_sha256": semantic_sha256(replay_semantic),
+            "target_state": replay_report.get("target_state"),
         },
         "deterministic": prohibited == 0,
         "summary": summary,
