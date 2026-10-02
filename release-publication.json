@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
-  "release": "1.11.0",
-  "tag": "v1.11.0",
-  "title": "TRQP Conformance Suite v1.11.0 — State-Bound Evidence",
-  "notes": "RELEASE_NOTES_v1.11.0.txt",
+  "release": "1.11.1",
+  "tag": "v1.11.1",
+  "title": "TRQP Conformance Suite v1.11.1 — State-Bound Generator Fix",
+  "notes": "RELEASE_NOTES_v1.11.1.txt",
   "status": "pending-publication"
 }
