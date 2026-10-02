@@ -122,7 +122,8 @@ python cts/run.py \
   --sut examples/sut.local.yaml \
   --out reports/interop_demo \
   --run-id opstack-demo-001 \
-  --target-id demo-directory
+  --target-id demo-directory \\
+  --target-state-file examples/state-snapshot.json
 ```
 
-This writes `cts-report.json` alongside the standard evidence bundle artifacts.
+This writes `cts-report.json` alongside the standard evidence bundle artifacts. The target-state file is hashed with SHA-256 and the digest is embedded in run, report and downstream profile-consumable evidence. A logical `target_id` without a target-state snapshot is no longer sufficient for assurance-producing runs.

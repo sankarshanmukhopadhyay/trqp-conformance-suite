@@ -7,6 +7,7 @@ BASE_REPORT = {
     "run_id": "run-1",
     "target_id": "registry-1",
     "generated_at": "2026-09-10T00:00:00Z",
+    "target_state": {"algorithm": "sha256", "digest": "a"*64, "identity": "sha256:" + "a"*64, "source": "fixture.json", "status": "verified"},
     "results": [
         {"test_case_id": "TC-AUTHZ-001", "result": "PASS"},
         {"test_case_id": "TC-ERR-001", "result": "ERROR", "reason": "transport failure"},
@@ -34,6 +35,7 @@ class ProfileConsumableEvidenceTests(unittest.TestCase):
         self.assertEqual(evidence["run"]["id"], "run-1")
         self.assertEqual(evidence["target"]["id"], "registry-1")
         self.assertEqual(evidence["protocol"], {"id": "trqp", "version": "2.0", "binding": "https-json"})
+        self.assertEqual(evidence["target_state"]["digest"], "a"*64)
         self.assertEqual(evidence["test_set"]["revision"], "abc123")
 
     def test_operational_error_is_not_exported_as_negative_semantic_result(self):
@@ -65,3 +67,10 @@ class ProfileConsumableEvidenceTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+    def test_missing_target_state_fails_closed(self):
+        report = dict(BASE_REPORT)
+        report.pop("target_state")
+        with self.assertRaises(KeyError):
+            make(report=report)

@@ -1,11 +1,15 @@
 {
-  "contract_version": "1.1",
+  "contract_version": "1.2",
   "producer": {
     "repository": "sankarshanmukhopadhyay/trqp-conformance-suite",
     "role": "protocol-conformance-and-replay-producer"
   },
   "consumer": "sankarshanmukhopadhyay/trqp-assurance-hub",
-  "required_correlators": ["run_id", "target_id"],
+  "required_correlators": [
+    "run_id",
+    "target_id",
+    "target_state.digest"
+  ],
   "required_outputs": [
     {
       "type": "conformance-evidence",
@@ -29,12 +33,15 @@
     "comparison_policy_digest_required": true,
     "artifact_hashing_required_by_stack_release": true,
     "profile_consumption_requires_test_set_revision": true,
-    "profile_metadata_must_not_change_core_results": true
+    "profile_metadata_must_not_change_core_results": true,
+    "target_state_digest_required": true
   },
   "invalidation_conditions": [
     "missing required output",
     "run_id mismatch",
     "target_id mismatch",
+    "missing target_state evidence",
+    "target_state digest mismatch",
     "schema-invalid evidence",
     "protocol or binding mismatch",
     "test-set revision mismatch where applicability depends on the changed tests",
@@ -44,7 +51,20 @@
     "unsupported semantic or schema authority"
   ],
   "authority_boundary": {
-    "owns": ["protocol conformance execution", "CTS evidence semantics", "replay comparison policy", "replay determinism verdict", "profile-consumable projection of CTS-owned evidence"],
-    "does_not_own": ["ecosystem profile policy", "TSPP control definitions", "combined assurance decision", "governance legitimacy", "coordinated stack release declaration"]
+    "owns": [
+      "protocol conformance execution",
+      "CTS evidence semantics",
+      "replay comparison policy",
+      "replay determinism verdict",
+      "profile-consumable projection of CTS-owned evidence",
+      "CTS target-state snapshot identity for the conformance run"
+    ],
+    "does_not_own": [
+      "ecosystem profile policy",
+      "TSPP control definitions",
+      "combined assurance decision",
+      "governance legitimacy",
+      "coordinated stack release declaration"
+    ]
   }
 }

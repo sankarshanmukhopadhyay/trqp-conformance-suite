@@ -45,6 +45,7 @@ def build(report: dict, *, suite_version: str, protocol_version: str, binding: s
         "protocol": {"id": "trqp", "version": protocol_version, "binding": binding},
         "run": {"id": report["run_id"], "generated_at": report["generated_at"]},
         "target": {"id": report["target_id"]},
+        "target_state": dict(report["target_state"]),
         "results": results,
         "reassessment": {"state": reassessment_state},
     }

@@ -34,6 +34,18 @@ def sha256_bytes(b: bytes) -> str:
 def sha256_file(p: Path) -> str:
     return sha256_bytes(p.read_bytes())
 
+def target_state_from_file(path: Path, source: str | None = None) -> dict:
+    if not path.exists() or not path.is_file():
+        raise SystemExit(f"Target-state snapshot is unavailable: {path}")
+    digest = sha256_file(path)
+    return {
+        "algorithm": "sha256",
+        "digest": digest,
+        "identity": f"sha256:{digest}",
+        "source": source or str(path),
+        "status": "verified",
+    }
+
 def guess_media_type(p: Path) -> str | None:
     suf = p.suffix.lower()
     if suf == ".json":
@@ -334,6 +346,8 @@ def run_replay(replay_dir: Path, out: Path, profile: dict, generated_at: str) ->
     if orig_run_path.exists():
         orig_run = json.loads(orig_run_path.read_text(encoding="utf-8"))
         orig_run_id = orig_run.get("test_run_id")
+    else:
+        orig_run = {}
 
     out.mkdir(parents=True, exist_ok=True)
 
@@ -397,6 +411,7 @@ def run_replay(replay_dir: Path, out: Path, profile: dict, generated_at: str) ->
         "profile_id": profile.get("id"),
         "suite_version": VERSION,
         "generated_at": generated_at,
+        "target_state": orig_run.get("target_state"),
         "summary": {
             "PASS": pass_count,
             "FAIL": fail_count,
@@ -426,6 +441,7 @@ def main():
     ap.add_argument("--out", required=True, help="Output directory for evidence artifacts")
     ap.add_argument("--run-id", default=None, help="Optional shared run identifier for Operational Stack workflows")
     ap.add_argument("--target-id", default=None, help="Optional stable target identifier for Operational Stack workflows")
+    ap.add_argument("--target-state-file", default=None, help="File snapshot of the deployed target state to hash and bind into CTS evidence")
     ap.add_argument("--dry-run", action="store_true",
                     help="Validate inputs and list applicable tests without executing any HTTP requests")
     ap.add_argument("--list-tests", action="store_true",
@@ -486,12 +502,17 @@ def main():
     run_id = args.run_id or str(uuid.uuid4())
     base_url = sut["base_url"]
     target_id = args.target_id or sut.get("target_id") or base_url
+    target_state_path = args.target_state_file or sut.get("target_state_file")
+    if not target_state_path:
+        raise SystemExit("State-bound assurance requires --target-state-file or sut.target_state_file")
+    target_state = target_state_from_file(Path(target_state_path), sut.get("state_reference"))
     run = {
         "test_run_id": run_id,
         "profile_id": profile["id"],
         "out_dir_label": out.name,
         "sut": {k:v for k,v in sut.items() if k != "signing_key_b64"},
         "target_id": target_id,
+        "target_state": target_state,
         "started_at": generated_at,
         "tool": {"name": "trqp-cts", "version": VERSION},
     }
@@ -647,6 +668,7 @@ def main():
     cts_report = {
         "run_id": run_id,
         "target_id": target_id,
+        "target_state": target_state,
         "generated_at": generated_at,
         "profile": profile["id"],
         "profile_id": profile["id"],
