@@ -5,7 +5,9 @@ root=Path(__file__).resolve().parents[1]
 out=root/'artifacts'; val=out/'validation'; tr=out/'traceability'
 shutil.rmtree(val,ignore_errors=True); val.mkdir(parents=True); tr.mkdir(parents=True,exist_ok=True)
 run=os.environ.get('TRQP_RUN_ID','cts-local-assurance'); target=os.environ.get('TRQP_TARGET_ID','trqp-reference-fixture')
-cmd=[sys.executable,'cts/run.py','--profile','profiles/baseline.yaml','--sut','examples/sut.local.yaml.example','--out',str(val/'run'),'--fixture-set','fixtures/baseline.fixture-set.json','--run-id',run,'--target-id',target,'--generated-at','2026-07-20T00:00:00Z']
+state_path=Path(os.environ.get('TRQP_TARGET_STATE_FILE',str(root/'examples/state-snapshot.json')))
+if not state_path.is_file(): raise SystemExit(f'Target-state snapshot unavailable: {state_path}')
+cmd=[sys.executable,'cts/run.py','--profile','profiles/baseline.yaml','--sut','examples/sut.local.yaml.example','--out',str(val/'run'),'--fixture-set','fixtures/baseline.fixture-set.json','--run-id',run,'--target-id',target,'--target-state-file',str(state_path),'--generated-at','2026-07-20T00:00:00Z']
 subprocess.run(cmd,cwd=root,check=True)
 reports=list((val/'run').glob('*.json'))
 report=next((p for p in reports if 'report' in p.name), reports[0] if reports else None)
@@ -28,5 +30,6 @@ neg=[x for x in ts if isinstance(x,dict) and any(w in json.dumps(x).lower() for 
 idx=[]
 for p in sorted(out.rglob('*')):
   if p.is_file(): idx.append({'path':str(p.relative_to(root)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()})
-(val/'evidence-index.json').write_text(json.dumps({'run_id':run,'target_id':target,'artifacts':idx},indent=2)+'\n')
+report_obj=json.loads((val/'cts-report.json').read_text(encoding='utf-8'))
+(val/'evidence-index.json').write_text(json.dumps({'run_id':run,'target_id':target,'target_state':report_obj.get('target_state'),'artifacts':idx},indent=2)+'\n')
 print('CTS assurance artifacts generated')

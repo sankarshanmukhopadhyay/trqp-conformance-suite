@@ -37,6 +37,21 @@ jobs:
           p.write_text(p.read_text(encoding="utf-8").replace("REPLACE_WITH_BASE64_ED25519_PRIVATE_KEY", key), encoding="utf-8")
           PY
 
+      - name: Validate Stack-facing assurance artifact generator
+        env:
+          TRQP_RUN_ID: ci-assurance-generator
+          TRQP_TARGET_ID: trqp-reference-fixture
+          TRQP_TARGET_STATE_FILE: examples/state-snapshot.json
+        run: |
+          make assurance-check
+          python - <<'PY'
+          import json
+          r=json.load(open('artifacts/validation/cts-report.json'))
+          assert r['target_state']['status']=='verified'
+          assert r['target_state']['algorithm']=='sha256'
+          assert len(r['target_state']['digest'])==64
+          PY
+
       - name: Schema hygiene checks
         run: python scripts/schema_check.py
 

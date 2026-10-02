@@ -4,6 +4,17 @@ title: "Changelog"
 nav_exclude: true
 ---
 
+## v1.11.1 — 2026-10-02
+
+### Fixed
+- Corrected the Stack-facing `make assurance-check` artifact generator so generated evidence carries the required verified target-state identity.
+- Added CI coverage for the assurance artifact-generation path.
+
+### Assurance
+- State-bound producer claims now hold for both primary execution and Stack-facing generated artifacts.
+- The previous v1.11.0 tag remains immutable historical evidence; state-bound Stack integration should use v1.11.1.
+- TRQP Stack 2026.3 — Banyan remains the current coordinated Stack baseline.
+
 ## v1.11.0 — 2026-10-02
 
 ### Added

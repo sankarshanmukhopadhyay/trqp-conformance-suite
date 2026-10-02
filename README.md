@@ -8,7 +8,7 @@ tier: 0
 
 The TRQP Conformance Suite is the **executable protocol-conformance authority** in the TRQP Operational Trust Stack. It maps TRQP requirements to repeatable tests, produces structured verdicts and replayable evidence, and exposes machine-readable outputs that downstream assurance tooling can consume without reinterpretation.
 
-> **Current component release:** v1.11.0  
+> **Current component release:** v1.11.1  
 > **Current coordinated stack:** TRQP Stack 2026.3 — Banyan  
 > **Previous coordinated stack:** TRQP Stack 2026.2 — Ashoka  
 > **Lifecycle:** Active  
