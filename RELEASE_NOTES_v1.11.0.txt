@@ -1,0 +1,37 @@
+TRQP Conformance Suite v1.11.0 — State-Bound Evidence
+
+Summary
+-------
+This minor release makes deployed-state identity part of CTS assurance evidence. Conformance, profile-consumable evidence, and replay determinism can now be tied to the exact target-state snapshot assessed instead of relying only on a logical target identifier.
+
+Requirement / profile impact
+----------------------------
+No TRQP protocol requirement or protocol version is changed. Existing profiles retain their conformance semantics. Assurance-producing executions now require an explicit target-state snapshot whose SHA-256 identity is recorded with the evidence.
+
+Evidence artifact impact
+------------------------
+- run.json and cts-report.json include verified target_state evidence.
+- profile-consumable conformance evidence requires target_state.
+- replay-determinism evidence requires identical source/replay target_state.
+- producer contract v1.2 requires run_id, target_id, and target_state.digest.
+
+Validation
+----------
+PR #54 passed:
+- CTS workflow
+- Profile Evidence Contract
+- Portfolio Integration Contract
+- Lifecycle Reassessment
+- documentation build
+
+Negative tests cover missing snapshots and changed snapshot content.
+
+Compatibility
+-------------
+TRQP Stack 2026.3 — Banyan remains the current coordinated release and retains CTS v1.10.0 / TSPP v0.17.0 / Assurance Hub v1.13.0 as its immutable tuple.
+
+CTS v1.11.0 is intended for the state-bound assurance integration line with TSPP v0.18.0 and the corresponding Assurance Hub component update after that integration passes its own gates. This component release does not declare a new coordinated Stack release.
+
+Upgrade guidance
+----------------
+Operators producing assurance evidence must supply --target-state-file (or sut.target_state_file). Consumers should treat target_state.digest as a required correlator for state-bound composition. A mutable URL or target_id alone must not be interpreted as immutable deployment-state identity.

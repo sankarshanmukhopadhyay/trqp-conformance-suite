@@ -6,13 +6,19 @@ nav_exclude: true
 
 # TRQP Conformance Suite Roadmap
 
-**Last reviewed:** 2026-08-28
+**Last reviewed:** 2026-10-02
 
 This roadmap records CTS-owned delivery priorities and its contribution to coordinated TRQP Stack releases. CTS retains authority over conformance execution, replay, and comparison semantics.
 
 ## Current coordinated baseline
 
-TRQP Stack 2026.1 — Coconut validates CTS `v1.8.0` deterministic replay with TSPP `v0.15.0` and Assurance Hub `v1.11.0`.
+TRQP Stack 2026.3 — Banyan remains the current coordinated baseline: CTS `v1.10.0`, TSPP `v0.17.0`, and Assurance Hub `v1.13.0`. CTS component development continues independently.
+
+## October 2026 capability: state-bound conformance evidence
+
+CTS v1.11.0 binds conformance and replay evidence to a verified SHA-256 target-state identity. This completes the prior state-snapshot maturity backlog by making the snapshot digest an explicit producer correlator rather than optional context.
+
+The capability is coordinated with Assurance Hub issue #99 and TSPP state-bound posture work, but it is protocol-version neutral and does not depend on downstream candidate TRQP work. Publication of v1.11.0 does not itself advance the coordinated Stack release.
 
 ## September 2026 priority: bounded reassessment after change
 

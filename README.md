@@ -1,6 +1,6 @@
 ---
 owner: maintainers
-last_reviewed: 2026-09-10
+last_reviewed: 2026-10-02
 tier: 0
 ---
 
@@ -8,7 +8,7 @@ tier: 0
 
 The TRQP Conformance Suite is the **executable protocol-conformance authority** in the TRQP Operational Trust Stack. It maps TRQP requirements to repeatable tests, produces structured verdicts and replayable evidence, and exposes machine-readable outputs that downstream assurance tooling can consume without reinterpretation.
 
-> **Current component release:** v1.10.0  
+> **Current component release:** v1.11.0  
 > **Current coordinated stack:** TRQP Stack 2026.3 — Banyan  
 > **Previous coordinated stack:** TRQP Stack 2026.2 — Ashoka  
 > **Lifecycle:** Active  
@@ -39,6 +39,14 @@ For the validated multi-repository adoption path, start with **TRQP Stack 2026.3
 - [`docs/TRQP_Conformance_Philosophy.md`](docs/TRQP_Conformance_Philosophy.md) — conformance design principles;
 - [`docs/evidence_bundles.md`](docs/evidence_bundles.md) — portable evidence model; and
 - [`docs/portfolio-integration.md`](docs/portfolio-integration.md) — coordinated Stack relationship.
+
+## v1.11.0 state-bound evidence producer
+
+v1.11.0 binds CTS conformance, profile-consumable evidence, and replay-determinism evidence to a verified SHA-256 identity for the deployed target state. Assurance-producing runs require an explicit target-state snapshot; a logical `target_id` alone is no longer sufficient to claim that evidence describes the same deployment.
+
+The target-state digest is CTS-owned evidence for the conformance run. Replay evidence must preserve the same target-state identity, and downstream consumers can reject conformance evidence that refers to a different deployed state.
+
+The current coordinated Stack remains **TRQP Stack 2026.3 — Banyan**. v1.11.0 is an independently versioned component release and does not by itself create or update a coordinated Stack release.
 
 ## v1.10.0 profile-aware evidence producer
 
