@@ -1,0 +1,21 @@
+TRQP Conformance Suite v1.11.1 — State-Bound Generator Fix
+
+Summary
+-------
+Patch release correcting the Stack-facing assurance artifact generator introduced alongside v1.11.0.
+
+Fix
+---
+make assurance-check now supplies and verifies an explicit target-state snapshot, so the generated CTS assurance report satisfies the state-bound producer contract. The evidence index also carries the generated target-state identity.
+
+Assurance
+---------
+CI now executes the Stack-facing assurance artifact generator and verifies that the resulting report contains a verified SHA-256 target_state. This closes the gap between the primary CTS runner path and the artifact-generation path consumed by the Assurance Hub.
+
+Compatibility
+-------------
+No TRQP protocol semantics change. TRQP Stack 2026.3 — Banyan remains the current coordinated Stack baseline. State-bound Hub integration should consume v1.11.1 rather than v1.11.0.
+
+Upgrade
+-------
+Consumers using v1.11.0 for state-bound Stack composition should move to v1.11.1. The v1.11.0 tag remains immutable historical evidence.
