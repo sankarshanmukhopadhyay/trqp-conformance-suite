@@ -3,52 +3,113 @@
   "$id": "https://schemas.trqp.example/evidence/profile-consumable-conformance.schema.json",
   "title": "TRQP CTS Profile-Consumable Conformance Evidence",
   "type": "object",
-  "required": ["schema_version", "producer", "suite_version", "test_set", "protocol", "run", "target", "results", "reassessment"],
+  "required": [
+    "schema_version",
+    "producer",
+    "suite_version",
+    "test_set",
+    "protocol",
+    "run",
+    "target",
+    "target_state",
+    "results",
+    "reassessment"
+  ],
   "properties": {
-    "schema_version": {"const": "1.0"},
-    "producer": {"const": "trqp-conformance-suite"},
-    "suite_version": {"type": "string", "minLength": 1},
+    "schema_version": {
+      "const": "1.0"
+    },
+    "producer": {
+      "const": "trqp-conformance-suite"
+    },
+    "suite_version": {
+      "type": "string",
+      "minLength": 1
+    },
     "test_set": {
       "type": "object",
-      "required": ["id", "revision"],
+      "required": [
+        "id",
+        "revision"
+      ],
       "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "revision": {"type": "string", "minLength": 1}
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1
+        }
       },
       "additionalProperties": false
     },
     "protocol": {
       "type": "object",
-      "required": ["id", "version", "binding"],
+      "required": [
+        "id",
+        "version",
+        "binding"
+      ],
       "properties": {
-        "id": {"const": "trqp"},
-        "version": {"type": "string", "minLength": 1},
-        "binding": {"type": "string", "minLength": 1}
+        "id": {
+          "const": "trqp"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "binding": {
+          "type": "string",
+          "minLength": 1
+        }
       },
       "additionalProperties": false
     },
     "run": {
       "type": "object",
-      "required": ["id", "generated_at"],
+      "required": [
+        "id",
+        "generated_at"
+      ],
       "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "generated_at": {"type": "string", "format": "date-time"}
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
       },
       "additionalProperties": false
     },
     "target": {
       "type": "object",
-      "required": ["id"],
-      "properties": {"id": {"type": "string", "minLength": 1}},
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
       "additionalProperties": false
     },
     "profile_context": {
       "type": "object",
       "description": "Correlation metadata only; it MUST NOT alter CTS core result semantics.",
       "properties": {
-        "id": {"type": "string"},
-        "version": {"type": "string"},
-        "source_revision": {"type": "string"}
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "source_revision": {
+          "type": "string"
+        }
       },
       "additionalProperties": false
     },
@@ -57,23 +118,86 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["test_case_id", "result"],
+        "required": [
+          "test_case_id",
+          "result"
+        ],
         "properties": {
-          "test_case_id": {"type": "string", "minLength": 1},
-          "requirement_id": {"type": ["string", "null"]},
-          "result": {"enum": ["PASS", "FAIL", "INDETERMINATE", "NOT_APPLICABLE"]},
-          "reason": {"type": "string"},
-          "evidence_ref": {"type": "string"}
+          "test_case_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "requirement_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "result": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "INDETERMINATE",
+              "NOT_APPLICABLE"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "evidence_ref": {
+            "type": "string"
+          }
         },
         "additionalProperties": false
       }
     },
     "reassessment": {
       "type": "object",
-      "required": ["state"],
+      "required": [
+        "state"
+      ],
       "properties": {
-        "state": {"enum": ["CURRENT", "REASSESS_REQUIRED", "INVALID"]},
-        "rationale_code": {"type": "string"}
+        "state": {
+          "enum": [
+            "CURRENT",
+            "REASSESS_REQUIRED",
+            "INVALID"
+          ]
+        },
+        "rationale_code": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "target_state": {
+      "type": "object",
+      "required": [
+        "algorithm",
+        "digest",
+        "identity",
+        "source",
+        "status"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "identity": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "const": "verified"
+        }
       },
       "additionalProperties": false
     }
