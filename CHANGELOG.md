@@ -4,6 +4,24 @@ title: "Changelog"
 nav_exclude: true
 ---
 
+## v1.11.0 — 2026-10-02
+
+### Added
+- Added SHA-256 target-state identity to CTS run and conformance evidence.
+- Added target-state binding to profile-consumable evidence and replay-determinism evidence.
+- Added direct tests proving stable snapshot hashing, content-change detection, and fail-closed missing-snapshot behavior.
+
+### Changed
+- Stack producer contract advanced to v1.2 and now requires `run_id`, `target_id`, and `target_state.digest`.
+- Assurance-producing CTS runs require an explicit target-state snapshot.
+- Replay determinism now refuses evidence when source and replay target-state identities differ.
+
+### Assurance
+- A logical target identifier no longer proves that two evidence sets describe the same deployed state.
+- Snapshot absence or state drift fails closed.
+- CTS remains authoritative for its target-state evidence; the Assurance Hub owns cross-producer correlation only.
+- TRQP Stack 2026.3 — Banyan remains the current coordinated Stack baseline.
+
 ## v1.10.0 — 2026-09-10
 
 ### Added
