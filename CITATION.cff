@@ -7,6 +7,6 @@ authors:
     given-names: Sankarshan
 repository-code: "https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite"
 url: "https://sankarshanmukhopadhyay.github.io/trqp-conformance-suite/"
-version: "1.5.0"
+version: "1.11.1"
 date-released: 2026-07-15
 license: Apache-2.0
