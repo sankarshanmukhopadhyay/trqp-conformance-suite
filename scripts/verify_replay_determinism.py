@@ -27,6 +27,26 @@ def verify_v1(report: dict) -> int:
         print("Replay determinism FAILED: policy provenance is incomplete", file=sys.stderr)
         return 2
 
+    if report.get("report_version") == "1.0.0":
+        source, replay = report.get("source") or {}, report.get("replay") or {}
+        for side, item in (("source", source), ("replay", replay)):
+            if not item.get("run_id") or not item.get("semantic_sha256"):
+                print(f"Replay determinism FAILED: {side} run or semantic identity missing", file=sys.stderr)
+                return 2
+            state = item.get("target_state") or {}
+            if state.get("status") != "verified" or not state.get("source") or not state.get("digest"):
+                print(f"Replay determinism FAILED: {side} target-state evidence incomplete", file=sys.stderr)
+                return 2
+        if source.get("target_state") != replay.get("target_state"):
+            print("Replay determinism FAILED: source/replay target states differ", file=sys.stderr)
+            return 2
+        if prohibited == 0 and source["semantic_sha256"] != replay["semantic_sha256"]:
+            print("Replay determinism FAILED: semantic hashes differ despite zero prohibited differences", file=sys.stderr)
+            return 2
+        if permitted != sum(1 for d in differences if d.get("permitted", False)):
+            print("Replay determinism FAILED: permitted difference count inconsistent", file=sys.stderr)
+            return 2
+
     if prohibited:
         print(f"Replay determinism FAILED: {prohibited} prohibited semantic difference(s).", file=sys.stderr)
         for diff in differences:
