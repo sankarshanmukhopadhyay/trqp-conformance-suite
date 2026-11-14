@@ -35,3 +35,7 @@ Evidence bundles MAY include supply chain integrity artifacts to support higher 
 - `openssf_scorecard_report` (OpenSSF Scorecard output or equivalent)
 
 These are referenced by TSPP-SCI controls and surfaced in the Assurance Hub workflow.
+
+## State-bound evidence scope
+
+CTS v1.11.1 associates conformance and deterministic replay artifacts with a verified SHA-256 digest of the supplied target-state snapshot. Matching digests prove identical snapshot identity under the declared hashing contract; they do not attest that the snapshot corresponds to the current running deployment. An adopter must obtain appropriate build/deployment provenance, target ownership and post-change evidence where those claims affect reliance. The [Lotus coordinated release](https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub/releases/tag/trqp-stack-2026.4) validates cross-producer composition, not independent runtime certification.

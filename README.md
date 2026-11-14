@@ -1,6 +1,6 @@
 ---
 owner: maintainers
-last_reviewed: 2026-10-02
+last_reviewed: 2026-11-14
 tier: 0
 ---
 
@@ -9,8 +9,8 @@ tier: 0
 The TRQP Conformance Suite is the **executable protocol-conformance authority** in the TRQP Operational Trust Stack. It maps TRQP requirements to repeatable tests, produces structured verdicts and replayable evidence, and exposes machine-readable outputs that downstream assurance tooling can consume without reinterpretation.
 
 > **Current component release:** v1.11.1  
-> **Current coordinated stack:** TRQP Stack 2026.3 — Banyan  
-> **Previous coordinated stack:** TRQP Stack 2026.2 — Ashoka  
+> **Current coordinated stack:** TRQP Stack 2026.4 — Lotus  
+> **Previous coordinated stack:** TRQP Stack 2026.3 — Banyan  
 > **Lifecycle:** Active  
 > **Maturity:** Implementation draft  
 > **Operational status:** Active validation
@@ -32,7 +32,7 @@ The TRQP Conformance Suite is the **executable protocol-conformance authority** 
 
 ## Start here
 
-For the validated multi-repository adoption path, start with **TRQP Stack 2026.3 — Banyan** in the TRQP Assurance Hub. If you are implementing or evaluating CTS directly, use:
+For the validated multi-repository adoption path, start with **[TRQP Stack 2026.4 — Lotus](https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub/releases/tag/trqp-stack-2026.4)** in the TRQP Assurance Hub. If you are implementing or evaluating CTS directly, use:
 
 - [`docs/START_HERE.md`](docs/START_HERE.md) — role-based entry point;
 - [`QUICKSTART.md`](QUICKSTART.md) — run the suite;
@@ -46,7 +46,7 @@ v1.11.0 binds CTS conformance, profile-consumable evidence, and replay-determini
 
 The target-state digest is CTS-owned evidence for the conformance run. Replay evidence must preserve the same target-state identity, and downstream consumers can reject conformance evidence that refers to a different deployed state.
 
-The current coordinated Stack remains **TRQP Stack 2026.3 — Banyan**. v1.11.0 is an independently versioned component release and does not by itself create or update a coordinated Stack release.
+The independently published v1.11.0 component preceded the coordinated Lotus release. **TRQP Stack 2026.4 — Lotus** now includes the corrected CTS v1.11.1 producer in an immutable validated tuple; component publication alone did not establish the coordinated release.
 
 ## v1.10.0 profile-aware evidence producer
 
@@ -56,7 +56,14 @@ Profile metadata is correlation context only. It cannot modify CTS core test sem
 
 The release retains the v1.9.x impact-aware reassessment capability: bounded reassessment is permitted only when material impact and affected tests are explicit; unknown impact fails toward a full rerun. CTS remains authoritative for conformance/replay reassessment consequences.
 
-The published coordinated compatibility tuple is **CTS v1.10.0 / TSPP v0.17.0 / Assurance Hub v1.13.0**, released as **TRQP Stack 2026.3 — Banyan**. Stack 2026.2 — Ashoka remains an immutable historical baseline, not the current coordinated release.
+The historical profile-aware compatibility tuple was **CTS v1.10.0 / TSPP v0.17.0 / Assurance Hub v1.13.0**, released as **TRQP Stack 2026.3 — Banyan**. Stack 2026.3 — Banyan and 2026.2 — Ashoka remain immutable historical baselines, not the current coordinated release.
+
+
+## Current coordinated release and evidence limit
+
+[TRQP Stack 2026.4 — Lotus](https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub/releases/tag/trqp-stack-2026.4) pins CTS v1.11.1, TSPP v0.18.1, and Assurance Hub v1.14.0. It adds verified cross-producer target-state correlation without changing CTS-owned conformance authority. The Hub is the coordinated publication authority; the current manifest is `stack/releases/2026.4/manifest.json` in that repository.
+
+A SHA-256 digest establishes the identity of supplied snapshot bytes. It does **not** by itself prove that the snapshot represents the live deployment, that signing/authorization material remains authorized, or that later change has not invalidated operational reliance. Deployment provenance, freshness and applicable external authority evidence must be established separately. Self-generated tests are not independent certification.
 
 ## Profile-aware evidence producer boundary
 
