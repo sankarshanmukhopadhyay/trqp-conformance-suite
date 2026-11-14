@@ -50,3 +50,7 @@ Missing traceability evidence, incompatible authority versions, producer-contrac
 The canonical coordinated release record is maintained by the TRQP Assurance Hub under `stack/releases/2026.4/` and as the GitHub release tag `trqp-stack-2026.4`. Component releases continue to be published independently using repository-local semantic versioning.
 
 Historical Stack 2026.1, 2026.2 and 2026.3 records remain immutable evidence of their tested tuples and are not rewritten when a newer coordinated release becomes current.
+
+## Published component provenance
+
+CTS v1.11.1 was published on 2026-10-02 at immutable source commit `0738c3cf86fddb99d761ed21d63d870eefdc5f76`. The independent component release is [v1.11.1](https://github.com/sankarshanmukhopadhyay/trqp-conformance-suite/releases/tag/v1.11.1). `release-publication.json` records this existing release as terminal, avoiding stale pending-publication metadata or gratuitous re-publication. Current post-tag replay verification hardening on `main` is not retroactively included in the tagged release.

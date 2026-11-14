@@ -4,5 +4,8 @@
   "tag": "v1.11.1",
   "title": "TRQP Conformance Suite v1.11.1 — State-Bound Generator Fix",
   "notes": "RELEASE_NOTES_v1.11.1.txt",
-  "status": "pending-publication"
+  "status": "published",
+  "published_release_id": 401468368,
+  "published_at": "2026-10-02T01:11:06Z",
+  "published_target_commit": "0738c3cf86fddb99d761ed21d63d870eefdc5f76"
 }
