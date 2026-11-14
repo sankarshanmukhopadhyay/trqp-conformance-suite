@@ -11,13 +11,13 @@ The TRQP Conformance Suite participates in the coordinated TRQP Operational Trus
 
 ## Current coordinated release
 
-**TRQP Stack 2026.3 — Banyan** validates the following adopter-facing tuple:
+**TRQP Stack 2026.4 — Lotus** validates the following adopter-facing tuple:
 
 | Layer | Release |
 |---|---:|
-| TRQP-TSPP | v0.17.0 |
-| TRQP Conformance Suite | v1.10.0 |
-| TRQP Assurance Hub | v1.13.0 |
+| TRQP-TSPP | v0.18.1 |
+| TRQP Conformance Suite | v1.11.1 |
+| TRQP Assurance Hub | v1.14.0 |
 | TSMM | 0.24.0 |
 | TIS | 0.15.0 |
 
@@ -25,9 +25,13 @@ The Assurance Hub is the coordinated-release authority and adopter front door. T
 
 The coordinated release does **not** replace CTS's independent versioning or authority. CTS remains authoritative for executable conformance requirements, verdict production, evidence bundles, replay-comparison semantics, and its producer-issued profile-consumable conformance evidence.
 
+## Deployment-state provenance
+
+The Lotus release binds CTS producer evidence to a verified SHA-256 identity for the supplied state snapshot. Matching evidence identities permit controlled correlation but do not independently establish that the captured state is the running deployment. This assertion requires deployment-specific provenance and appropriate authority/freshness checks outside the producer's scope. Operationally unresolved evidence must not be promoted to a positive Hub conclusion.
+
 ## Consumer value
 
-An adopter can select the coordinated Stack release without independently determining which CTS version is compatible with the TSPP and Assurance Hub releases. CTS v1.10.0 supplies protocol-conformance, deterministic replay, and profile-consumable core-conformance evidence under declared comparison and lifecycle rules, which the Hub consumes without redefining CTS semantics.
+An adopter can select the coordinated Stack release without independently determining which CTS version is compatible with the TSPP and Assurance Hub releases. CTS v1.11.1 supplies protocol-conformance, deterministic replay, and profile-consumable core-conformance evidence under declared comparison and lifecycle rules, which the Hub consumes without redefining CTS semantics.
 
 ## Repository responsibilities
 
@@ -43,6 +47,6 @@ Missing traceability evidence, incompatible authority versions, producer-contrac
 
 ## Release record
 
-The canonical coordinated release record is maintained by the TRQP Assurance Hub under `stack/releases/2026.3/` and as the GitHub release tag `trqp-stack-2026.3`. Component releases continue to be published independently using repository-local semantic versioning.
+The canonical coordinated release record is maintained by the TRQP Assurance Hub under `stack/releases/2026.4/` and as the GitHub release tag `trqp-stack-2026.4`. Component releases continue to be published independently using repository-local semantic versioning.
 
-Historical Stack 2026.1 and 2026.2 records remain immutable evidence of their tested tuples and are not rewritten when a newer coordinated release becomes current.
+Historical Stack 2026.1, 2026.2 and 2026.3 records remain immutable evidence of their tested tuples and are not rewritten when a newer coordinated release becomes current.
