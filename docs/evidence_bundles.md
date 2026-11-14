@@ -39,3 +39,9 @@ These are referenced by TSPP-SCI controls and surfaced in the Assurance Hub work
 ## State-bound evidence scope
 
 CTS v1.11.1 associates conformance and deterministic replay artifacts with a verified SHA-256 digest of the supplied target-state snapshot. Matching digests prove identical snapshot identity under the declared hashing contract; they do not attest that the snapshot corresponds to the current running deployment. An adopter must obtain appropriate build/deployment provenance, target ownership and post-change evidence where those claims affect reliance. The [Lotus coordinated release](https://github.com/sankarshanmukhopadhyay/trqp-assurance-hub/releases/tag/trqp-stack-2026.4) validates cross-producer composition, not independent runtime certification.
+
+## Replay determinism acceptance and limitations
+
+The CTS-owned replay verifier validates the reported comparison against the producer's canonical semantic hashes, permitted/prohibited difference counts, source and replay run identities and target-state continuity. A positive report with contradictory hashes or counters is invalid, even if `deterministic` is `true`. A consumer must still bind the report to the exact CTS execution and policy it is evaluating; the replay report alone does not authenticate a running deployment.
+
+The supplied target-state snapshot digest verifies snapshot identity, not correspondence to the live service. That latter claim needs separately verified deployment provenance and change/freshness evidence. Existing Lotus release artifacts are historical and are not rewritten by this refinement.
